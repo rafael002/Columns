@@ -14,8 +14,9 @@ var piece = new Piece([1,2,3]),
     window.addEventListener('keydown', function(event) {
       let resetPiece = screen.control(event, piece);
       if(resetPiece){
-        piece.x = 0; piece.y = 0;
         screen.addCurrentPiece(piece);
+        piece.x = 0;
+        piece.y = 0;
       }
 
     }, false);
