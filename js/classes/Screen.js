@@ -99,7 +99,7 @@ class Screen{
   }
 
   /**
-  * Changes the positin of piece in the screen
+  * Changes the position of piece in the screen
   * return false if another piece is necessary
   */
   control(event, piece){
@@ -155,13 +155,17 @@ class Screen{
           case 3:
             this.screen.fillStyle="#0000FF";
           break;
+
+          case 9:
+            this.screen.fillStyle="#000000";
+          break;
         }
         // draw blocks
         this.screen.beginPath();
         // if(this.screenMap[j][i] !== 0){
           this.screen.fillRect(i * 41.6 + 1, j * 41.6 + 1, 40.6, 40.6);
         // }
-        // draw griZ
+        // draw grid
         this.screen.strokeRect(i * 41.6, j * 41.6, 41.6, 41.6);
         this.screen.closePath();
       }
