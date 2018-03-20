@@ -1,11 +1,14 @@
 class Screen{
-  constructor(element){
+  constructor(element, xsize, ysize){
     // Getting the element context
     this.screen = element.getContext('2d');
 
     // Getting the size of received element
     this.width = element.offsetWidth;
     this.height = element.offsetHeight;
+    this.analize = false;
+    this.xsize = xsize;
+    this.ysize = ysize;
 
     // Prepare the core matrix
     this.startScreenMatrix();
@@ -18,11 +21,11 @@ class Screen{
     // creating the main matrix
     this.screenMap = [];
     // create the second dimension of matrix
-    for(let i = 0; i < 13; i++){
+    for(let i = 0; i < this.ysize; i++){
       this.screenMap[i] = [];
     }
     // set the initial values
-    for(let i = 0; i < 13; i++){
+    for(let i = 0; i < this.ysize; i++){
       for(let j = 0; j < 6; j++){
         this.screenMap[i][j] = 0;
       }
@@ -65,7 +68,7 @@ class Screen{
       }
       // check vertical limits
       else{
-        if( piece.y === 10 && speed === 1 ){
+        if( piece.y === 13 && speed === 1 ){
           move = false;
         }
       }
@@ -112,6 +115,11 @@ class Screen{
           piece.x--;
         }
       break;
+
+      case 38: // TODO remove
+          this.analize = true;
+      break;
+
       case 39: // Right
         if(this.checkCollision( 1, 1, piece)){
           piece.x++;
@@ -136,37 +144,54 @@ class Screen{
     this.screen.clearRect(0, 0, this.width, this.heigth);
     // TODO remove after fix clearRect
 
-    for(let i = 0; i < 6; i++){
-      for(let j = 0; j < 13; j++){
+    for(let i = 0; i < this.xsize; i++){
+      for(let j = 0; j < this.ysize; j++){
         // color selection
         switch(this.screenMap[j][i]){
-          // red
           case 0:
             this.screen.fillStyle="#FFFFFF";
           break;
           case 1:
-            this.screen.fillStyle="#FF0000";
+            this.screen.fillStyle="#e74c3c";
           break;
-          // green
           case 2:
-            this.screen.fillStyle="#00FF00";
+            this.screen.fillStyle="#27ae60";
           break;
-          // blue
           case 3:
-            this.screen.fillStyle="#0000FF";
+            this.screen.fillStyle="#2980b9";
           break;
-
+          case 4:
+              this.screen.fillStyle="#f1c40f";
+          break;
+          case 5:
+              this.screen.fillStyle="#B53471";
+          break;
+          case 6:
+              this.screen.fillStyle="#f368e0";
+          break;
+          case 7:
+              this.screen.fillStyle="#e67e22";
+          break;
+          case 8:
+              this.screen.fillStyle="#A3CB38";
+          break;
           case 9:
             this.screen.fillStyle="#000000";
           break;
         }
         // draw blocks
         this.screen.beginPath();
-        // if(this.screenMap[j][i] !== 0){
-          this.screen.fillRect(i * 41.6 + 1, j * 41.6 + 1, 40.6, 40.6);
+          // if(this.screenMap[j][i] !== 0){
+          this.screen.fillRect(i * 41.6 + 1, (j - 3) * 41.6 + 1, 40.6, 40.6);
+          // change color back to white
+          this.screen.fillStyle="#FFFFFF";
+          this.screen.fillRect(i * 41.6 + 8, (j - 3) * 41.6 + 8, 25.6, 25.6);
+          if( this.screenMap[j][i] !== 0 ){
+            this.screen.strokeRect(i * 41.6 + 8, (j - 3) * 41.6 + 8, 25.6, 25.6);
+          }
         // }
         // draw grid
-        this.screen.strokeRect(i * 41.6, j * 41.6, 41.6, 41.6);
+        this.screen.strokeRect(i * 41.6, (j - 3) * 41.6, 41.6, 41.6);
         this.screen.closePath();
       }
     }

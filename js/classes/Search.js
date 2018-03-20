@@ -4,7 +4,7 @@
  */
 class Search{
     constructor( matrix_x, matrix_y ){
-        this.x = matrix_x,
+        this.x = matrix_x;
         this.y = matrix_y;
 
         this.matrix = [];
@@ -21,7 +21,7 @@ class Search{
     }
 
     generatePattern( ScreenMap ){
-        var alter = 0;
+        let alter = 0;
         for(let i = 0; i < this.y; i++){
             alter = !alter;
             for(let j = 0; j < this.x; j++){
@@ -52,22 +52,18 @@ class Search{
             if( map[x][y] !== 9){
                 return false
             }
-            map[x][y] = 3;
+            map[x][y] = 1;
             this.move(x+x_speed, y+y_speed, x_speed, y_speed, map);
         }while(true);
     }
 
     analyse( screenMap ){
-        for(let i = 0; i < this.y; i++){
-            for(let j = 0; j < this.x; j++){
-
-                // this.move(i, j, 0, 1, screenMap);
-                this.move(j, i, 1, 1, screenMap);
-                this.move(j, i, -1, 1, screenMap);
-                this.move(j, i, 0, 1, screenMap);
-                this.move(j, i, 1, 0, screenMap);
-                this.move(i, j, 1, 0, screenMap);
-
+        if( screenMap.analize ){
+            console.log('teste');
+            for(let i = 0; i < this.y; i++){
+                for(let j = 0; j < this.x; j++){
+                    this.move(j, i, 1, 1, screenMap);
+                }
             }
         }
     }
