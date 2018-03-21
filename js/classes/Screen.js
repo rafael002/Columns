@@ -26,7 +26,7 @@ class Screen{
     }
     // set the initial values
     for(let i = 0; i < this.ysize; i++){
-      for(let j = 0; j < 6; j++){
+      for(let j = 0; j < this.xsize; j++){
         this.screenMap[i][j] = 0;
       }
     }
@@ -134,6 +134,15 @@ class Screen{
       break;
     }
     return false;
+  }
+
+  game_over(){
+      // set the initial values
+      for(let i = 0; i < this.ysize; i++){
+          for(let j = 0; j < this.xsize; j++){
+              this.screenMap[i][j] = 9;
+          }
+      }
   }
 
   /**
