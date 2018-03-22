@@ -1,4 +1,4 @@
-var piece = new Piece([1,2,3]),
+var piece = new Piece(3),
     element = document.getElementById("p1"),
     screen = new Screen(element, 6, 16),
     search = new Search(screen.INITIAL_X_POSITION, screen.INITIAL_Y_POSITION),
@@ -21,6 +21,7 @@ var piece = new Piece([1,2,3]),
               if( piece.y === (screen.ysize -3) || !(screen.checkCollision( 0, 1, piece))){
                   if(piece.y > 2){
                       screen.addCurrentPiece(piece);
+                      piece.newRocks();
                       piece.x = piece.INITIAL_X_POSITION;
                       piece.y = piece.INITIAL_Y_POSITION;
                   }
@@ -40,6 +41,7 @@ var piece = new Piece([1,2,3]),
       if(resetPiece){
           if(piece.y > 2){
               screen.addCurrentPiece(piece);
+              piece.newRocks();
               piece.x = piece.INITIAL_X_POSITION;
               piece.y = piece.INITIAL_Y_POSITION;
           }
