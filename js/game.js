@@ -16,7 +16,9 @@ var piece = new Piece(3),
           downPiece--;
           if(downPiece === 0){
               screen.removeCurrentPiece(piece);
-              piece.y++;
+              if(screen.checkCollision( 0, 1, piece)){
+                  piece.y++;
+              }
               downPiece = fps / level;
               if( piece.y === (screen.ysize -3) || !(screen.checkCollision( 0, 1, piece))){
                   if(piece.y > 2){
