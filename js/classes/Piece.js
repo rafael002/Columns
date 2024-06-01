@@ -9,7 +9,7 @@ class Piece{
     this.newRocks();
   }
 
-  shuffle(){
+  shuffle() {
     let lastRock = this.rocks.pop();
     this.rocks.unshift(lastRock);
   }

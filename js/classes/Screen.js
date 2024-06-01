@@ -1,4 +1,4 @@
-class Screen{
+class Screen{ // trocar nomepara algo como tabuleiro
   constructor(element, xsize, ysize){
     // Getting the element context
     this.screen = element.getContext('2d');
@@ -20,13 +20,15 @@ class Screen{
   startScreenMatrix(){
     // creating the main matrix
     this.screenMap = [];
+
     // create the second dimension of matrix
     for(let i = 0; i < this.ysize; i++){
       this.screenMap[i] = [];
     }
+
     // set the initial values
-    for(let i = 0; i < this.ysize; i++){
-      for(let j = 0; j < this.xsize; j++){
+    for(let i = 0; i < this.ysize; i++) {
+      for(let j = 0; j < this.xsize; j++) {
         this.screenMap[i][j] = 0;
       }
     }
@@ -42,7 +44,7 @@ class Screen{
   }
 
   /**
-  * Add a received piece in the screen drawing
+  * Remove a received piece in the screen drawing
   */
   removeCurrentPiece(piece){
     for(let i = 0; i < piece.size; i++){
@@ -78,7 +80,7 @@ class Screen{
         let x = direction ? piece.x + speed : piece.x,
             y = direction ? piece.y : piece.y + speed;
 
-        if( direction ){
+        if( direction ) {
         // horizontal
         for(let i=0; i < piece.size; i++ ){
             if(this.screenMap[y+i][x] !== 0){

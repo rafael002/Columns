@@ -1,17 +1,14 @@
 var piece = new Piece(3),
     element = document.getElementById("p1"),
     screen = new Screen(element, 6, 16),
-    search = new Search(piece.INITIAL_X_POSITION, piece.INITIAL_Y_POSITION),
     fps = 60,
     level = 5,
     downPiece = fps / level;
-    game_loop = function(){
-      setTimeout(function(){
+    game_loop = function() {
+      setTimeout(function() {
           screen.addCurrentPiece(piece);
-          // TODO REMOVE AFTER TESTS this generate a patter to tests of search
-          // search.generatePattern(screen.screenMap);
-          // search.analyse(screen.screenMap);
           screen.refresh();
+
           // TODO MOVE THIS PART TO PIECE CLASS
           downPiece--;
           if(downPiece === 0){
@@ -34,6 +31,7 @@ var piece = new Piece(3),
               }
           }
           //////////////////////////////////////
+          
           game_loop();
       }, 1000 / fps);
     };
