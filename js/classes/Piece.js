@@ -9,6 +9,18 @@ class Piece{
     this.newRocks();
   }
 
+  walkLeft() {
+    this.x -= 1;
+  }
+
+  walkRight() {
+    this.x += 1;
+  }
+
+  downPiece() {
+    this.y += 1;
+  }
+
   shuffle() {
     let lastRock = this.rocks.pop();
     this.rocks.unshift(lastRock);

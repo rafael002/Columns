@@ -1,32 +1,35 @@
 var piece = new Piece(3),
     element = document.getElementById("p1"),
-    screen = new Screen(element, 6, 16),
-    fps = 60,
+    board = new Board(6, 16),
+    screen = new Screen(element),
+    fps = 15,
     level = 5,
     downPiece = fps / level;
+
     game_loop = function() {
       setTimeout(function() {
-          screen.addCurrentPiece(piece);
-          screen.refresh();
+          board.addCurrentPiece(piece);
+          screen.refresh(board);
 
           // TODO MOVE THIS PART TO PIECE CLASS
           downPiece--;
-          if(downPiece === 0){
-              screen.removeCurrentPiece(piece);
-              if(screen.checkCollision( 0, 1, piece)){
+          if(downPiece === 0) {
+              board.removeCurrentPiece(piece);
+              if(board.checkCollision( 0, 1, piece)) {
                   piece.y++;
               }
               downPiece = fps / level;
-              if( piece.y === (screen.ysize -3) || !(screen.checkCollision( 0, 1, piece))){
-                  if(piece.y > 0){
-                      screen.addCurrentPiece(piece);
+              if( piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))){
+                  if(piece.y > 0) {
+                      board.match();
+                      board.addCurrentPiece(piece);
                       piece.newRocks();
                       piece.x = piece.INITIAL_X_POSITION;
                       piece.y = piece.INITIAL_Y_POSITION;
                   }
                   else{
-                      screen.game_over();
-                      return false; // end game TODO remove after all tests
+                    this.alert("game over");
+                    return false; // end game TODO remove after all tests
                   }
               }
           }
@@ -38,16 +41,13 @@ var piece = new Piece(3),
 
     // controls listener
     window.addEventListener('keydown', function(event) {
-      let resetPiece = screen.control(event, piece);
+      let resetPiece = board.control(event, piece);
       if(resetPiece){
           if(piece.y > 2){
-              screen.addCurrentPiece(piece);
+              board.addCurrentPiece(piece);
               piece.newRocks();
               piece.x = piece.INITIAL_X_POSITION;
               piece.y = piece.INITIAL_Y_POSITION;
-          }
-          else{
-              screen.game_over();
           }
       }
     }, false);
