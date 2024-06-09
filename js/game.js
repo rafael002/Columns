@@ -3,7 +3,7 @@ var piece = new Piece(3),
     board = new Board(6, 16),
     screen = new Screen(element),
     fps = 15,
-    level = 5,
+    level = 3,
     downPiece = fps / level;
 
     game_loop = function() {
@@ -21,8 +21,8 @@ var piece = new Piece(3),
               downPiece = fps / level;
               if( piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))){
                   if(piece.y > 0) {
-                      board.match();
                       board.addCurrentPiece(piece);
+                      board.match();
                       piece.newRocks();
                       piece.x = piece.INITIAL_X_POSITION;
                       piece.y = piece.INITIAL_Y_POSITION;

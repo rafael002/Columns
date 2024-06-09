@@ -125,6 +125,14 @@ class Board {
             horizontal: [
                 {x: -1, y: 0},
                 {x: 1, y: 0}
+            ],
+            first_diagonal: [
+                {x: -1, y: -1},
+                {x: 1, y: 1}
+            ],
+            second_diagonal: [
+                {x: 1, y: -1},
+                {x: -1, y: 1}
             ]
         };
 
@@ -175,6 +183,14 @@ class Board {
         return matches;
     }
 
+    gravity() {
+        let updateBoard = true;
+
+        while(updateBoard) {
+            
+        }
+    }
+
     match() {
         let matches = [];
 
@@ -194,7 +210,7 @@ class Board {
         }
 
         for (const current of list) {
-            this.screenMap[current.y][current.x] = 9;
+            this.screenMap[current.y][current.x] = 0;
         }
 
         return matches.flat();

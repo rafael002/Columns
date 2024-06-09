@@ -27,7 +27,7 @@ class Piece{
   }
 
   newRocks(){
-   for( let i = 0; i < this.size; i++ ){
+   for( let i = 0; i < this.size; i++ ) {
      this.rocks[i] = Math.floor(Math.random() * 8) + 1 ;
    }
   }
