@@ -187,9 +187,31 @@ class Board {
         let updateBoard = true;
 
         while(updateBoard) {
-            
+            updateBoard = false;
+
+            for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
+                for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
+                    if(
+                        vertical > this.screenMap.length &&
+                        this.screenMap[vertical][horizontal] != 0 &&
+                        this.screenMap[vertical + 1][horizontal] == 0
+                    ) {
+                        let updateBoard = true;
+                        console.log("preso");
+                        this.screenMap[vertical + 1][horizontal] = this.screenMap[vertical][horizontal];
+                        this.screenMap[vertical][horizontal] = 0;
+                    }
+                }
+            }
         }
     }
+
+    checkChained() { // TODO melhorar nome
+        while(this.match()) {
+            this.gravity();
+        }
+    }
+
 
     match() {
         let matches = [];
@@ -213,6 +235,6 @@ class Board {
             this.screenMap[current.y][current.x] = 0;
         }
 
-        return matches.flat();
+        return list.length > 0 ? true : false;
     }
 }

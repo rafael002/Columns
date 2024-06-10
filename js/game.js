@@ -22,7 +22,7 @@ var piece = new Piece(3),
               if( piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))){
                   if(piece.y > 0) {
                       board.addCurrentPiece(piece);
-                      board.match();
+                      board.checkChained();
                       piece.newRocks();
                       piece.x = piece.INITIAL_X_POSITION;
                       piece.y = piece.INITIAL_Y_POSITION;
