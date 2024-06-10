@@ -204,7 +204,7 @@ class Board {
         }
     }
 
-    checkChained() { // TODO melhorar nome
+    checkChained() {
         while(this.match()) {
             this.gravity();
         }
