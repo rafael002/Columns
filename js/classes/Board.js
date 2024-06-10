@@ -116,7 +116,6 @@ class Board {
     }
 
     #walk(vertical, horizontal) {
-        // movimento em cruz, sem diagonais
         const axies = {
             vertical: [
                 {x: 0, y: -1},
@@ -192,7 +191,7 @@ class Board {
             for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
                 for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
                     if(
-                        vertical > this.screenMap.length &&
+                        vertical < this.screenMap.length &&
                         this.screenMap[vertical][horizontal] != 0 &&
                         this.screenMap[vertical + 1][horizontal] == 0
                     ) {
