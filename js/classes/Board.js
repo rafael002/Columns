@@ -196,7 +196,6 @@ class Board {
                         this.screenMap[vertical + 1][horizontal] == 0
                     ) {
                         let updateBoard = true;
-                        console.log("preso");
                         this.screenMap[vertical + 1][horizontal] = this.screenMap[vertical][horizontal];
                         this.screenMap[vertical][horizontal] = 0;
                     }
