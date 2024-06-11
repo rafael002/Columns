@@ -190,12 +190,12 @@ class Board {
 
             for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
                 for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
-                    if(
-                        vertical < this.screenMap.length &&
+                    if (
+                        vertical < this.screenMap.length - 1 &&
                         this.screenMap[vertical][horizontal] != 0 &&
                         this.screenMap[vertical + 1][horizontal] == 0
                     ) {
-                        let updateBoard = true;
+                        updateBoard = true;
                         this.screenMap[vertical + 1][horizontal] = this.screenMap[vertical][horizontal];
                         this.screenMap[vertical][horizontal] = 0;
                     }
