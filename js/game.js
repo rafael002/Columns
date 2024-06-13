@@ -1,47 +1,50 @@
-var piece = new Piece(3),
-element = document.getElementById("p1"),
-board = new Board(6, 16),
-screen = new Screen(element),
-fps = 5,
-level = 1,
+;(function () {
+    var piece = new Piece(3),
+        element = document.getElementById("p1"),
+        board = new Board(6, 16),
+        screen = new Screen(element),
+        fps = 5,
+        level = 1,
+        gameOver = false;
 
-function gameLoop() {
-    board.addCurrentPiece(piece);
-    screen.refresh(board);
+    // screen updates
+    window.requestAnimationFrame(screenUpdate);
 
-    board.removeCurrentPiece(piece);
-    if(board.checkCollision(0, 1, piece)) {
-        piece.downPiece();
+    function screenUpdate() {
+        board.addCurrentPiece(piece);
+        screen.refresh(board);
+        board.removeCurrentPiece(piece);
+        window.requestAnimationFrame(screenUpdate);
+    };
+
+    // game update
+    window.setInterval(gameUpdate, 500);
+
+    function gameUpdate() {
+      if (gameOver != true) {
+        if (board.checkCollision(0, 1, piece))
+          piece.downPiece();
+  
+        if (piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))) {
+            if(piece.y > 0) {
+                board.addCurrentPiece(piece);
+                board.checkChained();
+                piece.reset();
+            }
+            else {
+                this.alert("game over");
+                gameOver = true;
+                return false;
+            }
+        }
+      }
     }
 
-    if( piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))){
-        if(piece.y > 0) {
+     // controls listener
+     window.addEventListener('keydown', function(event) {
+        if (board.control(event, piece)) {
             board.addCurrentPiece(piece);
-            board.checkChained();
-            piece.newRocks();
-            piece.x = piece.INITIAL_X_POSITION;
-            piece.y = piece.INITIAL_Y_POSITION;
+            piece.reset();   
         }
-    else{
-        this.alert("game over");
-        return false;
-        }
-    }
-
-    window.requestAnimationFrame(gameLoop);
-};
-
-// controls listener
-window.addEventListener('keydown', function(event) {
-    let resetPiece = board.control(event, piece);
-    if(resetPiece){
-        if(piece.y > 2){
-            board.addCurrentPiece(piece);
-            piece.newRocks();
-            piece.x = piece.INITIAL_X_POSITION;
-            piece.y = piece.INITIAL_Y_POSITION;
-        }
-    }
-}, false);
-
-window.requestAnimationFrame(gameLoop);
+    }, false);
+})();

@@ -3,9 +3,13 @@ class Piece{
     this.rocks = [];
     this.INITIAL_X_POSITION = 3;
     this.INITIAL_Y_POSITION = 0;
+    this.size = numberOfRocks;
+    this.reset();
+  }
+
+  reset() {
     this.x = this.INITIAL_X_POSITION;
     this.y = this.INITIAL_Y_POSITION;
-    this.size = numberOfRocks;
     this.newRocks();
   }
 
