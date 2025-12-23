@@ -12,7 +12,11 @@ class Board {
      */
     addCurrentPiece(piece){
         for(let i = 0; i < piece.size; i++){
-            this.screenMap[piece.y + i][piece.x] = piece.rocks[i];
+            const row = piece.y + i;
+            // Verifica se está dentro dos limites do tabuleiro
+            if (row >= 0 && row < this.ysize && piece.x >= 0 && piece.x < this.xsize) {
+                this.screenMap[row][piece.x] = piece.rocks[i];
+            }
         }
     }
 
@@ -21,7 +25,11 @@ class Board {
      */
     removeCurrentPiece(piece){
         for(let i = 0; i < piece.size; i++){
-            this.screenMap[piece.y + i][piece.x] = 0;
+            const row = piece.y + i;
+            // Verifica se está dentro dos limites do tabuleiro
+            if (row >= 0 && row < this.ysize && piece.x >= 0 && piece.x < this.xsize) {
+                this.screenMap[row][piece.x] = CONFIG.EMPTY_CELL;
+            }
         }
     }
 
@@ -40,7 +48,7 @@ class Board {
         // set the initial values
         for(let i = 0; i < this.ysize; i++) {
             for(let j = 0; j < this.xsize; j++) {
-            this.screenMap[i][j] = 0;
+            this.screenMap[i][j] = CONFIG.EMPTY_CELL;
             }
         }
     }
@@ -51,159 +59,157 @@ class Board {
      * directions x = 1 | y = 0
      */             
     checkCollision(isHorizontalMoviment, speed, piece) {
-        // Checking borad limit collisions
-        if ( !isHorizontalMoviment )
-            if( piece.y === 13 && speed === 1 )
-                return false;
+        // Calcula a nova posição
+        let x = isHorizontalMoviment ? piece.x + speed : piece.x;
+        let y = isHorizontalMoviment ? piece.y : piece.y + speed;
 
-        if ( piece.x === 0 && speed === -1 )
+        // Verifica limites do tabuleiro
+        if (x < 0 || x >= this.xsize) {
             return false;
+        }
 
-        if ( piece.x === 6 && speed === 1 )
+        if (y < 0 || y + piece.size > this.ysize) {
             return false;
+        }
 
-        // Checking map collisions
-        let x = isHorizontalMoviment ? piece.x + speed : piece.x,
-            y = isHorizontalMoviment ? piece.y : piece.y + speed;
-        
-        if( !isHorizontalMoviment ) // vertical
-            if(this.screenMap[y+ piece.size - 1][x] !== 0)
-                return false;
+        // Verifica colisões com outras peças
+        for (let i = 0; i < piece.size; i++) {
+            const checkY = y + i;
+            if (checkY >= 0 && checkY < this.ysize) {
+                if (this.screenMap[checkY][x] !== CONFIG.EMPTY_CELL) {
+                    return false;
+                }
+            }
+        }
 
-        for( let i = 0; i < piece.size; i++ )
-            if( this.screenMap[y+i][x] !== 0 )
-                return false;
-
-        // remove original piece of position
+        // Remove a peça da posição original antes de mover
         this.removeCurrentPiece(piece);
         return true;
     }
 
-  /**
-  * Changes the position of piece in the screen
-  * return false if another piece is necessary
-  */
-  control(event, piece) {
-    switch(event.keyCode) {
-      case 32: // Shuffle
-          piece.shuffle();
-      break;
-      case 37: // Left
-        if(this.checkCollision( 1, -1, piece))
-          piece.walkLeft();
-      break;
-      case 39: // Right
-        if(this.checkCollision( 1, 1, piece)) 
-          piece.walkRight();
-      break;
-      case 40: // TOOO verify the next piece
-        if(this.checkCollision( 0, 1, piece))
-          piece.downPiece();
-      break;
-    }
-    return false;
-  }
-
+    /**
+     * Verifica se a posição está dentro do mapa
+     * Baseado no algoritmo Match otimizado
+     */
     #isInsideMap(vertical, horizontal) {
         try {
-            return ![
-                horizontal >= 0, horizontal < this.screenMap[vertical].length,
-                vertical >= 0, vertical < this.screenMap.length,
-            ].includes(false);
+            return horizontal >= 0 && 
+                   horizontal < this.screenMap[vertical].length &&
+                   vertical >= 0 && 
+                   vertical < this.screenMap.length;
         } catch (error) {
             return false;
         }
     }
 
+    /**
+     * Procura matches em todas as direções a partir de uma posição
+     * Algoritmo otimizado baseado no Match class, com diagonais incluídas
+     * 
+     * Movimentos:
+     *      -1 | 0 | 1           0 | 0 | 0  
+     *      _________            _________
+     * X -> -1 | 0 | 1     Y -> -1 | 0 | 1
+     *      _________            _________
+     *      -1 | 0 | 1          -1 | 0 | 1
+     */
     #walk(vertical, horizontal) {
+        // Direções: vertical, horizontal e diagonais
         const axies = {
             vertical: [
-                {x: 0, y: -1},
-                {x: 0, y: 1}
+                {x: 0, y: -1},  // cima
+                {x: 0, y: 1}    // baixo
             ],
             horizontal: [
-                {x: -1, y: 0},
-                {x: 1, y: 0}
+                {x: -1, y: 0},  // esquerda
+                {x: 1, y: 0}    // direita
             ],
             first_diagonal: [
-                {x: -1, y: -1},
-                {x: 1, y: 1}
+                {x: -1, y: -1}, // diagonal esquerda-cima
+                {x: 1, y: 1}    // diagonal direita-baixo
             ],
             second_diagonal: [
-                {x: 1, y: -1},
-                {x: -1, y: 1}
+                {x: 1, y: -1},  // diagonal direita-cima
+                {x: -1, y: 1}   // diagonal esquerda-baixo
             ]
         };
 
         let matches = [];
-        if (this.#isInsideMap(vertical, horizontal)) {
-            // antes de andar, pegar o valor atual
-            const value = this.screenMap[vertical][horizontal];
+        
+        if (!this.#isInsideMap(vertical, horizontal)) {
+            return matches;
+        }
 
-            if (value != 0) {
-                let walkV = 0;
-                let walkH = 0;
-                
-                for (const [key, object] of Object.entries(axies)) {
-                    for (const current of object) { // {x: 0, y: -1} exemplo
+        // Antes de andar, pegar o valor atual
+        const value = this.screenMap[vertical][horizontal];
 
-                    // criando com o bloco inicial
-                    let currentMatch = [{x: horizontal, y: vertical}];
+        if (value === CONFIG.EMPTY_CELL || value === CONFIG.MARKED_CELL) {
+            return matches;
+        }
 
-                    // setanndo o ponto de partida
-                    walkV = vertical;
-                    walkH = horizontal;
+        // Procura matches em cada direção
+        for (const [key, directions] of Object.entries(axies)) {
+            for (const direction of directions) {
+                // Criando com o bloco inicial
+                let currentMatch = [{x: horizontal, y: vertical}];
 
-                    let continuar = true;
-                    
-                    do {
-                        // adicionando a cada iteracao, fará com que a procure caminhe
-                        walkH = walkH + current.x;
-                        walkV = walkV + current.y;
+                // Setando o ponto de partida
+                let walkH = horizontal;
+                let walkV = vertical;
 
-                        if (this.#isInsideMap(walkV, walkH) &&
-                            (value == this.screenMap[walkV][walkH]) &&
-                            this.screenMap[walkV][walkH] != 0 &&
-                            this.screenMap[walkV][walkH] != 9
-                            ) { 
-                            currentMatch.push({x: walkH, y: walkV});
-                        } else {
-                            continuar = false;
-                        }
-                    } while (continuar);
-                        if (currentMatch.length > 2) {
-                            matches = matches.concat(currentMatch);
-                        }
-                        currentMatch = [];
+                // Caminha na direção até encontrar um valor diferente
+                while (true) {
+                    walkH += direction.x;
+                    walkV += direction.y;
+
+                    if (this.#isInsideMap(walkV, walkH) &&
+                        this.screenMap[walkV][walkH] === value &&
+                        this.screenMap[walkV][walkH] !== CONFIG.EMPTY_CELL &&
+                        this.screenMap[walkV][walkH] !== CONFIG.MARKED_CELL) {
+                        currentMatch.push({x: walkH, y: walkV});
+                    } else {
+                        break;
                     }
                 }
-            } 
+
+                // Se encontrou match válido (3 ou mais), adiciona à lista
+                if (currentMatch.length >= CONFIG.MIN_MATCH_SIZE) {
+                    matches = matches.concat(currentMatch);
+                }
+            }
         }
+
         return matches;
     }
 
+    /**
+     * Aplica gravidade - faz as peças caírem
+     * Otimizado: percorre de baixo para cima (mais eficiente)
+     */
     gravity() {
-        let updateBoard = true;
+        let hasChanged = true;
 
-        while(updateBoard) {
-            updateBoard = false;
+        while(hasChanged) {
+            hasChanged = false;
 
-            for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
-                for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
-                    if (
-                        vertical < this.screenMap.length - 1 &&
-                        this.screenMap[vertical][horizontal] != 0 &&
-                        this.screenMap[vertical + 1][horizontal] == 0
-                    ) {
-                        updateBoard = true;
+            // Percorre de baixo para cima (mais eficiente)
+            for (let vertical = this.ysize - 2; vertical >= 0; vertical--) {
+                for (let horizontal = 0; horizontal < this.xsize; horizontal++) {
+                    if (this.screenMap[vertical][horizontal] !== CONFIG.EMPTY_CELL &&
+                        this.screenMap[vertical + 1][horizontal] === CONFIG.EMPTY_CELL) {
                         this.screenMap[vertical + 1][horizontal] = this.screenMap[vertical][horizontal];
-                        this.screenMap[vertical][horizontal] = 0;
+                        this.screenMap[vertical][horizontal] = CONFIG.EMPTY_CELL;
+                        hasChanged = true;
                     }
                 }
             }
         }
     }
 
+    /**
+     * Verifica e processa matches em cadeia (match + gravidade repetido)
+     * Integração correta: após cada match, aplica gravidade e verifica novamente
+     */
     checkChained() {
         while(this.match()) {
             this.gravity();
@@ -211,28 +217,41 @@ class Board {
     }
 
 
+    /**
+     * Procura e remove matches do tabuleiro
+     * Algoritmo otimizado baseado no Match class
+     * @returns {boolean} true se encontrou matches
+     */
     match() {
-        let matches = [];
+        let allMatches = [];
 
+        // Procura matches em todas as posições do tabuleiro
         for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
             for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
-                let m = this.#walk(vertical, horizontal, this.screenMap);
-                if (m.length > 0) {
-                    matches.push(m);
+                const matches = this.#walk(vertical, horizontal);
+                if (matches.length > 0) {
+                    allMatches.push(...matches);
                 }
             }
         }
 
-        let list = matches.flat();
+        // Remove duplicatas (um bloco pode estar em múltiplos matches)
+        const uniqueMatches = Array.from(
+            new Set(allMatches.map(m => `${m.x},${m.y}`))
+        ).map(str => {
+            const [x, y] = str.split(',').map(Number);
+            return {x, y};
+        });
 
-        if (list.length > 0) {
-            console.log(list);
+        // Remove os matches do tabuleiro
+        if (uniqueMatches.length > 0) {
+            console.log(`Matches encontrados: ${uniqueMatches.length}`, uniqueMatches);
+            uniqueMatches.forEach(match => {
+                this.screenMap[match.y][match.x] = CONFIG.EMPTY_CELL;
+            });
+            return true;
         }
 
-        for (const current of list) {
-            this.screenMap[current.y][current.x] = 0;
-        }
-
-        return list.length > 0 ? true : false;
+        return false;
     }
 }

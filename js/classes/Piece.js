@@ -1,8 +1,8 @@
-class Piece{
-  constructor(numberOfRocks){
+class Piece {
+  constructor(numberOfRocks = CONFIG.PIECE_SIZE) {
     this.rocks = [];
-    this.INITIAL_X_POSITION = 3;
-    this.INITIAL_Y_POSITION = 0;
+    this.INITIAL_X_POSITION = CONFIG.INITIAL_X_POSITION;
+    this.INITIAL_Y_POSITION = CONFIG.INITIAL_Y_POSITION;
     this.size = numberOfRocks;
     this.reset();
   }
@@ -26,13 +26,15 @@ class Piece{
   }
 
   shuffle() {
-    let lastRock = this.rocks.pop();
-    this.rocks.unshift(lastRock);
+    if (this.rocks.length > 1) {
+      const lastRock = this.rocks.pop();
+      this.rocks.unshift(lastRock);
+    }
   }
 
-  newRocks(){
-   for( let i = 0; i < this.size; i++ ) {
-     this.rocks[i] = Math.floor(Math.random() * 8) + 1 ;
-   }
+  newRocks() {
+    for (let i = 0; i < this.size; i++) {
+      this.rocks[i] = getRandomColor();
+    }
   }
 }

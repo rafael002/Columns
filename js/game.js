@@ -1,50 +1,28 @@
-;(function () {
-    var piece = new Piece(3),
-        element = document.getElementById("p1"),
-        board = new Board(6, 16),
-        screen = new Screen(element),
-        fps = 5,
-        level = 1,
-        gameOver = false;
+(function() {
+  const canvas = document.getElementById('p1');
+  if (!canvas) {
+    console.error('Canvas element not found!');
+    return;
+  }
 
-    // screen updates
-    window.requestAnimationFrame(screenUpdate);
+  // Verifica se as dependências estão carregadas
+  if (typeof CONFIG === 'undefined') {
+    console.error('CONFIG não está definido! Verifique se constants.js está carregado.');
+    return;
+  }
 
-    function screenUpdate() {
-        board.addCurrentPiece(piece);
-        screen.refresh(board);
-        board.removeCurrentPiece(piece);
-        window.requestAnimationFrame(screenUpdate);
-    };
+  if (typeof Board === 'undefined' || typeof Piece === 'undefined' || typeof Screen === 'undefined') {
+    console.error('Classes não estão definidas! Verifique se os scripts estão carregados.');
+    return;
+  }
 
-    // game update
-    window.setInterval(gameUpdate, 500);
-
-    function gameUpdate() {
-      if (gameOver != true) {
-        if (board.checkCollision(0, 1, piece))
-          piece.downPiece();
+  console.log('Iniciando jogo...');
   
-        if (piece.y === (screen.ysize -3) || !(board.checkCollision( 0, 1, piece))) {
-            if(piece.y > 0) {
-                board.addCurrentPiece(piece);
-                board.checkChained();
-                piece.reset();
-            }
-            else {
-                this.alert("game over");
-                gameOver = true;
-                return false;
-            }
-        }
-      }
-    }
-
-     // controls listener
-     window.addEventListener('keydown', function(event) {
-        if (board.control(event, piece)) {
-            board.addCurrentPiece(piece);
-            piece.reset();   
-        }
-    }, false);
+  // Inicia o jogo
+  const game = new Game(canvas);
+  
+  // Expõe o jogo globalmente para debug (opcional)
+  window.game = game;
+  
+  console.log('Jogo iniciado!', game);
 })();
