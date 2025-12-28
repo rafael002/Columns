@@ -14,7 +14,7 @@
   if (typeof Board === 'undefined' || typeof Piece === 'undefined' || typeof Screen === 'undefined') {
     console.error('Classes não estão definidas! Verifique se os scripts estão carregados.');
     return;
-  }
+            }
 
   console.log('Iniciando jogo...');
   

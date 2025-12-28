@@ -7,14 +7,28 @@
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-  <canvas id='p1' width="250" height="542"></canvas>
+  <div id="game-container">
+    <canvas id='p1' width="250" height="542"></canvas>
+    <canvas id='preview-canvas' width="60" height="150"></canvas>
+    <div id="debug-controls">
+      <label>
+        <input type="checkbox" id="debug-checkbox" checked>
+        Debug Mode
+      </label>
+      <button id="continue-button" style="display: none;">Continue</button>
+    </div>
+  </div>
   <!-- <canvas id='p2'></canvas> -->
   
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
+  <script src="js/utils/interpolation.js"></script>
+  <script src="js/classes/ResourceManager.js"></script>
+  <script src="js/classes/SpriteManager.js"></script>
   <script src="js/classes/Piece.js"></script>
   <script src="js/classes/Board.js"></script>
   <script src="js/classes/Screen.js"></script>
+  <script src="js/classes/GemBreakEffect.js"></script>
   <script src="js/classes/InputHandler.js"></script>
   <script src="js/classes/Game.js"></script>
   <script src="js/game.js"></script>

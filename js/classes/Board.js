@@ -4,6 +4,7 @@ class Board {
         this.analize = false;
         this.xsize = xsize;
         this.ysize = ysize;
+        this.markedGems = []; // Array de gemas marcadas para quebra (com informações de cor/valor)
         this.resetBoard();
     }
 
@@ -16,6 +17,8 @@ class Board {
             // Verifica se está dentro dos limites do tabuleiro
             if (row >= 0 && row < this.ysize && piece.x >= 0 && piece.x < this.xsize) {
                 this.screenMap[row][piece.x] = piece.rocks[i];
+                // Inicializa posição visual igual à lógica quando a peça é adicionada
+                this.visualMap[row][piece.x] = row;
             }
         }
     }
@@ -39,16 +42,21 @@ class Board {
     resetBoard() {
         // creating the main matrix
         this.screenMap = [];
+        
+        // Mapa visual para interpolação (armazena posição Y visual de cada célula)
+        this.visualMap = [];
 
         // create the second dimension of matrix
         for(let i = 0; i < this.ysize; i++) {
             this.screenMap[i] = [];
+            this.visualMap[i] = [];
         }
 
         // set the initial values
         for(let i = 0; i < this.ysize; i++) {
             for(let j = 0; j < this.xsize; j++) {
-            this.screenMap[i][j] = CONFIG.EMPTY_CELL;
+                this.screenMap[i][j] = CONFIG.EMPTY_CELL;
+                this.visualMap[i][j] = i; // Posição visual inicial = posição lógica
             }
         }
     }
@@ -77,7 +85,7 @@ class Board {
             const checkY = y + i;
             if (checkY >= 0 && checkY < this.ysize) {
                 if (this.screenMap[checkY][x] !== CONFIG.EMPTY_CELL) {
-                    return false;
+                return false;
                 }
             }
         }
@@ -87,7 +95,7 @@ class Board {
         return true;
     }
 
-    /**
+  /**
      * Verifica se a posição está dentro do mapa
      * Baseado no algoritmo Match otimizado
      */
@@ -112,9 +120,12 @@ class Board {
      * X -> -1 | 0 | 1     Y -> -1 | 0 | 1
      *      _________            _________
      *      -1 | 0 | 1          -1 | 0 | 1
+     * 
+     * IMPORTANTE: Combina as direções opostas de cada eixo para detectar matches completos
      */
     #walk(vertical, horizontal) {
         // Direções: vertical, horizontal e diagonais
+        // Cada eixo tem duas direções opostas que devem ser combinadas
         const axies = {
             vertical: [
                 {x: 0, y: -1},  // cima
@@ -140,20 +151,20 @@ class Board {
             return matches;
         }
 
-        // Antes de andar, pegar o valor atual
         const value = this.screenMap[vertical][horizontal];
 
         if (value === CONFIG.EMPTY_CELL || value === CONFIG.MARKED_CELL) {
             return matches;
         }
 
-        // Procura matches em cada direção
+        // Procura matches em cada eixo (combinando as duas direções opostas)
         for (const [key, directions] of Object.entries(axies)) {
-            for (const direction of directions) {
-                // Criando com o bloco inicial
-                let currentMatch = [{x: horizontal, y: vertical}];
+            // Cria um match combinando ambas as direções do eixo
+            // Começa com a célula inicial
+            let currentMatch = [{x: horizontal, y: vertical}];
 
-                // Setando o ponto de partida
+            // Caminha em ambas as direções do eixo e combina os resultados
+            for (const direction of directions) {
                 let walkH = horizontal;
                 let walkV = vertical;
 
@@ -171,11 +182,11 @@ class Board {
                         break;
                     }
                 }
+            }
 
-                // Se encontrou match válido (3 ou mais), adiciona à lista
-                if (currentMatch.length >= CONFIG.MIN_MATCH_SIZE) {
-                    matches = matches.concat(currentMatch);
-                }
+            // Se encontrou match válido (3 ou mais), adiciona à lista
+            if (currentMatch.length >= CONFIG.MIN_MATCH_SIZE) {
+                matches = matches.concat(currentMatch);
             }
         }
 
@@ -185,9 +196,20 @@ class Board {
     /**
      * Aplica gravidade - faz as peças caírem
      * Otimizado: percorre de baixo para cima (mais eficiente)
+     * Atualiza também o visualMap para interpolação suave
      */
     gravity() {
         let hasChanged = true;
+
+        // Salva as posições visuais ANTES de aplicar gravidade
+        // Isso garante que células que caem múltiplas posições mantenham sua posição visual original
+        const snapshotVisualMap = [];
+        for (let row = 0; row < this.ysize; row++) {
+            snapshotVisualMap[row] = [];
+            for (let col = 0; col < this.xsize; col++) {
+                snapshotVisualMap[row][col] = this.visualMap[row][col];
+            }
+        }
 
         while(hasChanged) {
             hasChanged = false;
@@ -197,8 +219,30 @@ class Board {
                 for (let horizontal = 0; horizontal < this.xsize; horizontal++) {
                     if (this.screenMap[vertical][horizontal] !== CONFIG.EMPTY_CELL &&
                         this.screenMap[vertical + 1][horizontal] === CONFIG.EMPTY_CELL) {
+                        // Move a célula logicamente
                         this.screenMap[vertical + 1][horizontal] = this.screenMap[vertical][horizontal];
                         this.screenMap[vertical][horizontal] = CONFIG.EMPTY_CELL;
+                        
+                        // Atualiza posição visual para interpolação suave
+                        // Usa a posição visual do SNAPSHOT (antes da gravidade) para garantir animação suave
+                        // Se a célula de destino já tinha uma posição visual diferente, mantém a mais antiga
+                        const snapshotVisualY = snapshotVisualMap[vertical][horizontal];
+                        const currentDestVisualY = this.visualMap[vertical + 1][horizontal];
+                        
+                        // Se a célula de destino estava vazia (visualY == posição lógica), usa o snapshot
+                        // Caso contrário, mantém a posição visual mais antiga (menor valor)
+                        if (Math.abs(currentDestVisualY - (vertical + 1)) < 0.01) {
+                            // Célula de destino estava vazia, usa a posição visual do snapshot
+                            this.visualMap[vertical + 1][horizontal] = snapshotVisualY;
+                        } else {
+                            // Célula de destino já tinha uma posição visual (pode estar caindo também)
+                            // Mantém a posição visual mais antiga (menor valor) para animação suave
+                            this.visualMap[vertical + 1][horizontal] = Math.min(snapshotVisualY, currentDestVisualY);
+                        }
+                        
+                        // Célula vazia volta à posição lógica
+                        this.visualMap[vertical][horizontal] = vertical;
+                        
                         hasChanged = true;
                     }
                 }
@@ -207,22 +251,68 @@ class Board {
     }
 
     /**
-     * Verifica e processa matches em cadeia (match + gravidade repetido)
-     * Integração correta: após cada match, aplica gravidade e verifica novamente
+     * Atualiza as posições visuais de todas as células do tabuleiro
+     * Interpola suavemente em direção às posições lógicas
+     * Deve ser chamado a cada frame de renderização
      */
-    checkChained() {
-        while(this.match()) {
-            this.gravity();
+    updateVisualPositions() {
+        for (let row = 0; row < this.ysize; row++) {
+            for (let col = 0; col < this.xsize; col++) {
+                // Interpola a posição visual Y em direção à posição lógica (row)
+                this.visualMap[row][col] = interpolate(this.visualMap[row][col], row);
+            }
         }
     }
 
+    /**
+     * Verifica se todas as posições visuais terminaram de interpolar (gravidade visual completa)
+     * Retorna true quando todas as células estão na posição lógica (dentro do threshold)
+     */
+    hasVisualGravityFinished() {
+        const threshold = 0.01;
+        for (let row = 0; row < this.ysize; row++) {
+            for (let col = 0; col < this.xsize; col++) {
+                if (this.screenMap[row] && this.screenMap[row][col] !== undefined) {
+                    const value = this.screenMap[row][col];
+                    // Apenas verifica células com conteúdo (não vazias)
+                    if (value !== CONFIG.EMPTY_CELL && value !== CONFIG.MARKED_CELL) {
+                        const visualY = this.visualMap && this.visualMap[row] ? this.visualMap[row][col] : row;
+                        const diff = Math.abs(visualY - row);
+                        // Se alguma célula ainda não terminou de interpolar, retorna false
+                        if (diff > threshold) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
     /**
-     * Procura e remove matches do tabuleiro
-     * Algoritmo otimizado baseado no Match class
-     * @returns {boolean} true se encontrou matches
+     * Verifica e processa matches em cadeia (match + gravidade repetido)
+     * Integração correta: após cada match, aplica gravidade e verifica novamente
+     * NOTA: Esta função agora apenas marca matches, não remove imediatamente
+     * @param {boolean} markCells - Se true, marca as células como MARKED_CELL. Se false, apenas retorna as gemas encontradas
+     * @returns {Array} Array com todas as pedras marcadas na primeira cadeia, ou null
      */
-    match() {
+    checkChained(markCells = true) {
+        // Apenas verifica a primeira cadeia de matches (marcação)
+        // A remoção e gravidade serão feitas após a animação
+        return this.match(markCells);
+        }
+
+
+    /**
+     * Procura matches do tabuleiro e marca para quebra (não remove imediatamente)
+     * Algoritmo otimizado baseado no Match class
+     * @param {boolean} markCells - Se true, marca as células como MARKED_CELL. Se false, apenas retorna as gemas encontradas
+     * @returns {Array} Array de objetos {x, y, value, color, visualY} com as pedras marcadas, ou null se não houver matches
+     */
+    match(markCells = true) {
+        // Limpa gemas marcadas anteriores
+        this.markedGems = [];
+        
         let allMatches = [];
 
         // Procura matches em todas as posições do tabuleiro
@@ -243,15 +333,54 @@ class Board {
             return {x, y};
         });
 
-        // Remove os matches do tabuleiro
+        // Coleta informações das pedras antes de marcá-las
+        const markedGems = [];
+
+        // Marca os matches para quebra (não remove ainda)
         if (uniqueMatches.length > 0) {
             console.log(`Matches encontrados: ${uniqueMatches.length}`, uniqueMatches);
             uniqueMatches.forEach(match => {
-                this.screenMap[match.y][match.x] = CONFIG.EMPTY_CELL;
+                const value = this.screenMap[match.y][match.x];
+                if (value !== CONFIG.EMPTY_CELL && value !== CONFIG.MARKED_CELL) {
+                    // Obtém posição visual Y antes de marcar
+                    const visualY = this.visualMap && this.visualMap[match.y] ? 
+                                   this.visualMap[match.y][match.x] : match.y;
+                    
+                    const gemInfo = {
+                        x: match.x,
+                        y: match.y,
+                        visualY: visualY, // Salva posição visual
+                        value: value,
+                        color: getColor(value)
+                    };
+                    
+                    markedGems.push(gemInfo);
+                    this.markedGems.push(gemInfo); // Armazena para renderização
+                    
+                    // Marca a célula apenas se markCells for true
+                    if (markCells) {
+                        this.screenMap[match.y][match.x] = CONFIG.MARKED_CELL;
+                    }
+        }
             });
-            return true;
+            return markedGems; // Retorna array de pedras marcadas
         }
 
-        return false;
+        return null; // Nenhum match encontrado
+    }
+    
+    /**
+     * Remove todas as células marcadas (chamado após animação)
+     */
+    removeMarkedCells() {
+        for (let row = 0; row < this.ysize; row++) {
+            for (let col = 0; col < this.xsize; col++) {
+                if (this.screenMap[row][col] === CONFIG.MARKED_CELL) {
+                    this.screenMap[row][col] = CONFIG.EMPTY_CELL;
+                }
+            }
+        }
+        // Limpa gemas marcadas
+        this.markedGems = [];
     }
 }

@@ -1,0 +1,61 @@
+{
+  "sprites": {
+    "gems": {
+      "path": "sprites/gems.png",
+      "type": "spriteSheet",
+      "startX": 0,
+      "startY": 120,
+      "spriteWidth": 90,
+      "spriteHeight": 90,
+      "horizontalIntervals": [30, 28, 27, 28, 28],
+      "frameIntervals": [28, 28, 28, 28, 28, 28, 28, 28],
+      "sheetWidth": 579,
+      "sheetHeight": 90,
+      "numSprites": 6,
+      "animationFPS": 10,
+      "animationFrames": 4
+    },
+    "explosion": {
+      "path": "sprites/explosion.png",
+      "type": "spriteSheet",
+      "startX": 310,
+      "startY": 20,
+      "spriteWidth": 131,
+      "spriteHeight": 131,
+      "horizontalIntervals": [],
+      "frameIntervals": [12, 12, 12, 12, 12, 12, 12, 12],
+      "sheetWidth": 761,
+      "sheetHeight": 1406,
+      "numSprites": 1,
+      "animationFPS": 120,
+      "animationFrames": 9
+    }
+  },
+  "audio": {
+    "placePiece": {
+      "path": "audio/place_piece.mp3",
+      "type": "sound",
+      "volume": 0.5,
+      "loop": false
+    },
+    "match": {
+      "path": "audio/match.mp3",
+      "type": "sound",
+      "volume": 0.7,
+      "loop": false
+    },
+    "backgroundMusic": {
+      "path": "audio/background.mp3",
+      "type": "music",
+      "volume": 0.3,
+      "loop": true
+    }
+  },
+  "images": {
+    "background": {
+      "path": "images/background.png",
+      "type": "image"
+    }
+  }
+}
+

@@ -11,7 +11,8 @@ class InputHandler {
   }
 
   handleKeyPress(event) {
-    if (this.game.isGameOver()) return;
+    // Desabilita controle se o jogo acabou ou se há animações/matches em andamento
+    if (!this.game.canPlayerControl()) return;
 
     const piece = this.game.getCurrentPiece();
     const board = this.game.getBoard();
