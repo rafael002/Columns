@@ -54,6 +54,7 @@ body {
 }
 
 #score::before { content: "SCORE"; }
+#gems::before  { content: "GEMS"; }
 #level::before { content: "LEVEL"; }
 
 #main-area {

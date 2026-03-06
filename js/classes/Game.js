@@ -10,6 +10,7 @@ class Game {
 
     this.level = 1;
     this.score = 0;
+    this.gems = 0;
     this.gameOver = false;
     this.updateInterval = CONFIG.GAME_UPDATE_INTERVAL;
 
@@ -88,6 +89,7 @@ class Game {
           this.board.gravity();
           const marked = this.board.match();
           if (marked.length > 0) {
+            this._addGems(marked.length);
             this.explosionEffect.addEffects(marked);
           } else {
             this.isAnimating = false;
@@ -130,9 +132,15 @@ class Game {
   /**
    * Inicia a resolução de matches (com animação se disponível)
    */
+  _addGems(count) {
+    this.gems += count;
+    document.getElementById('gems').textContent = this.gems;
+  }
+
   _resolveChain() {
     const marked = this.board.match();
     if (marked.length > 0 && this.explosionEffect) {
+      this._addGems(marked.length);
       this.explosionEffect.addEffects(marked);
       this.isAnimating = true;
     } else {
@@ -237,6 +245,7 @@ class Game {
     this.nextPiece = new Piece();
     this.level = 1;
     this.score = 0;
+    this.gems = 0;
     this.gameOver = false;
     this.isAnimating = false;
     this.isGameOverAnimating = false;
@@ -244,6 +253,7 @@ class Game {
 
     document.getElementById('game-over')?.classList.remove('visible');
     document.getElementById('score').textContent = 0;
+    document.getElementById('gems').textContent = 0;
     this.screen.clearPreview();
     this.screen.refreshPreview(this.nextPiece);
   }
