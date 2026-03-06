@@ -81,6 +81,9 @@ class Game {
             this.piece.reset();
           }
         }
+
+        this.screen.refresh(this.board, null);
+        return;
       }
 
       this.board.addCurrentPiece(this.piece);
