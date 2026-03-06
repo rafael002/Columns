@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Diogenes';
+  src: url('../fonts/DIOGENES.ttf') format('truetype');
+}
+
 :root {
   --c1: #e74c3c;
   --c2: #27ae60;
@@ -37,7 +42,7 @@ body {
   display: flex;
   gap: 24px;
   color: #fff;
-  font-family: monospace;
+  font-family: 'Diogenes', monospace;
   font-size: 18px;
 }
 
@@ -116,7 +121,7 @@ body {
   height: calc(13 * var(--cell-size) + 2px);
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
-  font-family: monospace;
+  font-family: 'Diogenes', monospace;
   font-size: 22px;
   flex-direction: column;
   align-items: center;
