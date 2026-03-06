@@ -156,7 +156,7 @@ class Game {
     }
     this.explosionEffect.addEffects(gems);
     this._gameOverRow--;
-    setTimeout(() => this._scheduleGameOverRow(), 200);
+    setTimeout(() => this._scheduleGameOverRow(), 50);
   }
 
   /**
