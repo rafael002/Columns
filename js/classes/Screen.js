@@ -122,6 +122,8 @@ class Screen {
 
     if (value === CONFIG.EMPTY_CELL || value === CONFIG.MARKED_CELL) {
       cell.classList.remove('has-gem');
+      cell.style.removeProperty('--sprite-x');
+      cell.style.removeProperty('--sprite-y');
       cell.dataset.value = value;
       return;
     }
