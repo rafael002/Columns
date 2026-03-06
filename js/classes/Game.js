@@ -12,6 +12,8 @@ class Game {
     this.updateInterval = CONFIG.GAME_UPDATE_INTERVAL;
 
     this.isAnimating = false;
+    this.isGameOverAnimating = false;
+    this._gameOverRow = -1;
     this.explosionEffect = null;
 
     fetch('js/config/resources.json')
@@ -53,6 +55,19 @@ class Game {
    */
   render() {
     try {
+      if (this.isGameOverAnimating && this.explosionEffect) {
+        this.explosionEffect.update();
+
+        if (this.explosionEffect.isDone()) {
+          this.board.removeMarkedCells();
+          this._gameOverRow--;
+          this._triggerGameOverRow();
+        }
+
+        this.screen.refresh(this.board, null);
+        return;
+      }
+
       if (this.isAnimating && this.explosionEffect) {
         this.explosionEffect.update();
 
@@ -81,7 +96,7 @@ class Game {
    * Atualiza a lógica do jogo
    */
   update() {
-    if (this.isAnimating) return;
+    if (this.isAnimating || this.isGameOverAnimating) return;
 
     if (this.board.checkCollision(0, 1, this.piece)) {
       this.piece.downPiece();
@@ -111,9 +126,45 @@ class Game {
   }
 
   /**
-   * Finaliza o jogo
+   * Inicia a animação de game over (varredura de baixo para cima)
    */
   endGame() {
+    if (!this.explosionEffect) {
+      this._finishGameOver();
+      return;
+    }
+    this.isGameOverAnimating = true;
+    this._gameOverRow = CONFIG.BOARD_HEIGHT - 1;
+    this._triggerGameOverRow();
+  }
+
+  /**
+   * Explode todas as gemas da linha atual e avança para a linha acima
+   */
+  _triggerGameOverRow() {
+    while (this._gameOverRow >= 0) {
+      const gems = [];
+      for (let col = 0; col < CONFIG.BOARD_WIDTH; col++) {
+        const val = this.board.screenMap[this._gameOverRow][col];
+        if (val !== CONFIG.EMPTY_CELL && val !== CONFIG.MARKED_CELL) {
+          gems.push({ col, row: this._gameOverRow, value: val });
+          this.board.screenMap[this._gameOverRow][col] = CONFIG.MARKED_CELL;
+        }
+      }
+      if (gems.length > 0) {
+        this.explosionEffect.addEffects(gems);
+        return; // aguarda a animação desta linha
+      }
+      this._gameOverRow--;
+    }
+    this._finishGameOver();
+  }
+
+  /**
+   * Conclui o game over após a animação
+   */
+  _finishGameOver() {
+    this.isGameOverAnimating = false;
     this.gameOver = true;
     const overlay = document.getElementById('game-over');
     if (overlay) {
