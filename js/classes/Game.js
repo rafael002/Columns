@@ -45,7 +45,7 @@ class Game {
     try {
       // Adiciona a peça atual temporariamente para renderização
       this.board.addCurrentPiece(this.piece);
-      this.screen.refresh(this.board);
+      this.screen.refresh(this.board, this.piece);
       // Remove a peça após renderização
       this.board.removeCurrentPiece(this.piece);
     } catch (error) {
