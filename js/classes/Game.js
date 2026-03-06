@@ -30,6 +30,8 @@ class Game {
         );
       });
 
+    document.getElementById('retry-btn')?.addEventListener('click', () => this.reset());
+
     this.startGameLoop();
     this.startUpdateLoop();
   }
@@ -233,6 +235,14 @@ class Game {
     this.level = 1;
     this.score = 0;
     this.gameOver = false;
+    this.isAnimating = false;
+    this.isGameOverAnimating = false;
+    this._gameOverRowsDone = false;
+
+    document.getElementById('game-over')?.classList.remove('visible');
+    document.getElementById('score').textContent = 0;
+    this.screen.clearPreview();
+    this.screen.refreshPreview(this.nextPiece);
   }
 }
 

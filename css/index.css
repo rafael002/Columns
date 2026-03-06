@@ -138,26 +138,59 @@ body {
   z-index: 5;
 }
 
-/* ── Game Over overlay — cobre apenas o tabuleiro ── */
+/* ── Game Over overlay ── */
 #game-over {
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  font-family: 'Diogenes', monospace;
-  font-size: 22px;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   z-index: 10;
-  text-align: center;
 }
 
 #game-over.visible {
   display: flex;
+}
+
+#game-over-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: #1a1a2e;
+  border: 2px solid #444;
+  padding: 24px 32px;
+  font-family: 'Diogenes', monospace;
+  color: #fff;
+  text-align: center;
+}
+
+#game-over-title {
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+#game-over-score {
+  font-size: 16px;
+  color: #aaa;
+}
+
+#retry-btn {
+  margin-top: 8px;
+  padding: 8px 24px;
+  font-family: 'Diogenes', monospace;
+  font-size: 18px;
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, color 0.15s;
+}
+
+#retry-btn:hover {
+  background: #fff;
+  color: #1a1a2e;
 }
