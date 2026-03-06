@@ -14,6 +14,7 @@ class Game {
     this.isAnimating = false;
     this.isGameOverAnimating = false;
     this._gameOverRow = -1;
+    this._gameOverRowsDone = false;
     this.explosionEffect = null;
 
     fetch('js/config/resources.json')
@@ -58,10 +59,8 @@ class Game {
       if (this.isGameOverAnimating && this.explosionEffect) {
         this.explosionEffect.update();
 
-        if (this.explosionEffect.isDone()) {
-          this.board.removeMarkedCells();
-          this._gameOverRow--;
-          this._triggerGameOverRow();
+        if (this._gameOverRowsDone && this.explosionEffect.isDone()) {
+          this._finishGameOver();
         }
 
         this.screen.refresh(this.board, null);
@@ -134,30 +133,30 @@ class Game {
       return;
     }
     this.isGameOverAnimating = true;
+    this._gameOverRowsDone = false;
     this._gameOverRow = CONFIG.BOARD_HEIGHT - 1;
-    this._triggerGameOverRow();
+    this._scheduleGameOverRow();
   }
 
   /**
-   * Explode todas as gemas da linha atual e avança para a linha acima
+   * Dispara a explosão da linha atual e agenda a próxima com 200ms de intervalo
    */
-  _triggerGameOverRow() {
-    while (this._gameOverRow >= 0) {
-      const gems = [];
-      for (let col = 0; col < CONFIG.BOARD_WIDTH; col++) {
-        const val = this.board.screenMap[this._gameOverRow][col];
-        if (val !== CONFIG.MARKED_CELL) {
-          gems.push({ col, row: this._gameOverRow, value: val });
-          this.board.screenMap[this._gameOverRow][col] = CONFIG.MARKED_CELL;
-        }
-      }
-      if (gems.length > 0) {
-        this.explosionEffect.addEffects(gems);
-        return; // aguarda a animação desta linha
-      }
-      this._gameOverRow--;
+  _scheduleGameOverRow() {
+    if (this._gameOverRow < 0) {
+      this._gameOverRowsDone = true;
+      return;
     }
-    this._finishGameOver();
+    const gems = [];
+    for (let col = 0; col < CONFIG.BOARD_WIDTH; col++) {
+      const val = this.board.screenMap[this._gameOverRow][col];
+      if (val !== CONFIG.MARKED_CELL) {
+        gems.push({ col, row: this._gameOverRow, value: val });
+        this.board.screenMap[this._gameOverRow][col] = CONFIG.MARKED_CELL;
+      }
+    }
+    this.explosionEffect.addEffects(gems);
+    this._gameOverRow--;
+    setTimeout(() => this._scheduleGameOverRow(), 200);
   }
 
   /**
