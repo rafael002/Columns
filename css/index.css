@@ -1,5 +1,4 @@
 :root {
-  --c0: #FFFFFF;
   --c1: #e74c3c;
   --c2: #27ae60;
   --c3: #2980b9;
@@ -8,7 +7,6 @@
   --c6: #f368e0;
   --c7: #e67e22;
   --c8: #A3CB38;
-  --c9: #000000;
   --cell-size: 41.6px;
   --grid-color: #CCCCCC;
 }
@@ -65,22 +63,38 @@ body {
   width: var(--cell-size);
   height: var(--cell-size);
   border: 1px solid var(--grid-color);
-  background: var(--c0);
+  background: #000;
   position: relative;
 }
 
+/* ── Fallback: solid color block while sprites load ── */
 .cell::after {
   content: "";
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  background: var(--cell-color, transparent);
-  transition: background-color 0.1s ease;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  background-color: var(--cell-color, transparent);
 }
 
-/* Game Over overlay */
+.cell[data-value="1"] { --cell-color: var(--c1); }
+.cell[data-value="2"] { --cell-color: var(--c2); }
+.cell[data-value="3"] { --cell-color: var(--c3); }
+.cell[data-value="4"] { --cell-color: var(--c4); }
+.cell[data-value="5"] { --cell-color: var(--c5); }
+.cell[data-value="6"] { --cell-color: var(--c6); }
+.cell[data-value="7"] { --cell-color: var(--c7); }
+.cell[data-value="8"] { --cell-color: var(--c8); }
+
+/* ── Sprite override: once sprites are ready ── */
+.cell.has-gem::after {
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: transparent;
+  background-image: url('../sprites/gems.png');
+  background-repeat: no-repeat;
+  background-size: var(--sheet-w) var(--sheet-h);
+  background-position: var(--sprite-x, 0px) var(--sprite-y, 0px);
+}
+
+/* ── Game Over overlay ── */
 #game-over {
   display: none;
   position: absolute;
@@ -100,15 +114,3 @@ body {
 #game-over.visible {
   display: flex;
 }
-
-/* Cores por valor */
-.cell[data-value="0"] { --cell-color: transparent; }
-.cell[data-value="1"] { --cell-color: var(--c1); }
-.cell[data-value="2"] { --cell-color: var(--c2); }
-.cell[data-value="3"] { --cell-color: var(--c3); }
-.cell[data-value="4"] { --cell-color: var(--c4); }
-.cell[data-value="5"] { --cell-color: var(--c5); }
-.cell[data-value="6"] { --cell-color: var(--c6); }
-.cell[data-value="7"] { --cell-color: var(--c7); }
-.cell[data-value="8"] { --cell-color: var(--c8); }
-.cell[data-value="9"] { --cell-color: var(--c9); }

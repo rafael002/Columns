@@ -3,9 +3,15 @@ class Screen {
     this.boardElement = boardElement;
     this.visualOffset = CONFIG.VISUAL_OFFSET;
     this.rows = CONFIG.BOARD_HEIGHT - this.visualOffset; // 13 visible rows
-    this.cols = CONFIG.BOARD_WIDTH;                      // 6 cols
+    this.cols = CONFIG.BOARD_WIDTH;
+    this.cellSize = Math.round(CONFIG.BLOCK_SIZE); // 42px
 
-    // Create one div per visible cell: rows [VISUAL_OFFSET .. BOARD_HEIGHT-1]
+    this.spriteReady = false;
+    this.gemCfg = null;
+    this.scale = 1;
+    this.animStart = Date.now();
+
+    // Create grid cells (plain divs, no canvas)
     this.cells = [];
     boardElement.innerHTML = '';
 
@@ -14,37 +20,119 @@ class Screen {
       for (let col = 0; col < this.cols; col++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
-        cell.dataset.value = '0';
         boardElement.appendChild(cell);
         this.cells[row][col] = cell;
       }
     }
 
-    // prevMap mirrors visible rows only (index 0 = board row VISUAL_OFFSET)
+    // prevMap: -1 forces a full draw on first refresh
     this.prevMap = Array.from({ length: this.rows }, () =>
-      new Array(this.cols).fill(-1) // -1 forces first full render
+      new Array(this.cols).fill(-1)
     );
+
+    this._loadSprites();
+  }
+
+  _loadSprites() {
+    fetch('js/config/resources.json')
+      .then(r => r.json())
+      .then(config => {
+        this.gemCfg = config.sprites.gems;
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = this.gemCfg.path;
+        });
+      })
+      .then(img => {
+        this.scale = this.cellSize / this.gemCfg.spriteWidth;
+        // Set sheet dimensions once on the board — all cells inherit via CSS vars
+        this.boardElement.style.setProperty('--sheet-w', `${img.naturalWidth  * this.scale}px`);
+        this.boardElement.style.setProperty('--sheet-h', `${img.naturalHeight * this.scale}px`);
+        this.spriteReady = true;
+        // Force redraw so cells switch from color fallback to sprites
+        for (let row = 0; row < this.rows; row++) this.prevMap[row].fill(-1);
+      })
+      .catch(err => console.warn('Sprites não carregados, usando cores:', err));
   }
 
   /**
-   * Sync DOM to board.screenMap using dirty tracking.
-   * Only touches divs whose value changed.
+   * Compute scaled background-position for a gem value and animation frame.
+   * frameIndex: null → frame 0 (static), undefined → current animated frame.
    */
-  refresh(board) {
-    if (!board || !board.screenMap) {
-      console.error('Board ou screenMap não está definido');
-      return;
+  _spritePos(value, frameIndex) {
+    const cfg = this.gemCfg;
+    const col = Math.min(value - 1, cfg.numSprites - 1); // clamp to available sprites
+
+    // X: sum widths + horizontal intervals up to this column
+    let sx = cfg.startX;
+    for (let i = 0; i < col; i++) {
+      sx += cfg.spriteWidth;
+      if (i < cfg.horizontalIntervals.length) sx += cfg.horizontalIntervals[i];
+    }
+
+    // Y: pick frame
+    let frame = 0;
+    if (frameIndex === undefined) {
+      const elapsed = Date.now() - this.animStart;
+      frame = Math.floor(elapsed / (1000 / cfg.animationFPS)) % cfg.animationFrames;
+    }
+
+    let sy = cfg.startY;
+    for (let i = 0; i < frame; i++) {
+      sy += cfg.spriteHeight;
+      if (i < cfg.frameIntervals.length) sy += cfg.frameIntervals[i];
+    }
+
+    return { x: -(sx * this.scale), y: -(sy * this.scale) };
+  }
+
+  refresh(board, piece) {
+    if (!board || !board.screenMap) return;
+
+    // Identify which visible cells belong to the falling piece
+    const pieceCells = new Set();
+    if (piece) {
+      for (let i = 0; i < piece.size; i++) {
+        const boardRow = piece.y + i;
+        const visRow = boardRow - this.visualOffset;
+        if (visRow >= 0 && visRow < this.rows) {
+          pieceCells.add(visRow * this.cols + piece.x);
+        }
+      }
     }
 
     for (let row = 0; row < this.rows; row++) {
       const boardRow = row + this.visualOffset;
       for (let col = 0; col < this.cols; col++) {
         const val = board.screenMap[boardRow]?.[col] ?? CONFIG.EMPTY_CELL;
-        if (val !== this.prevMap[row][col]) {
-          this.cells[row][col].dataset.value = val;
-          this.prevMap[row][col] = val;
+        const isPiece = pieceCells.has(row * this.cols + col);
+
+        if (val !== this.prevMap[row][col] || isPiece) {
+          this._drawCell(row, col, val, isPiece);
+          if (!isPiece) this.prevMap[row][col] = val;
         }
       }
+    }
+  }
+
+  _drawCell(row, col, value, animated) {
+    const cell = this.cells[row][col];
+
+    if (value === CONFIG.EMPTY_CELL || value === CONFIG.MARKED_CELL) {
+      cell.classList.remove('has-gem');
+      cell.dataset.value = value;
+      return;
+    }
+
+    cell.dataset.value = value; // color fallback (CSS handles it)
+
+    if (this.spriteReady) {
+      const { x, y } = this._spritePos(value, animated ? undefined : null);
+      cell.style.setProperty('--sprite-x', `${x}px`);
+      cell.style.setProperty('--sprite-y', `${y}px`);
+      cell.classList.add('has-gem');
     }
   }
 }
