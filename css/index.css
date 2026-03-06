@@ -77,6 +77,7 @@ body {
 }
 
 #next-piece-preview {
+  position: relative;
   display: grid;
   grid-template-columns: var(--cell-size);
   grid-template-rows: repeat(3, var(--cell-size));

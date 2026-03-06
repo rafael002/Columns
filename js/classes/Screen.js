@@ -130,6 +130,16 @@ class Screen {
     }
   }
 
+  clearPreview() {
+    if (!this.previewCells) return;
+    this.previewCells.forEach(cell => {
+      cell.classList.remove('has-gem');
+      cell.style.removeProperty('--sprite-x');
+      cell.style.removeProperty('--sprite-y');
+      cell.dataset.value = 0;
+    });
+  }
+
   refreshPreview(piece) {
     if (!this.previewCells || !piece) return;
     piece.rocks.forEach((val, i) => {

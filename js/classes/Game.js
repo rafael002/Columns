@@ -158,6 +158,7 @@ class Game {
 
     // Explode as 3 gemas do preview (row offset para não ser filtrado pelo VISUAL_OFFSET)
     if (this.previewExplosion) {
+      this.screen.clearPreview();
       const gems = this.nextPiece.rocks.map((val, i) => ({
         col: 0, row: i + CONFIG.VISUAL_OFFSET, value: val
       }));
