@@ -146,7 +146,7 @@ class Screen {
       const cell = this.previewCells[i];
       cell.dataset.value = val;
       if (this.spriteReady) {
-        const { x, y } = this._spritePos(val, null);
+        const { x, y } = this._spritePos(val, undefined);
         cell.style.setProperty('--sprite-x', `${x}px`);
         cell.style.setProperty('--sprite-y', `${y}px`);
         cell.classList.add('has-gem');
