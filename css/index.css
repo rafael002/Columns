@@ -114,11 +114,10 @@ body {
 #game-over {
   display: none;
   position: absolute;
-  top: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(6 * var(--cell-size) + 2px); /* mesma largura do board */
-  height: calc(13 * var(--cell-size) + 2px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.75);
   color: #fff;
   font-family: 'Diogenes', monospace;
