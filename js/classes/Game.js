@@ -18,11 +18,16 @@ class Game {
     this._gameOverRow = -1;
     this._gameOverRowsDone = false;
     this.explosionEffect = null;
+    this.previewExplosion = null;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
       .then(cfg => {
         this.explosionEffect = new ExplosionEffect(boardElement, cfg.sprites.explosion);
+        this.previewExplosion = new ExplosionEffect(
+          document.getElementById('next-piece-preview'),
+          cfg.sprites.explosion
+        );
       });
 
     this.startGameLoop();
@@ -60,6 +65,7 @@ class Game {
     try {
       if (this.isGameOverAnimating && this.explosionEffect) {
         this.explosionEffect.update();
+        if (this.previewExplosion) this.previewExplosion.update();
 
         if (this._gameOverRowsDone && this.explosionEffect.isDone()) {
           this._finishGameOver();
@@ -149,6 +155,15 @@ class Game {
     this.isGameOverAnimating = true;
     this._gameOverRowsDone = false;
     this._gameOverRow = CONFIG.BOARD_HEIGHT - 1;
+
+    // Explode as 3 gemas do preview (row offset para não ser filtrado pelo VISUAL_OFFSET)
+    if (this.previewExplosion) {
+      const gems = this.nextPiece.rocks.map((val, i) => ({
+        col: 0, row: i + CONFIG.VISUAL_OFFSET, value: val
+      }));
+      this.previewExplosion.addEffects(gems);
+    }
+
     this._scheduleGameOverRow();
   }
 
