@@ -146,7 +146,7 @@ class Game {
       const gems = [];
       for (let col = 0; col < CONFIG.BOARD_WIDTH; col++) {
         const val = this.board.screenMap[this._gameOverRow][col];
-        if (val !== CONFIG.EMPTY_CELL && val !== CONFIG.MARKED_CELL) {
+        if (val !== CONFIG.MARKED_CELL) {
           gems.push({ col, row: this._gameOverRow, value: val });
           this.board.screenMap[this._gameOverRow][col] = CONFIG.MARKED_CELL;
         }
