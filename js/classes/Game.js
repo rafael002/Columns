@@ -31,6 +31,9 @@ class Game {
       });
 
     document.getElementById('retry-btn')?.addEventListener('click', () => this.reset());
+    document.addEventListener('keydown', e => {
+      if (this.gameOver && e.key === 'Enter') this.reset();
+    });
 
     this.startGameLoop();
     this.startUpdateLoop();
