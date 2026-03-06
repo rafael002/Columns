@@ -12,7 +12,7 @@
       "sheetWidth": 579,
       "sheetHeight": 90,
       "numSprites": 6,
-      "animationFPS": 10,
+      "animationFPS": 6,
       "animationFrames": 4
     },
     "explosion": {

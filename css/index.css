@@ -96,6 +96,15 @@ body {
   background-position: var(--sprite-x, 0px) var(--sprite-y, 0px);
 }
 
+/* ── Explosion animation overlay ── */
+.explosion-effect {
+  position: absolute;
+  background-image: url('../sprites/explosion.png');
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* ── Game Over overlay — cobre apenas o tabuleiro ── */
 #game-over {
   display: none;

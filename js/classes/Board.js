@@ -207,25 +207,12 @@ class Board {
     }
 
     /**
-     * Verifica e processa matches em cadeia (match + gravidade repetido)
-     * Integração correta: após cada match, aplica gravidade e verifica novamente
-     */
-    checkChained() {
-        while(this.match()) {
-            this.gravity();
-        }
-    }
-
-
-    /**
-     * Procura e remove matches do tabuleiro
-     * Algoritmo otimizado baseado no Match class
-     * @returns {boolean} true se encontrou matches
+     * Procura matches e marca células com MARKED_CELL
+     * @returns {Array} array de {col, row, value} das gemas marcadas, ou [] se nenhum match
      */
     match() {
         let allMatches = [];
 
-        // Procura matches em todas as posições do tabuleiro
         for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
             for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
                 const matches = this.#walk(vertical, horizontal);
@@ -235,7 +222,6 @@ class Board {
             }
         }
 
-        // Remove duplicatas (um bloco pode estar em múltiplos matches)
         const uniqueMatches = Array.from(
             new Set(allMatches.map(m => `${m.x},${m.y}`))
         ).map(str => {
@@ -243,15 +229,26 @@ class Board {
             return {x, y};
         });
 
-        // Remove os matches do tabuleiro
-        if (uniqueMatches.length > 0) {
-            console.log(`Matches encontrados: ${uniqueMatches.length}`, uniqueMatches);
-            uniqueMatches.forEach(match => {
-                this.screenMap[match.y][match.x] = CONFIG.EMPTY_CELL;
-            });
-            return true;
-        }
+        if (uniqueMatches.length === 0) return [];
 
-        return false;
+        const markedGems = [];
+        uniqueMatches.forEach(({ x, y }) => {
+            const val = this.screenMap[y][x];
+            if (val !== CONFIG.EMPTY_CELL && val !== CONFIG.MARKED_CELL) {
+                markedGems.push({ col: x, row: y, value: val });
+                this.screenMap[y][x] = CONFIG.MARKED_CELL;
+            }
+        });
+        return markedGems;
+    }
+
+    /**
+     * Remove células marcadas com MARKED_CELL, substituindo por EMPTY_CELL
+     */
+    removeMarkedCells() {
+        for (let row = 0; row < this.ysize; row++)
+            for (let col = 0; col < this.xsize; col++)
+                if (this.screenMap[row][col] === CONFIG.MARKED_CELL)
+                    this.screenMap[row][col] = CONFIG.EMPTY_CELL;
     }
 }

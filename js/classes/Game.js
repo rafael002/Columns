@@ -1,15 +1,25 @@
 class Game {
   constructor(boardElement) {
+    this.boardElement = boardElement;
     this.board = new Board(CONFIG.BOARD_WIDTH, CONFIG.BOARD_HEIGHT);
     this.piece = new Piece();
     this.screen = new Screen(boardElement);
     this.inputHandler = new InputHandler(this);
-    
+
     this.level = 1;
     this.score = 0;
     this.gameOver = false;
     this.updateInterval = CONFIG.GAME_UPDATE_INTERVAL;
-    
+
+    this.isAnimating = false;
+    this.explosionEffect = null;
+
+    fetch('js/config/resources.json')
+      .then(r => r.json())
+      .then(cfg => {
+        this.explosionEffect = new ExplosionEffect(boardElement, cfg.sprites.explosion);
+      });
+
     this.startGameLoop();
     this.startUpdateLoop();
   }
@@ -43,10 +53,24 @@ class Game {
    */
   render() {
     try {
-      // Adiciona a peça atual temporariamente para renderização
+      if (this.isAnimating && this.explosionEffect) {
+        this.explosionEffect.update();
+
+        if (this.explosionEffect.isDone()) {
+          this.board.removeMarkedCells();
+          this.board.gravity();
+          const marked = this.board.match();
+          if (marked.length > 0) {
+            this.explosionEffect.addEffects(marked);
+          } else {
+            this.isAnimating = false;
+            this.piece.reset();
+          }
+        }
+      }
+
       this.board.addCurrentPiece(this.piece);
       this.screen.refresh(this.board, this.piece);
-      // Remove a peça após renderização
       this.board.removeCurrentPiece(this.piece);
     } catch (error) {
       console.error('Erro ao renderizar:', error);
@@ -57,24 +81,32 @@ class Game {
    * Atualiza a lógica do jogo
    */
   update() {
-    // Move a peça para baixo
+    if (this.isAnimating) return;
+
     if (this.board.checkCollision(0, 1, this.piece)) {
       this.piece.downPiece();
     } else {
-      // Peça não pode mais descer
       if (this.piece.y > 0) {
-        // Adiciona a peça ao tabuleiro permanentemente
         this.board.addCurrentPiece(this.piece);
-        
-        // Verifica e remove matches
-        this.board.checkChained();
-        
-        // Cria nova peça
-        this.piece.reset();
+        this._resolveChain();
       } else {
-        // Game Over
         this.endGame();
       }
+    }
+  }
+
+  /**
+   * Inicia a resolução de matches (com animação se disponível)
+   */
+  _resolveChain() {
+    const marked = this.board.match();
+    if (marked.length > 0 && this.explosionEffect) {
+      this.explosionEffect.addEffects(marked);
+      this.isAnimating = true;
+    } else {
+      this.board.removeMarkedCells();
+      this.board.gravity();
+      this.piece.reset();
     }
   }
 
