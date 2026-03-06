@@ -1,64 +1,50 @@
 class Screen {
-  constructor(element) {
-    this.canvas = element;
-    this.ctx = element.getContext('2d');
-    this.width = element.width;
-    this.height = element.height;
-    this.blockSize = CONFIG.BLOCK_SIZE;
+  constructor(boardElement) {
+    this.boardElement = boardElement;
     this.visualOffset = CONFIG.VISUAL_OFFSET;
+    this.rows = CONFIG.BOARD_HEIGHT - this.visualOffset; // 13 visible rows
+    this.cols = CONFIG.BOARD_WIDTH;                      // 6 cols
+
+    // Create one div per visible cell: rows [VISUAL_OFFSET .. BOARD_HEIGHT-1]
+    this.cells = [];
+    boardElement.innerHTML = '';
+
+    for (let row = 0; row < this.rows; row++) {
+      this.cells[row] = [];
+      for (let col = 0; col < this.cols; col++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.value = '0';
+        boardElement.appendChild(cell);
+        this.cells[row][col] = cell;
+      }
+    }
+
+    // prevMap mirrors visible rows only (index 0 = board row VISUAL_OFFSET)
+    this.prevMap = Array.from({ length: this.rows }, () =>
+      new Array(this.cols).fill(-1) // -1 forces first full render
+    );
   }
 
   /**
-   * Redraw a screen
+   * Sync DOM to board.screenMap using dirty tracking.
+   * Only touches divs whose value changed.
    */
   refresh(board) {
-    // cleaning the canvas and buffer
-    this.ctx.clearRect(0, 0, this.width, this.height);
-
-    // Verifica se board e screenMap existem
     if (!board || !board.screenMap) {
       console.error('Board ou screenMap não está definido');
       return;
     }
 
-    for (let col = 0; col < board.xsize; col++) {
-      for (let row = 0; row < board.ysize; row++) {
-        if (board.screenMap[row] && board.screenMap[row][col] !== undefined) {
-          const visualRow = row - this.visualOffset;
-          // Desenha apenas se estiver na área visível (visualRow >= -visualOffset ou seja, row >= 0)
-          if (visualRow >= -this.visualOffset) {
-            this.drawBlock(col, visualRow, board.screenMap[row][col]);
-          }
+    for (let row = 0; row < this.rows; row++) {
+      const boardRow = row + this.visualOffset;
+      for (let col = 0; col < this.cols; col++) {
+        const val = board.screenMap[boardRow]?.[col] ?? CONFIG.EMPTY_CELL;
+        if (val !== this.prevMap[row][col]) {
+          this.cells[row][col].dataset.value = val;
+          this.prevMap[row][col] = val;
         }
       }
     }
-  }
-
-  /**
-   * Draw a single block
-   */
-  drawBlock(col, visualRow, value) {
-    const x = col * this.blockSize;
-    const y = visualRow * this.blockSize;
-    const color = getColor(value);
-    const innerOffset = 8;
-    const innerSize = this.blockSize - 16;
-
-    // Background
-    this.ctx.fillStyle = COLORS[0];
-    this.ctx.fillRect(x + 1, y + 1, this.blockSize - 2, this.blockSize - 2);
-
-    // Colored block if not empty
-    if (value !== CONFIG.EMPTY_CELL) {
-      this.ctx.fillStyle = color;
-      this.ctx.fillRect(x + innerOffset, y + innerOffset, innerSize, innerSize);
-      this.ctx.strokeStyle = color;
-      this.ctx.strokeRect(x + innerOffset, y + innerOffset, innerSize, innerSize);
-    }
-
-    // Grid
-    this.ctx.strokeStyle = "#CCCCCC";
-    this.ctx.lineWidth = 1;
-    this.ctx.strokeRect(x, y, this.blockSize, this.blockSize);
   }
 }

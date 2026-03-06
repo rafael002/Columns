@@ -1,5 +1,114 @@
-#p1{
-    border: 1px solid #000;
-    /* width: 250px;
-    height: 500px; */
+:root {
+  --c0: #FFFFFF;
+  --c1: #e74c3c;
+  --c2: #27ae60;
+  --c3: #2980b9;
+  --c4: #f1c40f;
+  --c5: #B53471;
+  --c6: #f368e0;
+  --c7: #e67e22;
+  --c8: #A3CB38;
+  --c9: #000000;
+  --cell-size: 41.6px;
+  --grid-color: #CCCCCC;
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #1a1a2e;
+}
+
+#game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#hud {
+  display: flex;
+  gap: 24px;
+  color: #fff;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+#hud span::before {
+  color: #aaa;
+  font-size: 12px;
+  display: block;
+  text-align: center;
+}
+
+#score::before { content: "SCORE"; }
+#level::before { content: "LEVEL"; }
+
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(6, var(--cell-size));
+  grid-template-rows: repeat(13, var(--cell-size));
+  border: 1px solid #000;
+  overflow: hidden;
+  position: relative;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid var(--grid-color);
+  background: var(--c0);
+  position: relative;
+}
+
+.cell::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: var(--cell-color, transparent);
+  transition: background-color 0.1s ease;
+}
+
+/* Game Over overlay */
+#game-over {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-family: monospace;
+  font-size: 22px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+  text-align: center;
+}
+
+#game-over.visible {
+  display: flex;
+}
+
+/* Cores por valor */
+.cell[data-value="0"] { --cell-color: transparent; }
+.cell[data-value="1"] { --cell-color: var(--c1); }
+.cell[data-value="2"] { --cell-color: var(--c2); }
+.cell[data-value="3"] { --cell-color: var(--c3); }
+.cell[data-value="4"] { --cell-color: var(--c4); }
+.cell[data-value="5"] { --cell-color: var(--c5); }
+.cell[data-value="6"] { --cell-color: var(--c6); }
+.cell[data-value="7"] { --cell-color: var(--c7); }
+.cell[data-value="8"] { --cell-color: var(--c8); }
+.cell[data-value="9"] { --cell-color: var(--c9); }

@@ -1,11 +1,10 @@
 (function() {
-  const canvas = document.getElementById('p1');
-  if (!canvas) {
-    console.error('Canvas element not found!');
+  const boardElement = document.getElementById('game-board');
+  if (!boardElement) {
+    console.error('game-board element not found!');
     return;
   }
 
-  // Verifica se as dependências estão carregadas
   if (typeof CONFIG === 'undefined') {
     console.error('CONFIG não está definido! Verifique se constants.js está carregado.');
     return;
@@ -17,12 +16,10 @@
   }
 
   console.log('Iniciando jogo...');
-  
-  // Inicia o jogo
-  const game = new Game(canvas);
-  
-  // Expõe o jogo globalmente para debug (opcional)
+
+  const game = new Game(boardElement);
+
   window.game = game;
-  
+
   console.log('Jogo iniciado!', game);
 })();

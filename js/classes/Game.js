@@ -1,8 +1,8 @@
 class Game {
-  constructor(canvasElement) {
+  constructor(boardElement) {
     this.board = new Board(CONFIG.BOARD_WIDTH, CONFIG.BOARD_HEIGHT);
     this.piece = new Piece();
-    this.screen = new Screen(canvasElement);
+    this.screen = new Screen(boardElement);
     this.inputHandler = new InputHandler(this);
     
     this.level = 1;
@@ -83,7 +83,11 @@ class Game {
    */
   endGame() {
     this.gameOver = true;
-    alert(`Game Over! Pontuação: ${this.score}`);
+    const overlay = document.getElementById('game-over');
+    if (overlay) {
+      document.getElementById('final-score').textContent = this.score;
+      overlay.classList.add('visible');
+    }
   }
 
   /**

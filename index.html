@@ -7,9 +7,19 @@
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-  <canvas id='p1' width="250" height="542"></canvas>
-  <!-- <canvas id='p2'></canvas> -->
-  
+  <div id="game-wrapper">
+    <div id="hud">
+      <span id="score">0</span>
+      <span id="level">1</span>
+    </div>
+    <div id="game-board">
+      <div id="game-over">
+        <p>GAME OVER</p>
+        <p>Score: <span id="final-score">0</span></p>
+      </div>
+    </div>
+  </div>
+
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
   <script src="js/classes/Piece.js"></script>
