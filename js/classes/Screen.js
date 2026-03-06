@@ -47,9 +47,9 @@ class Screen {
       })
       .then(img => {
         this.scale = this.cellSize / this.gemCfg.spriteWidth;
-        // Set sheet dimensions once on the board — all cells inherit via CSS vars
-        this.boardElement.style.setProperty('--sheet-w', `${img.naturalWidth  * this.scale}px`);
-        this.boardElement.style.setProperty('--sheet-h', `${img.naturalHeight * this.scale}px`);
+        // Set sheet dimensions on :root so preview cells also inherit them
+        document.documentElement.style.setProperty('--sheet-w', `${img.naturalWidth  * this.scale}px`);
+        document.documentElement.style.setProperty('--sheet-h', `${img.naturalHeight * this.scale}px`);
         this.spriteReady = true;
         // Force redraw so cells switch from color fallback to sprites
         for (let row = 0; row < this.rows; row++) this.prevMap[row].fill(-1);
