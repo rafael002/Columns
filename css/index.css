@@ -56,6 +56,10 @@ body {
 #score::before { content: "SCORE"; }
 #level::before { content: "LEVEL"; }
 
+#board-wrapper {
+  position: relative;
+}
+
 #game-board {
   display: grid;
   grid-template-columns: repeat(6, var(--cell-size));
