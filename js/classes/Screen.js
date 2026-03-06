@@ -111,7 +111,9 @@ class Screen {
 
         if (val !== this.prevMap[row][col] || isPiece) {
           this._drawCell(row, col, val, isPiece);
-          if (!isPiece) this.prevMap[row][col] = val;
+          // Piece cells stay -1 so when the piece moves away (val=0, prevMap=-1 → ≠) the cell is cleared.
+          // Without this, prevMap=0 after the first empty draw → piece leaves → val=0==prevMap → no redraw → sprite trail.
+          this.prevMap[row][col] = isPiece ? -1 : val;
         }
       }
     }
