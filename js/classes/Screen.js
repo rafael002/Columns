@@ -119,6 +119,31 @@ class Screen {
     }
   }
 
+  initPreview(previewElement) {
+    this.previewCells = [];
+    previewElement.innerHTML = '';
+    for (let i = 0; i < CONFIG.PIECE_SIZE; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      previewElement.appendChild(cell);
+      this.previewCells.push(cell);
+    }
+  }
+
+  refreshPreview(piece) {
+    if (!this.previewCells || !piece) return;
+    piece.rocks.forEach((val, i) => {
+      const cell = this.previewCells[i];
+      cell.dataset.value = val;
+      if (this.spriteReady) {
+        const { x, y } = this._spritePos(val, null);
+        cell.style.setProperty('--sprite-x', `${x}px`);
+        cell.style.setProperty('--sprite-y', `${y}px`);
+        cell.classList.add('has-gem');
+      }
+    });
+  }
+
   _drawCell(row, col, value, animated) {
     const cell = this.cells[row][col];
 

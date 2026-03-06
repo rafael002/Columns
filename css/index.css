@@ -56,8 +56,31 @@ body {
 #score::before { content: "SCORE"; }
 #level::before { content: "LEVEL"; }
 
+#main-area {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
 #board-wrapper {
   position: relative;
+}
+
+#next-piece-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: 'Diogenes', monospace;
+  font-size: 14px;
+}
+
+#next-piece-preview {
+  display: grid;
+  grid-template-columns: var(--cell-size);
+  grid-template-rows: repeat(3, var(--cell-size));
+  border: 1px solid #444;
 }
 
 #game-board {

@@ -3,7 +3,9 @@ class Game {
     this.boardElement = boardElement;
     this.board = new Board(CONFIG.BOARD_WIDTH, CONFIG.BOARD_HEIGHT);
     this.piece = new Piece();
+    this.nextPiece = new Piece();
     this.screen = new Screen(boardElement);
+    this.screen.initPreview(document.getElementById('next-piece-preview'));
     this.inputHandler = new InputHandler(this);
 
     this.level = 1;
@@ -78,17 +80,19 @@ class Game {
             this.explosionEffect.addEffects(marked);
           } else {
             this.isAnimating = false;
-            this.piece.reset();
+            this._swapPiece();
           }
         }
 
         this.screen.refresh(this.board, null);
+        this.screen.refreshPreview(this.nextPiece);
         return;
       }
 
       this.board.addCurrentPiece(this.piece);
       this.screen.refresh(this.board, this.piece);
       this.board.removeCurrentPiece(this.piece);
+      this.screen.refreshPreview(this.nextPiece);
     } catch (error) {
       console.error('Erro ao renderizar:', error);
     }
@@ -123,8 +127,15 @@ class Game {
     } else {
       this.board.removeMarkedCells();
       this.board.gravity();
-      this.piece.reset();
+      this._swapPiece();
     }
+  }
+
+  _swapPiece() {
+    this.piece = this.nextPiece;
+    this.piece.x = this.piece.INITIAL_X_POSITION;
+    this.piece.y = this.piece.INITIAL_Y_POSITION;
+    this.nextPiece = new Piece();
   }
 
   /**
@@ -201,7 +212,8 @@ class Game {
    */
   reset() {
     this.board.resetBoard();
-    this.piece.reset();
+    this.piece = new Piece();
+    this.nextPiece = new Piece();
     this.level = 1;
     this.score = 0;
     this.gameOver = false;
