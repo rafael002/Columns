@@ -38,10 +38,10 @@
       gemsId:        'gems-p2',
       levelId:       'level-p2',
       nextPreviewId: 'next-piece-preview-p2',
-      gameOverId:    'game-over-p2',
-      finalScoreId:  'final-score-p2',
-      retryBtnId:    'retry-btn-p2',
-      titleId:       'modal-title-p2',
+      gameOverId:    'game-over',
+      finalScoreId:  'final-score',
+      retryBtnId:    'retry-btn',
+      titleId:       'modal-title',
       keys:  { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
       label: '2P',
     });
