@@ -50,6 +50,7 @@ class Game {
     this._duringCountdown = true;
     this._countdownGen = 0;
     this.isPaused = false;
+    this._pausedDuringCountdown = false;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
@@ -357,22 +358,64 @@ class Game {
     overlay.classList.add('visible');
   }
 
-  togglePause() {
-    if (this.gameOver || this.isGameOverAnimating || this._duringCountdown) return;
+  _interruptCountdown() {
+    if (!this._duringCountdown) return;
+    this._countdownGen++;
+    this.boardElement.parentElement.querySelector('.countdown-overlay')?.remove();
+  }
 
-    this.isPaused = !this.isPaused;
-    const overlay = document.getElementById(this._ids.gameOver);
-
-    if (this.isPaused) {
+  pauseSilent() {
+    if (this.gameOver || this.isGameOverAnimating || this.isPaused) return;
+    this.isPaused = true;
+    if (this._duringCountdown) {
+      this._pausedDuringCountdown = true;
+      this._interruptCountdown();
+    } else {
+      this._pausedDuringCountdown = false;
       clearInterval(this._updateLoopId);
       this._updateLoopId = null;
+    }
+  }
+
+  resumeSilent() {
+    if (!this.isPaused) return;
+    this.isPaused = false;
+    if (this._pausedDuringCountdown) {
+      this._pausedDuringCountdown = false;
+      this._startCountdown();
+    } else {
+      this.startUpdateLoop();
+    }
+  }
+
+  togglePause() {
+    if (this.gameOver || this.isGameOverAnimating) return;
+    const overlay = document.getElementById(this._ids.gameOver);
+    if (overlay?.classList.contains('confirming')) return;
+
+    if (!this.isPaused) {
+      this.isPaused = true;
+      if (this._duringCountdown) {
+        this._pausedDuringCountdown = true;
+        this._interruptCountdown();
+      } else {
+        this._pausedDuringCountdown = false;
+        clearInterval(this._updateLoopId);
+        this._updateLoopId = null;
+      }
       if (overlay) {
         document.getElementById(this._ids.title).textContent = 'PAUSE!';
         overlay.classList.add('visible', 'paused');
       }
     } else {
+      this.isPaused = false;
       if (overlay) overlay.classList.remove('visible', 'paused');
-      this.startUpdateLoop();
+      if (this._pausedDuringCountdown) {
+        this._pausedDuringCountdown = false;
+        this._startCountdown();
+      } else {
+        this.startUpdateLoop();
+      }
     }
   }
 
@@ -410,6 +453,7 @@ class Game {
     this._lostAt = null;
     this._duringCountdown = true;
     this.isPaused = false;
+    this._pausedDuringCountdown = false;
 
     document.getElementById(this._ids.gameOver)?.classList.remove('visible', 'paused');
     document.getElementById(this._ids.score).textContent = 0;

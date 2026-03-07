@@ -38,8 +38,8 @@ class ExplosionEffect {
 
   update() {
     const cfg = this.cfg;
-    const fps = 10;
-    const framesPerSprite = Math.ceil(60 / fps); // 6 rAF frames per sprite frame
+    const fps = cfg.animationFPS ?? 10;
+    const framesPerSprite = Math.ceil(60 / fps);
 
     this.effects.forEach(effect => {
       if (effect.done) return;

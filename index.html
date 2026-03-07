@@ -39,6 +39,7 @@
 
   <!-- ── Jogo ── -->
   <div id="game-wrapper" style="display:none">
+    <button id="btn-back-to-menu" class="back-to-menu-btn">&#8592; MENU</button>
     <div id="main-area">
 
       <!-- P1 NEXT (esquerda) -->
@@ -99,8 +100,13 @@
   <div id="game-over" class="game-over">
     <div class="game-over-modal">
       <p class="modal-title" id="modal-title">GAME OVER</p>
+      <p class="pause-hint">PRESSIONE "ESC" PARA RETOMAR O JOGO.</p>
       <p class="game-over-score-line">Score: <span id="final-score">0</span></p>
       <button id="retry-btn" class="retry-btn">RETRY</button>
+      <div class="modal-confirm-btns">
+        <button id="btn-confirm-no"  class="retry-btn">NÃO</button>
+        <button id="btn-confirm-yes" class="retry-btn confirm-yes">SIM</button>
+      </div>
     </div>
   </div>
 

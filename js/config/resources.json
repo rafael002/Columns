@@ -19,7 +19,7 @@
       "path": "sprites/explosion.png",
       "type": "spriteSheet",
       "startX": 310,
-      "startY": 20,
+      "startY": 151,
       "spriteWidth": 131,
       "spriteHeight": 131,
       "horizontalIntervals": [],
@@ -27,8 +27,8 @@
       "sheetWidth": 761,
       "sheetHeight": 1406,
       "numSprites": 1,
-      "animationFPS": 120,
-      "animationFrames": 9
+      "animationFPS": 80,
+      "animationFrames": 8
     }
   },
   "audio": {
