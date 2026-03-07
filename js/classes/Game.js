@@ -14,7 +14,11 @@ class Game {
       gameOver:    options.gameOverId    ?? 'game-over',
       finalScore:  options.finalScoreId  ?? 'final-score',
       retryBtn:    options.retryBtnId    ?? 'retry-btn',
+      title:       options.titleId       ?? 'game-over-title',
     };
+
+    this.peer = null;
+    this.isWinner = false;
 
     this.screen.initPreview(document.getElementById(this._ids.nextPreview));
 
@@ -37,6 +41,9 @@ class Game {
     this._gameOverRowsDone = false;
     this.explosionEffect = null;
     this.previewExplosion = null;
+    this._updateLoopId = null;
+    this._duringCountdown = true;
+    this._countdownGen = 0;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
@@ -46,6 +53,9 @@ class Game {
           document.getElementById(this._ids.nextPreview),
           cfg.sprites.explosion
         );
+        if (!this._duringCountdown) {
+          this.screen.refreshPreview(this.nextPiece);
+        }
       });
 
     document.getElementById(this._ids.retryBtn)?.addEventListener('click', () => this.reset());
@@ -53,8 +63,43 @@ class Game {
       if (this.gameOver && e.key === 'Enter') this.reset();
     });
 
+    this._startCountdown();
+  }
+
+  _startCountdown() {
+    this.screen.clearPreview();
+    const gen = ++this._countdownGen;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'countdown-overlay';
+    const text = document.createElement('span');
+    text.className = 'countdown-text';
+    overlay.appendChild(text);
+    this.boardElement.parentElement.appendChild(overlay);
+
     this.startGameLoop();
-    this.startUpdateLoop();
+
+    let count = 3;
+    text.textContent = count;
+
+    const tick = () => {
+      if (gen !== this._countdownGen) { overlay.remove(); return; }
+      count--;
+      if (count > 0) {
+        text.textContent = count;
+        setTimeout(tick, 1000);
+      } else {
+        text.textContent = 'GO!';
+        setTimeout(() => {
+          if (gen !== this._countdownGen) { overlay.remove(); return; }
+          this._duringCountdown = false;
+          overlay.remove();
+          this.screen.refreshPreview(this.nextPiece);
+          this.startUpdateLoop();
+        }, 700);
+      }
+    };
+    setTimeout(tick, 1000);
   }
 
   _handleCustomKey(e) {
@@ -87,7 +132,7 @@ class Game {
    * Loop de atualização do jogo (lógica)
    */
   startUpdateLoop() {
-    setInterval(() => {
+    this._updateLoopId = setInterval(() => {
       if (!this.gameOver) {
         this.update();
       }
@@ -132,10 +177,14 @@ class Game {
         return;
       }
 
-      this.board.addCurrentPiece(this.piece);
-      this.screen.refresh(this.board, this.piece);
-      this.board.removeCurrentPiece(this.piece);
-      this.screen.refreshPreview(this.nextPiece);
+      if (this._duringCountdown) {
+        this.screen.refresh(this.board, null);
+      } else {
+        this.board.addCurrentPiece(this.piece);
+        this.screen.refresh(this.board, this.piece);
+        this.board.removeCurrentPiece(this.piece);
+        this.screen.refreshPreview(this.nextPiece);
+      }
     } catch (error) {
       console.error('Erro ao renderizar:', error);
     }
@@ -187,15 +236,30 @@ class Game {
     this.nextPiece = new Piece();
   }
 
+  setPeer(game) {
+    this.peer = game;
+  }
+
+  winGame() {
+    this.isWinner = true;
+    this.endGame();
+  }
+
   /**
    * Inicia a animação de game over (varredura de baixo para cima)
    */
   endGame() {
+    if (this.isGameOverAnimating || this.gameOver) return;
+    this.isGameOverAnimating = true;
+
+    if (this.peer && !this.peer.isGameOverAnimating && !this.peer.gameOver) {
+      this.peer.winGame();
+    }
+
     if (!this.explosionEffect) {
       this._finishGameOver();
       return;
     }
-    this.isGameOverAnimating = true;
     this._gameOverRowsDone = false;
     this._gameOverRow = CONFIG.BOARD_HEIGHT - 1;
 
@@ -239,6 +303,8 @@ class Game {
     this.gameOver = true;
     const overlay = document.getElementById(this._ids.gameOver);
     if (overlay) {
+      const titleEl = document.getElementById(this._ids.title);
+      if (titleEl) titleEl.textContent = this.isWinner ? 'YOU WON!' : 'GAME OVER';
       document.getElementById(this._ids.finalScore).textContent = this.score;
       overlay.classList.add('visible');
     }
@@ -260,6 +326,9 @@ class Game {
    * Reinicia o jogo
    */
   reset() {
+    clearInterval(this._updateLoopId);
+    this._updateLoopId = null;
+
     this.board.resetBoard();
     this.piece = new Piece();
     this.nextPiece = new Piece();
@@ -270,11 +339,13 @@ class Game {
     this.isAnimating = false;
     this.isGameOverAnimating = false;
     this._gameOverRowsDone = false;
+    this.isWinner = false;
+    this._duringCountdown = true;
+    this._countdownGen = 0;
 
     document.getElementById(this._ids.gameOver)?.classList.remove('visible');
     document.getElementById(this._ids.score).textContent = 0;
     document.getElementById(this._ids.gems).textContent = 0;
-    this.screen.clearPreview();
-    this.screen.refreshPreview(this.nextPiece);
+    this._startCountdown();
   }
 }

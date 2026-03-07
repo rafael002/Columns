@@ -30,6 +30,8 @@
     document.getElementById('side-panel-p2').style.display = '';
     document.getElementById('main-area').classList.add('two-player');
 
+    game.reset();
+
     window.game2 = new Game(document.getElementById('game-board-p2'), {
       scoreId:       'score-p2',
       gemsId:        'gems-p2',
@@ -38,8 +40,12 @@
       gameOverId:    'game-over-p2',
       finalScoreId:  'final-score-p2',
       retryBtnId:    'retry-btn-p2',
+      titleId:       'game-over-title-p2',
       keys: { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
     });
+
+    game.setPeer(window.game2);
+    window.game2.setPeer(game);
 
     document.getElementById('btn-1x1').disabled = true;
     console.log('Modo 1×1 iniciado!', window.game2);

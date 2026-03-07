@@ -27,8 +27,9 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url("../images/stone.jpg");
-  background-size: 45%;
+  background-color: #34495e;
+  /* background-image: url("../images/stone.jpg");
+  background-size: 45%; */
 }
 
 #game-wrapper {
@@ -68,6 +69,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  align-self: flex-start;
 }
 
 .next-piece-wrapper {
@@ -152,6 +154,25 @@ body {
 }
 
 /* ── Tabuleiro ── */
+.board-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-label {
+  display: none;
+  font-family: 'Diogenes', monospace;
+  font-size: 18px;
+  color: #f1c40f;
+  letter-spacing: 2px;
+}
+
+#main-area.two-player .player-label {
+  display: block;
+}
+
 .board-wrapper {
   position: relative;
 }
@@ -208,6 +229,24 @@ body {
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 5;
+}
+
+/* ── Countdown overlay ── */
+.countdown-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+.countdown-text {
+  font-family: 'Diogenes', monospace;
+  font-size: 120px;
+  color: #f1c40f;
 }
 
 /* ── Game Over overlay ── */
