@@ -19,6 +19,8 @@ class Game {
 
     this.peer = null;
     this.isWinner = false;
+    this.isDraw = false;
+    this._lostAt = null;
 
     this.screen.initPreview(document.getElementById(this._ids.nextPreview));
 
@@ -241,19 +243,30 @@ class Game {
   }
 
   winGame() {
-    this.isWinner = true;
-    this.endGame();
+    // Empate: o jogo "vencedor" também perderia (peça presa no topo)
+    const alsoLost = this.piece.y <= 0 && !this.board.checkCollision(0, 1, this.piece);
+    if (alsoLost && this.peer && this.peer._lostAt) {
+      this.isDraw = true;
+      this.peer.isDraw = true;
+      this.peer.isWinner = false;
+    } else {
+      this.isWinner = true;
+    }
+    this.endGame(true);
   }
 
   /**
    * Inicia a animação de game over (varredura de baixo para cima)
    */
-  endGame() {
+  endGame(fromWin = false) {
     if (this.isGameOverAnimating || this.gameOver) return;
     this.isGameOverAnimating = true;
 
-    if (this.peer && !this.peer.isGameOverAnimating && !this.peer.gameOver) {
-      this.peer.winGame();
+    if (!fromWin) {
+      this._lostAt = Date.now();
+      if (this.peer && !this.peer.isGameOverAnimating && !this.peer.gameOver) {
+        this.peer.winGame();
+      }
     }
 
     if (!this.explosionEffect) {
@@ -304,7 +317,7 @@ class Game {
     const overlay = document.getElementById(this._ids.gameOver);
     if (overlay) {
       const titleEl = document.getElementById(this._ids.title);
-      if (titleEl) titleEl.textContent = this.isWinner ? 'YOU WON!' : 'GAME OVER';
+      if (titleEl) titleEl.textContent = this.isDraw ? 'DRAW!' : this.isWinner ? 'YOU WON!' : 'GAME OVER';
       document.getElementById(this._ids.finalScore).textContent = this.score;
       overlay.classList.add('visible');
     }
@@ -340,6 +353,8 @@ class Game {
     this.isGameOverAnimating = false;
     this._gameOverRowsDone = false;
     this.isWinner = false;
+    this.isDraw = false;
+    this._lostAt = null;
     this._duringCountdown = true;
     this._countdownGen = 0;
 
