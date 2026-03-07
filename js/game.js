@@ -30,6 +30,7 @@
     document.getElementById('side-panel-p2').style.display = '';
     document.getElementById('main-area').classList.add('two-player');
 
+    game._label = '1P';
     game.reset();
 
     window.game2 = new Game(document.getElementById('game-board-p2'), {
@@ -40,8 +41,9 @@
       gameOverId:    'game-over-p2',
       finalScoreId:  'final-score-p2',
       retryBtnId:    'retry-btn-p2',
-      titleId:       'game-over-title-p2',
-      keys: { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
+      titleId:       'modal-title-p2',
+      keys:  { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
+      label: '2P',
     });
 
     game.setPeer(window.game2);

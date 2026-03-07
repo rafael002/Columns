@@ -14,8 +14,10 @@ class Game {
       gameOver:    options.gameOverId    ?? 'game-over',
       finalScore:  options.finalScoreId  ?? 'final-score',
       retryBtn:    options.retryBtnId    ?? 'retry-btn',
-      title:       options.titleId       ?? 'game-over-title',
+      title:       options.titleId       ?? 'modal-title',
     };
+
+    this._label = options.label ?? null;
 
     this.peer = null;
     this.isWinner = false;
@@ -44,8 +46,10 @@ class Game {
     this.explosionEffect = null;
     this.previewExplosion = null;
     this._updateLoopId = null;
+    this._renderStarted = false;
     this._duringCountdown = true;
     this._countdownGen = 0;
+    this.isPaused = false;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
@@ -60,9 +64,13 @@ class Game {
         }
       });
 
-    document.getElementById(this._ids.retryBtn)?.addEventListener('click', () => this.reset());
+    document.getElementById(this._ids.retryBtn)?.addEventListener('click', () => {
+      this.reset();
+      this.peer?.reset();
+    });
     document.addEventListener('keydown', e => {
-      if (this.gameOver && e.key === 'Enter') this.reset();
+      if (this.gameOver && e.key === 'Enter') { this.reset(); this.peer?.reset(); }
+      if (e.key === 'Escape') this.togglePause();
     });
 
     this._startCountdown();
@@ -121,6 +129,8 @@ class Game {
    * Loop de renderização (60 FPS)
    */
   startGameLoop() {
+    if (this._renderStarted) return;
+    this._renderStarted = true;
     const render = () => {
       if (!this.gameOver) {
         this.render();
@@ -314,12 +324,55 @@ class Game {
   _finishGameOver() {
     this.isGameOverAnimating = false;
     this.gameOver = true;
+
+    // Em 1x1, só o vencedor (ou empate) exibe o overlay
+    if (this.peer && !this.isWinner && !this.isDraw) return;
+
     const overlay = document.getElementById(this._ids.gameOver);
-    if (overlay) {
-      const titleEl = document.getElementById(this._ids.title);
-      if (titleEl) titleEl.textContent = this.isDraw ? 'DRAW!' : this.isWinner ? 'YOU WON!' : 'GAME OVER';
-      document.getElementById(this._ids.finalScore).textContent = this.score;
-      overlay.classList.add('visible');
+    if (!overlay) return;
+
+    const titleEl = document.getElementById(this._ids.title);
+    if (titleEl) {
+      if (this.isDraw) {
+        titleEl.textContent = 'DRAW!';
+      } else if (this.isWinner) {
+        titleEl.textContent = this._label ? `${this._label} WON!` : 'YOU WON!';
+      } else {
+        titleEl.textContent = 'GAME OVER';
+      }
+    }
+
+    const scoreSpan = document.getElementById(this._ids.finalScore);
+    if (scoreSpan) {
+      const line = scoreSpan.closest('.game-over-score-line');
+      if (line && this.peer) {
+        const myLabel   = this._label        ?? 'P1';
+        const peerLabel = this.peer._label   ?? 'P2';
+        line.textContent = `${myLabel}: ${this.score}   ${peerLabel}: ${this.peer.score}`;
+      } else if (line) {
+        line.textContent = `Score: ${this.score}`;
+      }
+    }
+
+    overlay.classList.add('visible');
+  }
+
+  togglePause() {
+    if (this.gameOver || this.isGameOverAnimating || this._duringCountdown) return;
+
+    this.isPaused = !this.isPaused;
+    const overlay = document.getElementById(this._ids.gameOver);
+
+    if (this.isPaused) {
+      clearInterval(this._updateLoopId);
+      this._updateLoopId = null;
+      if (overlay) {
+        document.getElementById(this._ids.title).textContent = 'PAUSE!';
+        overlay.classList.add('visible', 'paused');
+      }
+    } else {
+      if (overlay) overlay.classList.remove('visible', 'paused');
+      this.startUpdateLoop();
     }
   }
 
@@ -356,9 +409,9 @@ class Game {
     this.isDraw = false;
     this._lostAt = null;
     this._duringCountdown = true;
-    this._countdownGen = 0;
+    this.isPaused = false;
 
-    document.getElementById(this._ids.gameOver)?.classList.remove('visible');
+    document.getElementById(this._ids.gameOver)?.classList.remove('visible', 'paused');
     document.getElementById(this._ids.score).textContent = 0;
     document.getElementById(this._ids.gems).textContent = 0;
     this._startCountdown();
