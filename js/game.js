@@ -1,37 +1,42 @@
-(function() {
-  const boardElement = document.getElementById('game-board');
-  if (!boardElement) {
-    console.error('game-board element not found!');
-    return;
-  }
-
+(function () {
   if (typeof CONFIG === 'undefined') {
-    console.error('CONFIG não está definido! Verifique se constants.js está carregado.');
-    return;
+    console.error('CONFIG não está definido!'); return;
   }
-
   if (typeof Board === 'undefined' || typeof Piece === 'undefined' || typeof Screen === 'undefined') {
-    console.error('Classes não estão definidas! Verifique se os scripts estão carregados.');
-    return;
+    console.error('Classes não estão definidas!'); return;
   }
 
-  console.log('Iniciando jogo...');
+  // ── Navegação entre telas ──────────────────────────────────────────────────
 
-  const game = new Game(boardElement);
-  window.game = game;
+  function showGame() {
+    document.getElementById('screen-menu').style.display = 'none';
+    document.getElementById('game-wrapper').style.display = '';
+  }
 
-  console.log('Jogo iniciado!', game);
+  document.getElementById('btn-settings').addEventListener('click', () => {
+    document.getElementById('screen-menu').style.display = 'none';
+    document.getElementById('screen-settings').style.display = 'flex';
+  });
 
-  // ── Modo 1×1 ──
-  document.getElementById('btn-1x1')?.addEventListener('click', () => {
-    if (window.game2) return;
+  document.getElementById('btn-back').addEventListener('click', () => {
+    document.getElementById('screen-settings').style.display = 'none';
+    document.getElementById('screen-menu').style.display = 'flex';
+  });
 
+  // ── Modos de jogo ─────────────────────────────────────────────────────────
+
+  document.getElementById('btn-1p').addEventListener('click', () => {
+    showGame();
+    window.game = new Game(document.getElementById('game-board'));
+  });
+
+  document.getElementById('btn-2p').addEventListener('click', () => {
     document.getElementById('board-wrapper-p2').style.display = '';
     document.getElementById('side-panel-p2').style.display = '';
     document.getElementById('main-area').classList.add('two-player');
+    showGame();
 
-    game._label = '1P';
-    game.reset();
+    window.game = new Game(document.getElementById('game-board'), { label: '1P' });
 
     window.game2 = new Game(document.getElementById('game-board-p2'), {
       scoreId:       'score-p2',
@@ -46,10 +51,7 @@
       label: '2P',
     });
 
-    game.setPeer(window.game2);
-    window.game2.setPeer(game);
-
-    document.getElementById('btn-1x1').disabled = true;
-    console.log('Modo 1×1 iniciado!', window.game2);
+    window.game.setPeer(window.game2);
+    window.game2.setPeer(window.game);
   });
 })();

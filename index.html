@@ -7,8 +7,38 @@
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-  <div id="game-wrapper">
-    <button id="btn-1x1">1×1</button>
+
+  <!-- ── Tela de menu ── -->
+  <div id="screen-menu" class="screen">
+    <div class="menu-container">
+      <h1 class="game-logo">COLUMNS</h1>
+      <div class="menu-gems">
+        <span class="mg" style="--c:var(--c1)"></span>
+        <span class="mg" style="--c:var(--c2)"></span>
+        <span class="mg" style="--c:var(--c3)"></span>
+        <span class="mg" style="--c:var(--c4)"></span>
+        <span class="mg" style="--c:var(--c5)"></span>
+        <span class="mg" style="--c:var(--c6)"></span>
+      </div>
+      <nav class="menu-nav">
+        <button class="menu-btn" id="btn-1p">1 PLAYER</button>
+        <button class="menu-btn" id="btn-2p">2 PLAYERS</button>
+        <button class="menu-btn menu-btn--secondary" id="btn-settings">SETTINGS</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ── Tela de configurações ── -->
+  <div id="screen-settings" class="screen" style="display:none">
+    <div class="menu-container">
+      <h2 class="menu-heading">SETTINGS</h2>
+      <p class="settings-placeholder">Em breve...</p>
+      <button class="menu-btn menu-btn--secondary" id="btn-back">BACK</button>
+    </div>
+  </div>
+
+  <!-- ── Jogo ── -->
+  <div id="game-wrapper" style="display:none">
     <div id="main-area">
 
       <!-- P1 NEXT (esquerda) -->

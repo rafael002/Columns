@@ -32,29 +32,107 @@ body {
   background-size: 45%; */
 }
 
+/* ── Telas (menu / settings) ── */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f1e;
+  z-index: 100;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.game-logo {
+  font-family: 'Diogenes', monospace;
+  font-size: 80px;
+  color: #f1c40f;
+  letter-spacing: 10px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 48px rgba(241, 196, 15, 0.25);
+}
+
+.menu-gems {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 52px;
+}
+
+.mg {
+  width: 18px;
+  height: 18px;
+  background: var(--c);
+  border-radius: 3px;
+}
+
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.menu-btn {
+  font-family: 'Diogenes', monospace;
+  font-size: 20px;
+  padding: 12px 0;
+  width: 280px;
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 3px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.menu-btn:hover {
+  background: #f1c40f;
+  border-color: #f1c40f;
+  color: #0f0f1e;
+}
+
+.menu-btn--secondary {
+  font-size: 16px;
+  padding: 8px 0;
+  color: #888;
+  border-color: #555;
+  margin-top: 8px;
+}
+
+.menu-btn--secondary:hover {
+  color: #0f0f1e;
+}
+
+.menu-heading {
+  font-family: 'Diogenes', monospace;
+  font-size: 40px;
+  color: #f1c40f;
+  letter-spacing: 6px;
+  margin-bottom: 32px;
+}
+
+.settings-placeholder {
+  font-family: 'Diogenes', monospace;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+/* ── Jogo ── */
 #game-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   position: relative;
-}
-
-#btn-1x1 {
-  font-family: 'Diogenes', monospace;
-  font-size: 16px;
-  padding: 6px 20px;
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: background 0.15s, color 0.15s;
-}
-
-#btn-1x1:hover {
-  background: #fff;
-  color: #1a1a2e;
 }
 
 #main-area {
