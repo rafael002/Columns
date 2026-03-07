@@ -27,7 +27,8 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #1a1a2e;
+  background-image: url("../images/stone.jpg");
+  background-size: 45%;
 }
 
 #game-wrapper {
@@ -38,36 +39,38 @@ body {
   position: relative;
 }
 
-#hud {
-  display: flex;
-  gap: 24px;
-  color: #fff;
+#btn-1x1 {
   font-family: 'Diogenes', monospace;
-  font-size: 18px;
+  font-size: 16px;
+  padding: 6px 20px;
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, color 0.15s;
 }
 
-#hud span::before {
-  color: #aaa;
-  font-size: 12px;
-  display: block;
-  text-align: center;
+#btn-1x1:hover {
+  background: #fff;
+  color: #1a1a2e;
 }
-
-#score::before { content: "SCORE"; }
-#gems::before  { content: "GEMS"; }
-#level::before { content: "LEVEL"; }
 
 #main-area {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  gap: 32px;
+  align-items: center;
 }
 
-#board-wrapper {
-  position: relative;
+/* ── Painel lateral (NEXT + HUD) ── */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-#next-piece-wrapper {
+.next-piece-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,7 +80,7 @@ body {
   font-size: 14px;
 }
 
-#next-piece-preview {
+.next-piece-preview {
   position: relative;
   display: grid;
   grid-template-columns: var(--cell-size);
@@ -85,7 +88,75 @@ body {
   border: 1px solid #444;
 }
 
-#game-board {
+/* ── Stats panel (SCORE / GEMS / LEVEL) ── */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: calc(13 * var(--cell-size));
+  font-family: 'Diogenes', monospace;
+}
+
+.value-display {
+  position: relative;
+  width: 130px;
+}
+
+.value-display span {
+  padding: 5px 10px;
+}
+
+.value-display div {
+  position: relative;
+  color: #f1c40f;
+  background-color: #000;
+}
+
+.value-display .st-player span,
+.value-display .nd-player span {
+  font-size: 20px;
+}
+
+.label {
+  width: 70px;
+  text-align: center;
+  left: 30px;
+  font-size: 20px;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.st-player {
+  width: 100px;
+  text-align: left;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.nd-player {
+  display: none;
+  width: 100px;
+  text-align: right;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  left: 30px;
+}
+
+#main-area.two-player .nd-player {
+  display: block;
+}
+
+/* ── Tabuleiro ── */
+.board-wrapper {
+  position: relative;
+}
+
+.game-board {
   display: grid;
   grid-template-columns: repeat(6, var(--cell-size));
   grid-template-rows: repeat(13, var(--cell-size));
@@ -140,7 +211,7 @@ body {
 }
 
 /* ── Game Over overlay ── */
-#game-over {
+.game-over {
   display: none;
   position: absolute;
   top: 0; left: 0;
@@ -150,11 +221,11 @@ body {
   z-index: 10;
 }
 
-#game-over.visible {
+.game-over.visible {
   display: flex;
 }
 
-#game-over-modal {
+.game-over-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -167,17 +238,17 @@ body {
   text-align: center;
 }
 
-#game-over-title {
+.game-over-title {
   font-size: 28px;
   letter-spacing: 2px;
 }
 
-#game-over-score {
+.game-over-score-line {
   font-size: 16px;
   color: #aaa;
 }
 
-#retry-btn {
+.retry-btn {
   margin-top: 8px;
   padding: 8px 24px;
   font-family: 'Diogenes', monospace;
@@ -190,7 +261,7 @@ body {
   transition: background 0.15s, color 0.15s;
 }
 
-#retry-btn:hover {
+.retry-btn:hover {
   background: #fff;
   color: #1a1a2e;
 }
