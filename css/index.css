@@ -27,9 +27,24 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #34495e;
-  /* background-image: url("../images/stone.jpg");
-  background-size: 45%; */
+  background-color: #510506;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Telas (menu / settings) ── */
@@ -175,9 +190,16 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  color: #fff;
+  color: #f1c40f;
   font-family: 'Diogenes', monospace;
   font-size: 14px;
+  background-color: #000;
+  border: 2px solid #000;
+  border-radius: 3px;
+}
+
+.next-piece-label {
+  padding-top: 7px;
 }
 
 .next-piece-preview {
