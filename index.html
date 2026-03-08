@@ -10,6 +10,18 @@
 
   <!-- ── Tela de menu ── -->
   <div id="screen-menu" class="screen">
+    <div class="corner-orb corner-orb--left">
+      <div class="orb-mid">
+        <div class="orb-inner"></div>
+      </div>
+    </div>
+    <div class="corner-orb corner-orb--right">
+      <div class="orb-mid">
+        <div class="orb-inner"></div>
+      </div>
+    </div>
+    <span class="orb-god-icon" id="orb-icon-left"></span>
+    <span class="orb-god-icon" id="orb-icon-right"></span>
     <div class="menu-container">
       <h1 class="game-logo">COLUMNS</h1>
       <div class="menu-gems">
@@ -119,5 +131,24 @@
   <script src="js/classes/ExplosionEffect.js"></script>
   <script src="js/classes/Game.js"></script>
   <script src="js/game.js"></script>
+  <script>
+    (function () {
+      const gods = [
+        '⚡', // Zeus      — raio
+        'Ψ',  // Poseidon  — tridente (psi grego)
+        '☿',  // Hermes    — caduceu
+        '⚔',  // Ares      — espadas cruzadas
+        '☀',  // Apollo    — sol
+        '☽',  // Artemis   — lua crescente
+        '⚒',  // Hefesto   — martelo
+        '⚖',  // Temis     — balança
+      ];
+      const i1 = Math.floor(Math.random() * gods.length);
+      let i2;
+      do { i2 = Math.floor(Math.random() * gods.length); } while (i2 === i1);
+      document.getElementById('orb-icon-left').textContent  = gods[i1];
+      document.getElementById('orb-icon-right').textContent = gods[i2];
+    })();
+  </script>
 </body>
 </html>
