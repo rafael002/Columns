@@ -82,17 +82,18 @@
 /* ── Give up ── */
 .give-up-btn {
   font-family: var(--font-main);
-  font-size: 12px;
-  padding: 6px 16px;
+  font-size: 13px;
+  padding: 6px 20px;
   background: transparent;
-  color: var(--color-text-dim);
-  border: 1px solid var(--color-border-muted);
+  color: var(--color-text);
+  border: 1px solid var(--color-text);
   cursor: pointer;
   letter-spacing: 2px;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 
 .give-up-btn:hover {
-  color: var(--color-danger);
+  background: var(--color-danger);
   border-color: var(--color-danger);
+  color: var(--color-text);
 }
