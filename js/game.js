@@ -225,6 +225,13 @@
   function showGame() {
     stopMenuMusic();
     document.getElementById('game-wrapper').style.display = 'flex';
+    document.getElementById('btn-give-up-p1').disabled = true;
+    document.getElementById('btn-give-up-p2').disabled = true;
+  }
+
+  function enableGiveUp() {
+    document.getElementById('btn-give-up-p1').disabled = false;
+    document.getElementById('btn-give-up-p2').disabled = false;
   }
 
   function goToMenu() {
@@ -315,7 +322,7 @@
     return {
       countdownDuration: getCountdownDuration(),
       onCountdownStart:  playCountdownMusic,
-      onGameStart:       startGameMusic,
+      onGameStart:       () => { startGameMusic(); enableGiveUp(); },
       onGameOver:        playGameOverMusic,
       onPause:           pauseMusic,
       onResume:          resumeMusic,

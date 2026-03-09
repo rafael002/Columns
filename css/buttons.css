@@ -97,3 +97,9 @@
   border-color: var(--color-danger);
   color: var(--color-text);
 }
+
+.give-up-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+  pointer-events: none;
+}
