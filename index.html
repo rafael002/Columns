@@ -30,14 +30,35 @@
           <p class="howto-rule">Match <strong>3 or more</strong> gems of the same color — horizontally, vertically or diagonally — to destroy them.</p>
         </div>
 
-        <div class="howto-controls">
+        <!-- Single Player controls -->
+        <div class="howto-controls howto-controls-sp">
           <div class="howto-key-row"><kbd>← →</kbd><span>Move column</span></div>
           <div class="howto-key-row"><kbd>↓</kbd><span>Drop faster</span></div>
           <div class="howto-key-row"><kbd>SPACE</kbd><span>Cycle gem colors</span></div>
           <div class="howto-key-row"><kbd>ESC</kbd><span>Pause</span></div>
         </div>
 
-        <div class="howto-section">
+        <!-- Versus controls -->
+        <div class="howto-controls howto-controls-vs" style="display:none">
+          <div class="howto-vs-cols">
+            <div class="howto-vs-player">
+              <p class="howto-vs-label">P1</p>
+              <div class="howto-key-row"><kbd>A D</kbd><span>Move</span></div>
+              <div class="howto-key-row"><kbd>S</kbd><span>Drop faster</span></div>
+              <div class="howto-key-row"><kbd>C</kbd><span>Cycle colors</span></div>
+            </div>
+            <div class="howto-vs-divider"></div>
+            <div class="howto-vs-player">
+              <p class="howto-vs-label">P2</p>
+              <div class="howto-key-row"><kbd>J L</kbd><span>Move</span></div>
+              <div class="howto-key-row"><kbd>K</kbd><span>Drop faster</span></div>
+              <div class="howto-key-row"><kbd>SPACE</kbd><span>Cycle colors</span></div>
+            </div>
+          </div>
+          <div class="howto-key-row howto-esc-row"><kbd>ESC</kbd><span>Pause</span></div>
+        </div>
+
+        <div class="howto-section howto-score-line">
           <p class="howto-rule">Each gem destroyed = <strong>200 pts</strong>. Speed increases every 15 gems.</p>
         </div>
       </div>

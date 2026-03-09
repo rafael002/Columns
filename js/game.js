@@ -488,7 +488,7 @@
   }
 
   function startTwoPlayerGame() {
-    showHowtoThen(_launchTwoPlayerGame);
+    showHowtoThen(_launchTwoPlayerGame, 'versus');
   }
 
   function _launchTwoPlayerGame() {
@@ -503,7 +503,10 @@
     document.getElementById('game-board').closest('.board-area').querySelector('.player-label').textContent = _p1Name;
     document.getElementById('game-board-p2').closest('.board-area').querySelector('.player-label').textContent = _p2Name;
 
-    window.game = new Game(document.getElementById('game-board'), makeGameOptions({ label: _p1Name }));
+    window.game = new Game(document.getElementById('game-board'), makeGameOptions({
+      label: _p1Name,
+      keys:  { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 67 }, // A, D, S, C
+    }));
 
     window.game2 = new Game(document.getElementById('game-board-p2'), makeGameOptions({
       scoreId:       'score-p2',
@@ -514,7 +517,7 @@
       finalScoreId:  'final-score',
       retryBtnId:    'retry-btn',
       titleId:       'modal-title',
-      keys:          { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
+      keys:          { LEFT: 74, RIGHT: 76, DOWN: 75, SHUFFLE: 32 }, // J, L, K, Space
       label:         _p2Name,
       onCountdownStart: null,
       onGameStart:      null,
@@ -557,14 +560,19 @@
   const _HOWTO_KEY = 'columns_skip_howto';
   let _pendingGameStart = null;
 
-  function showHowtoThen(fn) {
+  function showHowtoThen(fn, mode = 'single') {
+    const overlay = document.getElementById('screen-howto');
+    overlay.dataset.mode = mode;
+    overlay.querySelector('.howto-controls-sp').style.display  = mode === 'single'  ? '' : 'none';
+    overlay.querySelector('.howto-controls-vs').style.display  = mode === 'versus'  ? '' : 'none';
+    overlay.querySelector('.howto-score-line').style.display   = mode === 'single'  ? '' : 'none';
     if (localStorage.getItem(_HOWTO_KEY)) {
       fn();
       return;
     }
     document.getElementById('howto-skip-check').checked = false;
     _pendingGameStart = fn;
-    document.getElementById('screen-howto').classList.add('visible');
+    overlay.classList.add('visible');
   }
 
   function dismissHowto() {
