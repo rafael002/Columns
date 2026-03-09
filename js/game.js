@@ -304,6 +304,8 @@
 
     // Reseta a UI do jogo
     document.getElementById('game-over').classList.remove('visible', 'paused', 'confirming');
+    document.getElementById('high-score-overlay').classList.remove('visible');
+    document.getElementById('screen-scores').style.display = 'none';
     document.getElementById('board-wrapper-p2').style.display = 'none';
     document.getElementById('side-panel-p2').style.display = 'none';
     document.getElementById('main-area').classList.remove('two-player');
@@ -340,6 +342,44 @@
     playSfxThen('sfx_click', goToMenu);
   });
 
+  // ── High Scores ───────────────────────────────────────────────────────────
+
+  function showHighScoreEntry(score, rank) {
+    document.getElementById('hs-final-score').textContent = score.toLocaleString();
+    document.getElementById('hs-rank-msg').textContent = `RANK #${rank}`;
+    document.getElementById('hs-name-input').value = '';
+    document.getElementById('high-score-overlay').classList.add('visible');
+    setTimeout(() => document.getElementById('hs-name-input').focus(), 100);
+  }
+
+  function confirmHighScore() {
+    const name  = document.getElementById('hs-name-input').value.trim() || 'PLAYER';
+    const score = window.game?.score ?? 0;
+    ScoreBoard.addScore(name, score);
+    document.getElementById('high-score-overlay').classList.remove('visible');
+    playSfx('sfx_click');
+  }
+
+  document.getElementById('hs-confirm-btn').addEventListener('click', confirmHighScore);
+  document.getElementById('hs-name-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') confirmHighScore();
+  });
+
+  document.getElementById('btn-scores').addEventListener('click', () => {
+    playSfxThen('sfx_click', () => {
+      ScoreBoard.render('scores-list');
+      document.getElementById('screen-menu').style.display = 'none';
+      document.getElementById('screen-scores').style.display = 'flex';
+    });
+  });
+
+  document.getElementById('btn-scores-back').addEventListener('click', () => {
+    playSfxThen('sfx_click', () => {
+      document.getElementById('screen-scores').style.display = 'none';
+      document.getElementById('screen-menu').style.display = 'flex';
+    });
+  });
+
   // ── Settings ──────────────────────────────────────────────────────────────
 
   document.getElementById('btn-settings').addEventListener('click', () => {
@@ -354,6 +394,24 @@
       document.getElementById('screen-settings').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
     });
+  });
+
+  document.getElementById('btn-clear-data').addEventListener('click', () => {
+    playSfx('sfx_click');
+    document.getElementById('clear-confirm-overlay').classList.add('visible');
+  });
+
+  document.getElementById('btn-clear-no').addEventListener('click', () => {
+    playSfx('sfx_back');
+    document.getElementById('clear-confirm-overlay').classList.remove('visible');
+  });
+
+  document.getElementById('btn-clear-yes').addEventListener('click', () => {
+    ['columns_music_vol', 'columns_sfx_vol', 'columns_music_muted', 'columns_sfx_muted',
+     'columns_track', 'columns_scores', 'columns_skip_howto_sp', 'columns_skip_howto_vs',
+    ].forEach(k => localStorage.removeItem(k));
+    document.getElementById('clear-confirm-overlay').classList.remove('visible');
+    playSfx('sfx_click');
   });
 
   // ── Start ─────────────────────────────────────────────────────────────────
@@ -388,8 +446,18 @@
 
   document.getElementById('btn-1p').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
-      showGame();
-      window.game = new Game(document.getElementById('game-board'), makeGameOptions());
+      showHowtoThen(() => {
+        showGame();
+        window.game = new Game(document.getElementById('game-board'), makeGameOptions({
+          onGameOver: () => {
+            playGameOverMusic();
+            const score = window.game?.score ?? 0;
+            if (ScoreBoard.qualifies(score)) {
+              showHighScoreEntry(score, ScoreBoard.getRank(score));
+            }
+          },
+        }));
+      });
     });
   });
 
@@ -438,6 +506,10 @@
   }
 
   function startTwoPlayerGame() {
+    showHowtoThen(_launchTwoPlayerGame, 'versus');
+  }
+
+  function _launchTwoPlayerGame() {
     stopNameEntryMusic();
     document.getElementById('screen-name-entry').style.display = 'none';
     document.getElementById('board-wrapper-p2').style.display = '';
@@ -449,7 +521,10 @@
     document.getElementById('game-board').closest('.board-area').querySelector('.player-label').textContent = _p1Name;
     document.getElementById('game-board-p2').closest('.board-area').querySelector('.player-label').textContent = _p2Name;
 
-    window.game = new Game(document.getElementById('game-board'), makeGameOptions({ label: _p1Name }));
+    window.game = new Game(document.getElementById('game-board'), makeGameOptions({
+      label: _p1Name,
+      keys:  { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 67 }, // A, D, S, C
+    }));
 
     window.game2 = new Game(document.getElementById('game-board-p2'), makeGameOptions({
       scoreId:       'score-p2',
@@ -460,7 +535,7 @@
       finalScoreId:  'final-score',
       retryBtnId:    'retry-btn',
       titleId:       'modal-title',
-      keys:          { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
+      keys:          { LEFT: 74, RIGHT: 76, DOWN: 75, SHUFFLE: 32 }, // J, L, K, Space
       label:         _p2Name,
       onCountdownStart: null,
       onGameStart:      null,
@@ -496,5 +571,49 @@
       document.getElementById('screen-name-entry').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
     });
+  });
+
+  // ── Auto-pause ao perder foco ─────────────────────────────────────────────
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && window.game && !window.game.gameOver && !window.game.isPaused) {
+      window.game.togglePause();
+    }
+  });
+
+  // ── How to Play ───────────────────────────────────────────────────────────
+
+  const _HOWTO_KEYS = { single: 'columns_skip_howto_sp', versus: 'columns_skip_howto_vs' };
+  let _pendingGameStart = null;
+  let _currentHowtoMode = 'single';
+
+  function showHowtoThen(fn, mode = 'single') {
+    _currentHowtoMode = mode;
+    const overlay = document.getElementById('screen-howto');
+    overlay.querySelector('.howto-controls-sp').style.display = mode === 'single' ? '' : 'none';
+    overlay.querySelector('.howto-controls-vs').style.display = mode === 'versus' ? '' : 'none';
+    overlay.querySelector('.howto-score-line').style.display  = mode === 'single' ? '' : 'none';
+    if (localStorage.getItem(_HOWTO_KEYS[mode])) {
+      fn();
+      return;
+    }
+    document.getElementById('howto-skip-check').checked = false;
+    _pendingGameStart = fn;
+    overlay.classList.add('visible');
+  }
+
+  function dismissHowto() {
+    if (document.getElementById('howto-skip-check').checked) {
+      localStorage.setItem(_HOWTO_KEYS[_currentHowtoMode], '1');
+    }
+    document.getElementById('screen-howto').classList.remove('visible');
+    const fn = _pendingGameStart;
+    _pendingGameStart = null;
+    fn?.();
+  }
+
+  document.getElementById('btn-howto-ok').addEventListener('click', () => {
+    playSfx('sfx_click');
+    dismissHowto();
   });
 })();

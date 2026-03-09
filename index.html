@@ -20,6 +20,58 @@
 </head>
 <body>
 
+  <!-- ── How to Play ── -->
+  <div id="screen-howto" class="game-over">
+    <div class="game-over-modal howto-modal">
+      <p class="modal-title">HOW TO PLAY</p>
+
+      <div class="howto-body">
+        <div class="howto-section">
+          <p class="howto-rule">Match <strong>3 or more</strong> gems of the same color — horizontally, vertically or diagonally — to destroy them.</p>
+        </div>
+
+        <!-- Single Player controls -->
+        <div class="howto-controls howto-controls-sp">
+          <div class="howto-key-row"><kbd>← →</kbd><span>Move column</span></div>
+          <div class="howto-key-row"><kbd>↓</kbd><span>Drop faster</span></div>
+          <div class="howto-key-row"><kbd>SPACE</kbd><span>Shuffle</span></div>
+          <div class="howto-key-row"><kbd>ESC</kbd><span>Pause</span></div>
+        </div>
+
+        <!-- Versus controls -->
+        <div class="howto-controls howto-controls-vs" style="display:none">
+          <div class="howto-vs-cols">
+            <div class="howto-vs-player">
+              <p class="howto-vs-label">P1</p>
+              <div class="howto-key-row"><kbd>A D</kbd><span>Move</span></div>
+              <div class="howto-key-row"><kbd>S</kbd><span>Drop faster</span></div>
+              <div class="howto-key-row"><kbd>C</kbd><span>Shuffle</span></div>
+            </div>
+            <div class="howto-vs-divider"></div>
+            <div class="howto-vs-player">
+              <p class="howto-vs-label">P2</p>
+              <div class="howto-key-row"><kbd>J L</kbd><span>Move</span></div>
+              <div class="howto-key-row"><kbd>K</kbd><span>Drop faster</span></div>
+              <div class="howto-key-row"><kbd>SPACE</kbd><span>Shuffle</span></div>
+            </div>
+          </div>
+          <div class="howto-key-row howto-esc-row"><kbd>ESC</kbd><span>Pause</span></div>
+        </div>
+
+        <div class="howto-section howto-score-line">
+          <p class="howto-rule">Each gem destroyed = <strong>200 pts</strong>. Speed increases every 15 gems.</p>
+        </div>
+      </div>
+
+      <label class="howto-check-label">
+        <input type="checkbox" id="howto-skip-check">
+        <span>Don't show this again</span>
+      </label>
+
+      <button class="menu-btn" id="btn-howto-ok">GOT IT!</button>
+    </div>
+  </div>
+
   <!-- ── Tela de menu ── -->
   <div id="screen-menu" class="screen">
     <div class="corner-orb corner-orb--left">
@@ -47,8 +99,9 @@
       <button class="menu-btn menu-btn--start" id="btn-start">START</button>
       <p class="press-start-hint" id="press-start-hint">CLICK START BUTTON</p>
       <nav class="menu-nav" id="main-nav" style="display:none">
-        <button class="menu-btn" id="btn-1p">1 PLAYER</button>
-        <button class="menu-btn" id="btn-2p">2 PLAYERS</button>
+        <button class="menu-btn" id="btn-1p">SINGLE PLAYER</button>
+        <button class="menu-btn" id="btn-2p">VERSUS</button>
+        <button class="menu-btn" id="btn-scores">HIGH SCORES</button>
         <button class="menu-btn" id="btn-settings">SETTINGS</button>
         <span class="menu-version">v1.0</span>
       </nav>
@@ -81,6 +134,8 @@
             </div>
           </div>
 
+          <button class="menu-btn menu-btn--danger" id="btn-clear-data">CLEAR DATA</button>
+
           <button class="menu-btn" id="btn-back">BACK</button>
 
         </div>
@@ -112,6 +167,15 @@
 
       </div>
       <button class="menu-btn" id="btn-name-back">BACK</button>
+    </div>
+  </div>
+
+  <!-- ── Tela de scores ── -->
+  <div id="screen-scores" class="screen" style="display:none">
+    <div class="scores-container">
+      <h2 class="menu-heading">HIGH SCORES</h2>
+      <div class="scores-list" id="scores-list"></div>
+      <button class="menu-btn" id="btn-scores-back">BACK</button>
     </div>
   </div>
 
@@ -192,6 +256,29 @@
     </div>
   </div>
 
+  <!-- ── Overlay confirmação clear data ── -->
+  <div id="clear-confirm-overlay" class="game-over">
+    <div class="game-over-modal">
+      <p class="modal-title" style="color:var(--color-danger)">CLEAR DATA</p>
+      <p class="game-over-score-line">This will erase all scores, settings and preferences.</p>
+      <div class="modal-action-btns">
+        <button class="retry-btn menu-btn--danger" id="btn-clear-yes">YES, CLEAR</button>
+        <button class="retry-btn" id="btn-clear-no">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Overlay novo recorde ── -->
+  <div id="high-score-overlay" class="game-over">
+    <div class="game-over-modal">
+      <p class="modal-title hs-title">NEW RECORD!</p>
+      <p class="game-over-score-line">Score: <span id="hs-final-score">0</span></p>
+      <p class="hs-rank-msg" id="hs-rank-msg"></p>
+      <input type="text" id="hs-name-input" class="name-entry-input hs-input" maxlength="10" placeholder="YOUR NAME" autocomplete="off">
+      <button id="hs-confirm-btn" class="menu-btn">OK</button>
+    </div>
+  </div>
+
   <!-- ── Scripts: lógica do jogo ── -->
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
@@ -206,6 +293,7 @@
   <script src="js/game.js"></script>
 
   <!-- ── Scripts: UI ── -->
+  <script src="js/ui/scoreboard.js"></script>
   <script src="js/ui/menu.js"></script>
 
 </body>
