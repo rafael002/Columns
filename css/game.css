@@ -235,9 +235,9 @@
   color: var(--color-bg);
 }
 
-.music-switch-btn .music-icon {
-  font-size: 20px;
-  line-height: 1;
+.music-switch-btn svg {
+  width: 18px;
+  height: 18px;
   vertical-align: middle;
 }
 
