@@ -1,4 +1,4 @@
-/* ── Game Over / Pause / Confirmação ── */
+/* ── Game Over / Pause ── */
 .game-over {
   display: none;
   position: fixed;
@@ -41,25 +41,10 @@
   letter-spacing: 1px;
 }
 
-/* ── Confirmação de saída ── */
-.modal-confirm-btns {
-  display: none;
-  gap: 20px;
-  margin-top: 4px;
-}
-
-.game-over.confirming .game-over-score-line,
-.game-over.confirming #retry-btn {
-  display: none;
-}
-
-.game-over.confirming .modal-confirm-btns {
-  display: flex;
-}
-
 /* ── Pause ── */
 .game-over.paused .game-over-score-line,
-.game-over.paused .retry-btn {
+.game-over.paused .retry-btn,
+.game-over.paused #menu-btn-overlay {
   display: none;
 }
 

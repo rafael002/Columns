@@ -117,7 +117,6 @@
 
   <!-- ── Jogo ── -->
   <div id="game-wrapper" style="display:none">
-    <button id="btn-back-to-menu" class="back-to-menu-btn">&#8592; MENU</button>
     <div id="main-area">
 
       <!-- P1 NEXT (esquerda) -->
@@ -126,6 +125,7 @@
           <span class="next-piece-label">NEXT</span>
           <div id="next-piece-preview" class="next-piece-preview"></div>
         </div>
+        <button class="give-up-btn" id="btn-give-up-p1">GIVE UP</button>
       </div>
 
       <!-- P1 tabuleiro -->
@@ -169,6 +169,7 @@
           <span class="next-piece-label">NEXT</span>
           <div id="next-piece-preview-p2" class="next-piece-preview"></div>
         </div>
+        <button class="give-up-btn" id="btn-give-up-p2">GIVE UP</button>
       </div>
 
     </div>
@@ -181,10 +182,7 @@
       <p class="pause-hint">PRESSIONE "ESC" PARA RETOMAR O JOGO.</p>
       <p class="game-over-score-line">Score: <span id="final-score">0</span></p>
       <button id="retry-btn" class="retry-btn">RETRY</button>
-      <div class="modal-confirm-btns">
-        <button id="btn-confirm-no"  class="retry-btn">NÃO</button>
-        <button id="btn-confirm-yes" class="retry-btn confirm-yes">SIM</button>
-      </div>
+      <button id="menu-btn-overlay" class="retry-btn">MENU</button>
     </div>
   </div>
 

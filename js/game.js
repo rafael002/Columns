@@ -257,67 +257,28 @@
     document.getElementById('main-nav').style.display = 'none';
   }
 
-  // ── Confirmação de saída ───────────────────────────────────────────────────
+  // ── Give Up ───────────────────────────────────────────────────────────────
 
-  let _savedOverlayClasses = '';
-  let _pausedByConfirm     = false;
-
-  function showConfirm() {
-    if (window.game?._duringCountdown) return;
-    const overlay = document.getElementById('game-over');
-
-    // Salva estado atual do overlay para restaurar se cancelar
-    _savedOverlayClasses = overlay.className;
-
-    // Pausa silenciosamente se o jogo estiver rodando
-    _pausedByConfirm = false;
-    if (window.game && !window.game.gameOver && !window.game.isPaused) {
-      window.game.pauseSilent();
-      window.game2?.pauseSilent();
-      pauseMusic();
-      _pausedByConfirm = true;
-    }
-
-    document.getElementById('modal-title').textContent = 'DESEJA REALMENTE SAIR?';
-    overlay.className = 'game-over visible confirming';
-  }
-
-  function cancelConfirm() {
-    const overlay = document.getElementById('game-over');
-    overlay.className = _savedOverlayClasses;
-
-    if (_pausedByConfirm) {
-      window.game?.resumeSilent();
-      window.game2?.resumeSilent();
-      resumeMusic();
-      _pausedByConfirm = false;
-    }
-  }
-
-  document.getElementById('btn-back-to-menu').addEventListener('click', () => {
-    playSfxThen('sfx_click', showConfirm);
+  document.getElementById('btn-give-up-p1').addEventListener('click', () => {
+    if (!window.game || window.game.gameOver || window.game.isGameOverAnimating) return;
+    playSfx('sfx_click');
+    window.game.endGame();
   });
-  document.getElementById('btn-confirm-yes').addEventListener('click', () => {
-    playSfxThen('sfx_click', goToMenu);
+
+  document.getElementById('btn-give-up-p2').addEventListener('click', () => {
+    if (!window.game2 || window.game2.gameOver || window.game2.isGameOverAnimating) return;
+    playSfx('sfx_click');
+    window.game2.endGame();
   });
-  document.getElementById('btn-confirm-no').addEventListener('click', () => {
-    playSfxThen('sfx_click', cancelConfirm);
-  });
+
+  // ── Overlay buttons ───────────────────────────────────────────────────────
+
   document.getElementById('retry-btn')?.addEventListener('click', () => {
     playSfx('sfx_click');
   });
 
-  // ── Confirmação de saída da página ────────────────────────────────────────
-
-  window.addEventListener('beforeunload', (e) => {
-    if (!window.game || window.game.gameOver) return;
-
-    // Pausa o(s) jogo(s) antes do diálogo nativo do navegador aparecer
-    if (!window.game.isPaused) window.game.togglePause();
-    if (window.game2 && !window.game2.isPaused) window.game2.togglePause();
-
-    e.preventDefault();
-    e.returnValue = '';
+  document.getElementById('menu-btn-overlay').addEventListener('click', () => {
+    playSfxThen('sfx_click', goToMenu);
   });
 
   // ── Settings ──────────────────────────────────────────────────────────────
