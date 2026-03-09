@@ -20,6 +20,37 @@
 </head>
 <body>
 
+  <!-- ── How to Play ── -->
+  <div id="screen-howto" class="game-over">
+    <div class="game-over-modal howto-modal">
+      <p class="modal-title">HOW TO PLAY</p>
+
+      <div class="howto-body">
+        <div class="howto-section">
+          <p class="howto-rule">Match <strong>3 or more</strong> gems of the same color — horizontally, vertically or diagonally — to destroy them.</p>
+        </div>
+
+        <div class="howto-controls">
+          <div class="howto-key-row"><kbd>← →</kbd><span>Move column</span></div>
+          <div class="howto-key-row"><kbd>↓</kbd><span>Drop faster</span></div>
+          <div class="howto-key-row"><kbd>SPACE</kbd><span>Cycle gem colors</span></div>
+          <div class="howto-key-row"><kbd>ESC</kbd><span>Pause</span></div>
+        </div>
+
+        <div class="howto-section">
+          <p class="howto-rule">Each gem destroyed = <strong>200 pts</strong>. Speed increases every 15 gems.</p>
+        </div>
+      </div>
+
+      <label class="howto-check-label">
+        <input type="checkbox" id="howto-skip-check">
+        <span>Don't show this again</span>
+      </label>
+
+      <button class="menu-btn" id="btn-howto-ok">GOT IT!</button>
+    </div>
+  </div>
+
   <!-- ── Tela de menu ── -->
   <div id="screen-menu" class="screen">
     <div class="corner-orb corner-orb--left">

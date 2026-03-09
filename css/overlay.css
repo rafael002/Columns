@@ -69,3 +69,82 @@
 .game-over.paused .modal-title {
   letter-spacing: 6px;
 }
+
+/* ── How to Play ── */
+#screen-howto {
+  z-index: 500;
+  background: rgba(0,0,0,0.85);
+}
+
+.howto-modal {
+  max-width: 480px;
+  gap: 16px;
+}
+
+.howto-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.howto-section {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+.howto-section strong {
+  color: var(--color-accent);
+}
+
+.howto-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.howto-key-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.howto-key-row kbd {
+  font-family: var(--font-main);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 3px 10px;
+  min-width: 80px;
+  text-align: center;
+  background: transparent;
+}
+
+.howto-key-row span {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  letter-spacing: 1px;
+}
+
+.howto-check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.howto-check-label input[type="checkbox"] {
+  accent-color: var(--color-accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
