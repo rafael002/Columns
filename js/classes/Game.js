@@ -257,8 +257,10 @@ class Game {
 
   _addGems(count) {
     this.gems += count;
+    this.score += count * 200;
     this._onMatch?.();
-    document.getElementById(this._ids.gems).textContent = this.gems;
+    document.getElementById(this._ids.gems).textContent  = this.gems;
+    document.getElementById(this._ids.score).textContent = this.score;
 
     const newLevel = Math.floor(this.gems / 15) + 1;
     if (newLevel > this.level) {
