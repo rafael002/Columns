@@ -36,7 +36,8 @@
   box-sizing: border-box;
 }
 
-.settings-content #btn-back {
+.settings-content #btn-back,
+.settings-content #btn-clear-data {
   align-self: center;
   margin-top: 8px;
 }
