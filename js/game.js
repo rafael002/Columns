@@ -96,10 +96,58 @@
   let _musicAudio = null;
   let _gameOverAudio = null;
 
+  // ── Seletor de música ──────────────────────────────────────────────────────
+
+  let _selectableTracks = [];
+  let _currentTrackIndex = 0;
+  const _TRACK_STORAGE_KEY = 'columns_game_track';
+
+  function getCurrentTrackKey() {
+    return _selectableTracks[_currentTrackIndex] ?? 'music_clotho';
+  }
+
+  function updateMusicSwitchBtn() {
+    const btn = document.getElementById('btn-music-switch');
+    if (!btn || _selectableTracks.length === 0) return;
+    const label = getCurrentTrackKey().replace('music_', '').toUpperCase();
+    btn.textContent = '♪  ' + label;
+  }
+
+  function cycleMusic() {
+    if (_selectableTracks.length < 2) return;
+    _currentTrackIndex = (_currentTrackIndex + 1) % _selectableTracks.length;
+    localStorage.setItem(_TRACK_STORAGE_KEY, getCurrentTrackKey());
+    updateMusicSwitchBtn();
+    if (_musicAudio) {
+      const wasPaused = window.game?.isPaused;
+      stopMusic();
+      startGameMusic();
+      if (wasPaused) pauseMusic();
+    }
+  }
+
+  document.getElementById('btn-music-switch').addEventListener('click', () => {
+    playSfx('sfx_click');
+    cycleMusic();
+  });
+
+  // ── Carregamento de recursos ───────────────────────────────────────────────
+
   fetch('js/config/resources.json')
     .then(r => r.json())
     .then(config => {
       _rm = new ResourceManager(config);
+
+      // Determina tracks selecionáveis e restaura preferência salva
+      _selectableTracks = Object.entries(config.audio)
+        .filter(([, v]) => v.selectable)
+        .map(([k]) => k);
+      const defaultKey = Object.entries(config.audio).find(([, v]) => v.default)?.[0] ?? _selectableTracks[0];
+      const saved = localStorage.getItem(_TRACK_STORAGE_KEY);
+      const savedIdx = _selectableTracks.indexOf(saved);
+      _currentTrackIndex = savedIdx >= 0 ? savedIdx : _selectableTracks.indexOf(defaultKey);
+      if (_currentTrackIndex < 0) _currentTrackIndex = 0;
+
       return Promise.all([
         _rm.loadResource('audio', 'music_lathesis'),
         _rm.loadResource('audio', 'music_game_start'),
@@ -112,8 +160,10 @@
         _rm.loadResource('audio', 'sfx_match'),
         _rm.loadResource('audio', 'sfx_level_up'),
         _rm.loadResource('audio', 'sfx_problem'),
+        ..._selectableTracks.map(k => _rm.loadResource('audio', k)),
       ]);
     })
+    .then(() => updateMusicSwitchBtn())
     .catch(err => console.warn('Erro ao carregar áudio:', err));
 
   function getCountdownDuration() {
@@ -165,7 +215,7 @@
 
   function startGameMusic() {
     stopMusic();
-    _musicAudio = _rm?.playSound('music_clotho');
+    _musicAudio = _rm?.playSound(getCurrentTrackKey());
     applyMusicSettings(_musicAudio);
   }
 

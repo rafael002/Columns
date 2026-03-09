@@ -117,6 +117,7 @@
 
   <!-- ── Jogo ── -->
   <div id="game-wrapper" style="display:none">
+    <button id="btn-music-switch" class="music-switch-btn"></button>
     <div id="main-area">
 
       <!-- P1 NEXT (esquerda) -->
@@ -181,8 +182,10 @@
       <p class="modal-title" id="modal-title">GAME OVER</p>
       <p class="pause-hint">PRESSIONE "ESC" PARA RETOMAR O JOGO.</p>
       <p class="game-over-score-line">Score: <span id="final-score">0</span></p>
-      <button id="retry-btn" class="retry-btn">RETRY</button>
-      <button id="menu-btn-overlay" class="retry-btn">MENU</button>
+      <div class="modal-action-btns">
+        <button id="menu-btn-overlay" class="retry-btn">MENU</button>
+        <button id="retry-btn" class="retry-btn">RETRY</button>
+      </div>
     </div>
   </div>
 

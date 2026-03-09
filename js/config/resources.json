@@ -36,19 +36,23 @@
       "path": "audio/music/lathesis.mp3",
       "type": "music",
       "volume": 0.3,
-      "loop": true
+      "loop": true,
+      "selectable": true
     },
     "music_atropos": {
       "path": "audio/music/atropos.mp3",
       "type": "music",
       "volume": 0.3,
-      "loop": true
+      "loop": true,
+      "selectable": true
     },
     "music_clotho": {
       "path": "audio/music/clotho.mp3",
       "type": "music",
       "volume": 0.3,
-      "loop": true
+      "loop": true,
+      "selectable": true,
+      "default": true
     },
     "music_game_over": {
       "path": "audio/music/game_over.mp3",

@@ -41,10 +41,16 @@
   letter-spacing: 1px;
 }
 
+/* ── Botões de ação (MENU + RETRY lado a lado) ── */
+.modal-action-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
 /* ── Pause ── */
 .game-over.paused .game-over-score-line,
-.game-over.paused .retry-btn,
-.game-over.paused #menu-btn-overlay {
+.game-over.paused .modal-action-btns {
   display: none;
 }
 
