@@ -230,6 +230,25 @@
   display: block;
 }
 
+.music-control::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  font-family: var(--font-main);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.music-control:hover::after {
+  opacity: 1;
+}
+
 .music-switch-btn {
   font-family: var(--font-main);
   font-size: 11px;
