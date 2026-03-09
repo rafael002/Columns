@@ -545,4 +545,24 @@
       document.getElementById('screen-menu').style.display = 'flex';
     });
   });
+
+  // ── How to Play ───────────────────────────────────────────────────────────
+
+  const _HOWTO_KEY = 'columns_skip_howto';
+
+  function dismissHowto() {
+    if (document.getElementById('howto-skip-check').checked) {
+      localStorage.setItem(_HOWTO_KEY, '1');
+    }
+    document.getElementById('screen-howto').classList.remove('visible');
+  }
+
+  document.getElementById('btn-howto-ok').addEventListener('click', () => {
+    playSfx('sfx_click');
+    dismissHowto();
+  });
+
+  if (!localStorage.getItem(_HOWTO_KEY)) {
+    document.getElementById('screen-howto').classList.add('visible');
+  }
 })();
