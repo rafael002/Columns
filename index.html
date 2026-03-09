@@ -88,6 +88,33 @@
     </div>
   </div>
 
+  <!-- ── Tela de entrada de nomes (2P) ── -->
+  <div id="screen-name-entry" class="screen" style="display:none">
+    <div class="name-entry-container">
+      <h2 class="menu-heading">2 PLAYERS</h2>
+      <div class="name-entry-panels">
+
+        <div class="name-entry-panel" id="name-panel-p1">
+          <label class="name-entry-label" for="input-name-p1">Insira o nome do Player 1</label>
+          <input type="text" id="input-name-p1" class="name-entry-input" maxlength="10" placeholder="P1" autocomplete="off">
+          <button class="menu-btn" id="btn-ok-p1">OK</button>
+          <p class="name-entry-confirmed" id="confirmed-p1" style="display:none">✓ PRONTO</p>
+        </div>
+
+        <div class="name-entry-divider"></div>
+
+        <div class="name-entry-panel" id="name-panel-p2">
+          <label class="name-entry-label" for="input-name-p2">Insira o nome do Player 2</label>
+          <input type="text" id="input-name-p2" class="name-entry-input" maxlength="10" placeholder="P2" autocomplete="off">
+          <button class="menu-btn" id="btn-ok-p2">OK</button>
+          <p class="name-entry-confirmed" id="confirmed-p2" style="display:none">✓ PRONTO</p>
+        </div>
+
+      </div>
+      <button class="menu-btn" id="btn-name-back">BACK</button>
+    </div>
+  </div>
+
   <!-- ── Jogo ── -->
   <div id="game-wrapper" style="display:none">
     <button id="btn-back-to-menu" class="back-to-menu-btn">&#8592; MENU</button>

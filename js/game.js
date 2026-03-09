@@ -34,6 +34,7 @@
 
   function applyMusicSettingsToAll() {
     applyMusicSettings(_menuAudio);
+    applyMusicSettings(_nameEntryAudio);
     applyMusicSettings(_musicAudio);
     applyMusicSettings(_gameOverAudio);
   }
@@ -91,6 +92,7 @@
 
   let _rm = null;
   let _menuAudio = null;
+  let _nameEntryAudio = null;
   let _musicAudio = null;
   let _gameOverAudio = null;
 
@@ -103,6 +105,7 @@
         _rm.loadResource('audio', 'music_game_start'),
         _rm.loadResource('audio', 'music_clotho'),
         _rm.loadResource('audio', 'music_game_over'),
+        _rm.loadResource('audio', 'music_name_entry'),
         _rm.loadResource('audio', 'sfx_shuffle'),
         _rm.loadResource('audio', 'sfx_click'),
         _rm.loadResource('audio', 'sfx_drop'),
@@ -132,6 +135,24 @@
       _menuAudio.pause();
       _menuAudio.currentTime = 0;
       _menuAudio = null;
+    }
+  }
+
+  function startNameEntryMusic() {
+    stopMenuMusic();
+    const res = _rm?.get('audio', 'music_name_entry');
+    if (!res?.audio) return;
+    _nameEntryAudio = res.audio;
+    applyMusicSettings(_nameEntryAudio);
+    _nameEntryAudio.currentTime = 0;
+    _nameEntryAudio.play().catch(() => {});
+  }
+
+  function stopNameEntryMusic() {
+    if (_nameEntryAudio) {
+      _nameEntryAudio.pause();
+      _nameEntryAudio.currentTime = 0;
+      _nameEntryAudio = null;
     }
   }
 
@@ -209,6 +230,7 @@
   function goToMenu() {
     stopMusic();
     stopGameOverMusic();
+    stopNameEntryMusic();
 
     // Para os loops de todos os jogos ativos
     [window.game, window.game2].forEach(g => {
@@ -228,6 +250,8 @@
     document.getElementById('side-panel-p2').style.display = 'none';
     document.getElementById('main-area').classList.remove('two-player');
     document.getElementById('game-wrapper').style.display = 'none';
+    document.getElementById('screen-name-entry').style.display = 'none';
+    document.getElementById('screen-menu').style.display = 'flex';
     document.getElementById('btn-start').style.display = '';
     document.getElementById('press-start-hint').style.display = '';
     document.getElementById('main-nav').style.display = 'none';
@@ -348,34 +372,107 @@
     });
   });
 
+  // ── Tela de nomes (2P) ────────────────────────────────────────────────────
+
+  let _p1Name = 'P1';
+  let _p2Name = 'P2';
+  let _p1Confirmed = false;
+  let _p2Confirmed = false;
+
+  function showNameEntry() {
+    _p1Confirmed = false;
+    _p2Confirmed = false;
+
+    const inp1 = document.getElementById('input-name-p1');
+    const inp2 = document.getElementById('input-name-p2');
+    inp1.value = ''; inp1.removeAttribute('readonly');
+    inp2.value = ''; inp2.removeAttribute('readonly');
+    document.getElementById('btn-ok-p1').style.display = '';
+    document.getElementById('btn-ok-p2').style.display = '';
+    document.getElementById('confirmed-p1').style.display = 'none';
+    document.getElementById('confirmed-p2').style.display = 'none';
+
+    document.getElementById('screen-menu').style.display = 'none';
+    document.getElementById('screen-name-entry').style.display = 'flex';
+    startNameEntryMusic();
+    inp1.focus();
+  }
+
+  function confirmPlayer(player) {
+    playSfx('sfx_click');
+    if (player === 1) {
+      _p1Name = document.getElementById('input-name-p1').value.trim() || 'P1';
+      document.getElementById('input-name-p1').setAttribute('readonly', '');
+      document.getElementById('btn-ok-p1').style.display = 'none';
+      document.getElementById('confirmed-p1').style.display = '';
+      _p1Confirmed = true;
+    } else {
+      _p2Name = document.getElementById('input-name-p2').value.trim() || 'P2';
+      document.getElementById('input-name-p2').setAttribute('readonly', '');
+      document.getElementById('btn-ok-p2').style.display = 'none';
+      document.getElementById('confirmed-p2').style.display = '';
+      _p2Confirmed = true;
+    }
+    if (_p1Confirmed && _p2Confirmed) startTwoPlayerGame();
+  }
+
+  function startTwoPlayerGame() {
+    stopNameEntryMusic();
+    document.getElementById('screen-name-entry').style.display = 'none';
+    document.getElementById('board-wrapper-p2').style.display = '';
+    document.getElementById('side-panel-p2').style.display = '';
+    document.getElementById('main-area').classList.add('two-player');
+    showGame();
+
+    document.getElementById('game-board').closest('.board-area').querySelector('.player-label').textContent = _p1Name;
+    document.getElementById('game-board-p2').closest('.board-area').querySelector('.player-label').textContent = _p2Name;
+
+    window.game = new Game(document.getElementById('game-board'), makeGameOptions({ label: _p1Name }));
+
+    window.game2 = new Game(document.getElementById('game-board-p2'), makeGameOptions({
+      scoreId:       'score-p2',
+      gemsId:        'gems-p2',
+      levelId:       'level-p2',
+      nextPreviewId: 'next-piece-preview-p2',
+      gameOverId:    'game-over',
+      finalScoreId:  'final-score',
+      retryBtnId:    'retry-btn',
+      titleId:       'modal-title',
+      keys:          { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
+      label:         _p2Name,
+      onCountdownStart: null,
+      onGameStart:      null,
+      onPause:          null,
+      onResume:         null,
+    }));
+
+    window.game.setPeer(window.game2);
+    window.game2.setPeer(window.game);
+  }
+
   document.getElementById('btn-2p').addEventListener('click', () => {
+    playSfxThen('sfx_click', showNameEntry);
+  });
+
+  document.getElementById('btn-ok-p1').addEventListener('click', () => {
+    if (!_p1Confirmed) confirmPlayer(1);
+  });
+  document.getElementById('btn-ok-p2').addEventListener('click', () => {
+    if (!_p2Confirmed) confirmPlayer(2);
+  });
+
+  document.getElementById('input-name-p1').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !_p1Confirmed) confirmPlayer(1);
+  });
+  document.getElementById('input-name-p2').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !_p2Confirmed) confirmPlayer(2);
+  });
+
+  document.getElementById('btn-name-back').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
-      document.getElementById('board-wrapper-p2').style.display = '';
-      document.getElementById('side-panel-p2').style.display = '';
-      document.getElementById('main-area').classList.add('two-player');
-      showGame();
-
-      window.game = new Game(document.getElementById('game-board'), makeGameOptions({ label: '1P' }));
-
-      window.game2 = new Game(document.getElementById('game-board-p2'), makeGameOptions({
-        scoreId:       'score-p2',
-        gemsId:        'gems-p2',
-        levelId:       'level-p2',
-        nextPreviewId: 'next-piece-preview-p2',
-        gameOverId:    'game-over',
-        finalScoreId:  'final-score',
-        retryBtnId:    'retry-btn',
-        titleId:       'modal-title',
-        keys:          { LEFT: 65, RIGHT: 68, DOWN: 83, SHUFFLE: 87 }, // A, D, S, W
-        label:         '2P',
-        onCountdownStart: null,
-        onGameStart:      null,
-        onPause:          null,
-        onResume:         null,
-      }));
-
-      window.game.setPeer(window.game2);
-      window.game2.setPeer(window.game);
+      stopNameEntryMusic();
+      document.getElementById('screen-name-entry').style.display = 'none';
+      document.getElementById('screen-menu').style.display = 'flex';
     });
   });
 })();
