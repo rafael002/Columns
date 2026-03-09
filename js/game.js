@@ -565,16 +565,17 @@
 
   // ── How to Play ───────────────────────────────────────────────────────────
 
-  const _HOWTO_KEY = 'columns_skip_howto';
+  const _HOWTO_KEYS = { single: 'columns_skip_howto_sp', versus: 'columns_skip_howto_vs' };
   let _pendingGameStart = null;
+  let _currentHowtoMode = 'single';
 
   function showHowtoThen(fn, mode = 'single') {
+    _currentHowtoMode = mode;
     const overlay = document.getElementById('screen-howto');
-    overlay.dataset.mode = mode;
-    overlay.querySelector('.howto-controls-sp').style.display  = mode === 'single'  ? '' : 'none';
-    overlay.querySelector('.howto-controls-vs').style.display  = mode === 'versus'  ? '' : 'none';
-    overlay.querySelector('.howto-score-line').style.display   = mode === 'single'  ? '' : 'none';
-    if (localStorage.getItem(_HOWTO_KEY)) {
+    overlay.querySelector('.howto-controls-sp').style.display = mode === 'single' ? '' : 'none';
+    overlay.querySelector('.howto-controls-vs').style.display = mode === 'versus' ? '' : 'none';
+    overlay.querySelector('.howto-score-line').style.display  = mode === 'single' ? '' : 'none';
+    if (localStorage.getItem(_HOWTO_KEYS[mode])) {
       fn();
       return;
     }
@@ -585,7 +586,7 @@
 
   function dismissHowto() {
     if (document.getElementById('howto-skip-check').checked) {
-      localStorage.setItem(_HOWTO_KEY, '1');
+      localStorage.setItem(_HOWTO_KEYS[_currentHowtoMode], '1');
     }
     document.getElementById('screen-howto').classList.remove('visible');
     const fn = _pendingGameStart;
