@@ -331,6 +331,7 @@
       onDrop:            () => playSfx('sfx_drop'),
       onMatch:           () => playSfx('sfx_match'),
       onLevelUp:         () => playSfx('sfx_level_up'),
+      onGameOverRow:     () => playSfx('sfx_problem'),
       ...extraOpts,
     };
   }

@@ -62,6 +62,7 @@ class Game {
     this._onLevelUp = options.onLevelUp ?? null;
     this._onPause = options.onPause ?? null;
     this._onResume = options.onResume ?? null;
+    this._onGameOverRow = options.onGameOverRow ?? null;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
@@ -344,6 +345,7 @@ class Game {
         this.board.screenMap[this._gameOverRow][col] = CONFIG.MARKED_CELL;
       }
     }
+    if (gems.length > 0) this._onGameOverRow?.();
     this.explosionEffect.addEffects(gems);
     this._gameOverRow--;
     setTimeout(() => this._scheduleGameOverRow(), 50);
