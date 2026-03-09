@@ -242,6 +242,7 @@
     // Para os loops de todos os jogos ativos
     [window.game, window.game2].forEach(g => {
       if (!g) return;
+      g._killed = true;
       clearInterval(g._updateLoopId);
       g._updateLoopId = null;
       g.gameOver = true;

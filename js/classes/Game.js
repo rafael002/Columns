@@ -48,6 +48,7 @@ class Game {
     this._updateLoopId = null;
     this._renderStarted = false;
     this._duringCountdown = true;
+    this._killed = false;
     this._countdownGen = 0;
     this.isPaused = false;
     this._pausedDuringCountdown = false;
@@ -76,10 +77,12 @@ class Game {
       });
 
     document.getElementById(this._ids.retryBtn)?.addEventListener('click', () => {
+      if (this._killed) return;
       this.reset();
       this.peer?.reset();
     });
     document.addEventListener('keydown', e => {
+      if (this._killed) return;
       if (this.gameOver && e.key === 'Enter') { this.reset(); this.peer?.reset(); }
       if (e.key === 'Escape') this.togglePause();
     });
