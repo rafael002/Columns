@@ -111,6 +111,7 @@
         _rm.loadResource('audio', 'sfx_drop'),
         _rm.loadResource('audio', 'sfx_match'),
         _rm.loadResource('audio', 'sfx_level_up'),
+        _rm.loadResource('audio', 'sfx_problem'),
       ]);
     })
     .catch(err => console.warn('Erro ao carregar áudio:', err));
