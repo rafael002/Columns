@@ -247,11 +247,31 @@ body > * {
 
 /* ── Jogo ── */
 #game-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  background-color: #510506;
+}
+
+#game-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#game-wrapper > * {
   position: relative;
+  z-index: 1;
 }
 
 #main-area {
@@ -466,7 +486,7 @@ body > * {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 30;
+  z-index: 300;
 }
 
 .game-over.visible {

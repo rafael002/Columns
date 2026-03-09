@@ -9,8 +9,7 @@
   // ── Navegação entre telas ──────────────────────────────────────────────────
 
   function showGame() {
-    document.getElementById('screen-menu').style.display = 'none';
-    document.getElementById('game-wrapper').style.display = '';
+    document.getElementById('game-wrapper').style.display = 'flex';
   }
 
   function goToMenu() {
@@ -31,8 +30,6 @@
     document.getElementById('side-panel-p2').style.display = 'none';
     document.getElementById('main-area').classList.remove('two-player');
     document.getElementById('game-wrapper').style.display = 'none';
-
-    document.getElementById('screen-menu').style.display = 'flex';
   }
 
   // ── Confirmação de saída ───────────────────────────────────────────────────
