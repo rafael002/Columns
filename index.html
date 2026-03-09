@@ -134,16 +134,7 @@
             </div>
           </div>
 
-          <div class="settings-clear">
-            <button class="menu-btn menu-btn--danger" id="btn-clear-data">CLEAR DATA</button>
-            <div class="settings-clear-confirm" id="clear-confirm" style="display:none">
-              <span class="settings-clear-msg">ARE YOU SURE?</span>
-              <div class="settings-clear-btns">
-                <button class="menu-btn menu-btn--danger" id="btn-clear-yes">YES</button>
-                <button class="menu-btn" id="btn-clear-no">NO</button>
-              </div>
-            </div>
-          </div>
+          <button class="menu-btn menu-btn--danger" id="btn-clear-data">CLEAR DATA</button>
 
           <button class="menu-btn" id="btn-back">BACK</button>
 
@@ -261,6 +252,18 @@
       <div class="modal-action-btns">
         <button id="menu-btn-overlay" class="retry-btn">MENU</button>
         <button id="retry-btn" class="retry-btn">RETRY</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Overlay confirmação clear data ── -->
+  <div id="clear-confirm-overlay" class="game-over">
+    <div class="game-over-modal">
+      <p class="modal-title" style="color:var(--color-danger)">CLEAR DATA</p>
+      <p class="game-over-score-line">This will erase all scores, settings and preferences.</p>
+      <div class="modal-action-btns">
+        <button class="retry-btn menu-btn--danger" id="btn-clear-yes">YES, CLEAR</button>
+        <button class="retry-btn" id="btn-clear-no">CANCEL</button>
       </div>
     </div>
   </div>
