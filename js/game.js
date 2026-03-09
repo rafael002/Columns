@@ -555,6 +555,14 @@
     });
   });
 
+  // ── Auto-pause ao perder foco ─────────────────────────────────────────────
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && window.game && !window.game.gameOver && !window.game.isPaused) {
+      window.game.togglePause();
+    }
+  });
+
   // ── How to Play ───────────────────────────────────────────────────────────
 
   const _HOWTO_KEY = 'columns_skip_howto';
