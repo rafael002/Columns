@@ -252,6 +252,7 @@
     document.getElementById('game-wrapper').style.display = 'none';
     document.getElementById('screen-name-entry').style.display = 'none';
     document.getElementById('screen-menu').style.display = 'flex';
+    document.getElementById('retry-btn').textContent = 'RETRY';
     document.getElementById('btn-start').style.display = '';
     document.getElementById('press-start-hint').style.display = '';
     document.getElementById('main-nav').style.display = 'none';
@@ -383,6 +384,7 @@
     document.getElementById('board-wrapper-p2').style.display = '';
     document.getElementById('side-panel-p2').style.display = '';
     document.getElementById('main-area').classList.add('two-player');
+    document.getElementById('retry-btn').textContent = 'REMATCH';
     showGame();
 
     document.getElementById('game-board').closest('.board-area').querySelector('.player-label').textContent = _p1Name;
