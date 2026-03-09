@@ -49,6 +49,7 @@
       <nav class="menu-nav" id="main-nav" style="display:none">
         <button class="menu-btn" id="btn-1p">1 PLAYER</button>
         <button class="menu-btn" id="btn-2p">2 PLAYERS</button>
+        <button class="menu-btn" id="btn-scores">HIGH SCORES</button>
         <button class="menu-btn" id="btn-settings">SETTINGS</button>
         <span class="menu-version">v1.0</span>
       </nav>
@@ -112,6 +113,15 @@
 
       </div>
       <button class="menu-btn" id="btn-name-back">BACK</button>
+    </div>
+  </div>
+
+  <!-- ── Tela de scores ── -->
+  <div id="screen-scores" class="screen" style="display:none">
+    <div class="scores-container">
+      <h2 class="menu-heading">HIGH SCORES</h2>
+      <div class="scores-list" id="scores-list"></div>
+      <button class="menu-btn" id="btn-scores-back">BACK</button>
     </div>
   </div>
 
@@ -192,6 +202,17 @@
     </div>
   </div>
 
+  <!-- ── Overlay novo recorde ── -->
+  <div id="high-score-overlay" class="game-over">
+    <div class="game-over-modal">
+      <p class="modal-title hs-title">NEW RECORD!</p>
+      <p class="game-over-score-line">Score: <span id="hs-final-score">0</span></p>
+      <p class="hs-rank-msg" id="hs-rank-msg"></p>
+      <input type="text" id="hs-name-input" class="name-entry-input hs-input" maxlength="10" placeholder="YOUR NAME" autocomplete="off">
+      <button id="hs-confirm-btn" class="menu-btn">OK</button>
+    </div>
+  </div>
+
   <!-- ── Scripts: lógica do jogo ── -->
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
@@ -206,6 +227,7 @@
   <script src="js/game.js"></script>
 
   <!-- ── Scripts: UI ── -->
+  <script src="js/ui/scoreboard.js"></script>
   <script src="js/ui/menu.js"></script>
 
 </body>

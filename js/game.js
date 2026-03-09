@@ -304,6 +304,8 @@
 
     // Reseta a UI do jogo
     document.getElementById('game-over').classList.remove('visible', 'paused', 'confirming');
+    document.getElementById('high-score-overlay').classList.remove('visible');
+    document.getElementById('screen-scores').style.display = 'none';
     document.getElementById('board-wrapper-p2').style.display = 'none';
     document.getElementById('side-panel-p2').style.display = 'none';
     document.getElementById('main-area').classList.remove('two-player');
@@ -338,6 +340,44 @@
 
   document.getElementById('menu-btn-overlay').addEventListener('click', () => {
     playSfxThen('sfx_click', goToMenu);
+  });
+
+  // ── High Scores ───────────────────────────────────────────────────────────
+
+  function showHighScoreEntry(score, rank) {
+    document.getElementById('hs-final-score').textContent = score.toLocaleString();
+    document.getElementById('hs-rank-msg').textContent = `RANK #${rank}`;
+    document.getElementById('hs-name-input').value = '';
+    document.getElementById('high-score-overlay').classList.add('visible');
+    setTimeout(() => document.getElementById('hs-name-input').focus(), 100);
+  }
+
+  function confirmHighScore() {
+    const name  = document.getElementById('hs-name-input').value.trim() || 'PLAYER';
+    const score = window.game?.score ?? 0;
+    ScoreBoard.addScore(name, score);
+    document.getElementById('high-score-overlay').classList.remove('visible');
+    playSfx('sfx_click');
+  }
+
+  document.getElementById('hs-confirm-btn').addEventListener('click', confirmHighScore);
+  document.getElementById('hs-name-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') confirmHighScore();
+  });
+
+  document.getElementById('btn-scores').addEventListener('click', () => {
+    playSfxThen('sfx_click', () => {
+      ScoreBoard.render('scores-list');
+      document.getElementById('screen-menu').style.display = 'none';
+      document.getElementById('screen-scores').style.display = 'flex';
+    });
+  });
+
+  document.getElementById('btn-scores-back').addEventListener('click', () => {
+    playSfxThen('sfx_click', () => {
+      document.getElementById('screen-scores').style.display = 'none';
+      document.getElementById('screen-menu').style.display = 'flex';
+    });
   });
 
   // ── Settings ──────────────────────────────────────────────────────────────
@@ -389,7 +429,15 @@
   document.getElementById('btn-1p').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
       showGame();
-      window.game = new Game(document.getElementById('game-board'), makeGameOptions());
+      window.game = new Game(document.getElementById('game-board'), makeGameOptions({
+        onGameOver: () => {
+          playGameOverMusic();
+          const score = window.game?.score ?? 0;
+          if (ScoreBoard.qualifies(score)) {
+            showHighScoreEntry(score, ScoreBoard.getRank(score));
+          }
+        },
+      }));
     });
   });
 
