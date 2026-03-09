@@ -428,16 +428,18 @@
 
   document.getElementById('btn-1p').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
-      showGame();
-      window.game = new Game(document.getElementById('game-board'), makeGameOptions({
-        onGameOver: () => {
-          playGameOverMusic();
-          const score = window.game?.score ?? 0;
-          if (ScoreBoard.qualifies(score)) {
-            showHighScoreEntry(score, ScoreBoard.getRank(score));
-          }
-        },
-      }));
+      showHowtoThen(() => {
+        showGame();
+        window.game = new Game(document.getElementById('game-board'), makeGameOptions({
+          onGameOver: () => {
+            playGameOverMusic();
+            const score = window.game?.score ?? 0;
+            if (ScoreBoard.qualifies(score)) {
+              showHighScoreEntry(score, ScoreBoard.getRank(score));
+            }
+          },
+        }));
+      });
     });
   });
 
@@ -486,6 +488,10 @@
   }
 
   function startTwoPlayerGame() {
+    showHowtoThen(_launchTwoPlayerGame);
+  }
+
+  function _launchTwoPlayerGame() {
     stopNameEntryMusic();
     document.getElementById('screen-name-entry').style.display = 'none';
     document.getElementById('board-wrapper-p2').style.display = '';
@@ -549,20 +555,30 @@
   // ── How to Play ───────────────────────────────────────────────────────────
 
   const _HOWTO_KEY = 'columns_skip_howto';
+  let _pendingGameStart = null;
+
+  function showHowtoThen(fn) {
+    if (localStorage.getItem(_HOWTO_KEY)) {
+      fn();
+      return;
+    }
+    document.getElementById('howto-skip-check').checked = false;
+    _pendingGameStart = fn;
+    document.getElementById('screen-howto').classList.add('visible');
+  }
 
   function dismissHowto() {
     if (document.getElementById('howto-skip-check').checked) {
       localStorage.setItem(_HOWTO_KEY, '1');
     }
     document.getElementById('screen-howto').classList.remove('visible');
+    const fn = _pendingGameStart;
+    _pendingGameStart = null;
+    fn?.();
   }
 
   document.getElementById('btn-howto-ok').addEventListener('click', () => {
     playSfx('sfx_click');
     dismissHowto();
   });
-
-  if (!localStorage.getItem(_HOWTO_KEY)) {
-    document.getElementById('screen-howto').classList.add('visible');
-  }
 })();
