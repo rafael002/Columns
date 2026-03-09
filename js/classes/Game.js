@@ -51,6 +51,16 @@ class Game {
     this._countdownGen = 0;
     this.isPaused = false;
     this._pausedDuringCountdown = false;
+    this._countdownDuration = options.countdownDuration ?? 3700;
+    this._onCountdownStart = options.onCountdownStart ?? null;
+    this._onGameStart = options.onGameStart ?? null;
+    this._onGameOver = options.onGameOver ?? null;
+    this._onShuffle = options.onShuffle ?? null;
+    this._onDrop = options.onDrop ?? null;
+    this._onMatch = options.onMatch ?? null;
+    this._onLevelUp = options.onLevelUp ?? null;
+    this._onPause = options.onPause ?? null;
+    this._onResume = options.onResume ?? null;
 
     fetch('js/config/resources.json')
       .then(r => r.json())
@@ -80,6 +90,7 @@ class Game {
   _startCountdown() {
     this.screen.clearPreview();
     const gen = ++this._countdownGen;
+    this._onCountdownStart?.();
 
     const overlay = document.createElement('div');
     overlay.className = 'countdown-overlay';
@@ -90,6 +101,7 @@ class Game {
 
     this.startGameLoop();
 
+    const tickMs = Math.floor(this._countdownDuration / 4);
     let count = 3;
     text.textContent = count;
 
@@ -98,7 +110,7 @@ class Game {
       count--;
       if (count > 0) {
         text.textContent = count;
-        setTimeout(tick, 1000);
+        setTimeout(tick, tickMs);
       } else {
         text.textContent = 'GO!';
         setTimeout(() => {
@@ -107,10 +119,11 @@ class Game {
           overlay.remove();
           this.screen.refreshPreview(this.nextPiece);
           this.startUpdateLoop();
-        }, 700);
+          this._onGameStart?.();
+        }, tickMs);
       }
     };
-    setTimeout(tick, 1000);
+    setTimeout(tick, tickMs);
   }
 
   _handleCustomKey(e) {
@@ -119,7 +132,7 @@ class Game {
     const board = this.board;
     const k = this.customKeys;
     switch (e.keyCode) {
-      case k.SHUFFLE: piece.shuffle(); e.preventDefault(); break;
+      case k.SHUFFLE: piece.shuffle(); this._onShuffle?.(); e.preventDefault(); break;
       case k.LEFT:  if (board.checkCollision(1, -1, piece)) piece.walkLeft();  e.preventDefault(); break;
       case k.RIGHT: if (board.checkCollision(1,  1, piece)) piece.walkRight(); e.preventDefault(); break;
       case k.DOWN:  if (board.checkCollision(0,  1, piece)) piece.downPiece(); e.preventDefault(); break;
@@ -213,6 +226,7 @@ class Game {
       this.piece.downPiece();
     } else {
       if (this.piece.y > 0) {
+        this._onDrop?.();
         this.board.addCurrentPiece(this.piece);
         this._resolveChain();
       } else {
@@ -239,7 +253,20 @@ class Game {
 
   _addGems(count) {
     this.gems += count;
+    this._onMatch?.();
     document.getElementById(this._ids.gems).textContent = this.gems;
+
+    const newLevel = Math.floor(this.gems / 15) + 1;
+    if (newLevel > this.level) {
+      this.level = newLevel;
+      document.getElementById(this._ids.level).textContent = this.level;
+      this.updateInterval = Math.max(100, CONFIG.GAME_UPDATE_INTERVAL - (this.level - 1) * 40);
+      if (this._updateLoopId) {
+        clearInterval(this._updateLoopId);
+        this.startUpdateLoop();
+      }
+      this._onLevelUp?.();
+    }
   }
 
   _swapPiece() {
@@ -355,6 +382,7 @@ class Game {
       }
     }
 
+    this._onGameOver?.();
     overlay.classList.add('visible');
   }
 
@@ -389,7 +417,7 @@ class Game {
   }
 
   togglePause() {
-    if (this.gameOver || this.isGameOverAnimating) return;
+    if (this.gameOver || this.isGameOverAnimating || this._duringCountdown) return;
     const overlay = document.getElementById(this._ids.gameOver);
     if (overlay?.classList.contains('confirming')) return;
 
@@ -403,6 +431,7 @@ class Game {
         clearInterval(this._updateLoopId);
         this._updateLoopId = null;
       }
+      this._onPause?.();
       if (overlay) {
         document.getElementById(this._ids.title).textContent = 'PAUSE!';
         overlay.classList.add('visible', 'paused');
@@ -416,6 +445,7 @@ class Game {
       } else {
         this.startUpdateLoop();
       }
+      this._onResume?.();
     }
   }
 

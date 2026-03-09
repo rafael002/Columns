@@ -39,10 +39,12 @@
         <span class="mg"></span>
         <span class="mg"></span>
       </div>
-      <nav class="menu-nav">
+      <button class="menu-btn menu-btn--start" id="btn-start">START</button>
+      <p class="press-start-hint" id="press-start-hint">CLICK START BUTTON</p>
+      <nav class="menu-nav" id="main-nav" style="display:none">
         <button class="menu-btn" id="btn-1p">1 PLAYER</button>
         <button class="menu-btn" id="btn-2p">2 PLAYERS</button>
-        <button class="menu-btn menu-btn--secondary" id="btn-settings">SETTINGS</button>
+        <button class="menu-btn" id="btn-settings">SETTINGS</button>
         <span class="menu-version">v1.0</span>
       </nav>
     </div>
@@ -50,10 +52,34 @@
 
   <!-- ── Tela de configurações ── -->
   <div id="screen-settings" class="screen" style="display:none">
-    <div class="menu-container">
+    <div class="settings-container">
       <h2 class="menu-heading">SETTINGS</h2>
-      <p class="settings-placeholder">Em breve...</p>
-      <button class="menu-btn menu-btn--secondary" id="btn-back">BACK</button>
+
+      <div class="settings-frame">
+        <div class="settings-content">
+
+          <div class="settings-group">
+            <span class="settings-label">MUSIC</span>
+            <div class="settings-row">
+              <input type="range" class="settings-slider" id="slider-music" min="0" max="100" step="1">
+              <span class="settings-value" id="val-music"></span>
+              <button class="mute-btn" id="btn-mute-music">🔊</button>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <span class="settings-label">SFX</span>
+            <div class="settings-row">
+              <input type="range" class="settings-slider" id="slider-sfx" min="0" max="100" step="1">
+              <span class="settings-value" id="val-sfx"></span>
+              <button class="mute-btn" id="btn-mute-sfx">🔊</button>
+            </div>
+          </div>
+
+          <button class="menu-btn" id="btn-back">BACK</button>
+
+        </div>
+      </div>
     </div>
   </div>
 

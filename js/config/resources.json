@@ -32,30 +32,89 @@
     }
   },
   "audio": {
-    "placePiece": {
-      "path": "audio/place_piece.mp3",
+    "music_lathesis": {
+      "path": "audio/music/lathesis.mp3",
+      "type": "music",
+      "volume": 0.3,
+      "loop": true
+    },
+    "music_atropos": {
+      "path": "audio/music/atropos.mp3",
+      "type": "music",
+      "volume": 0.3,
+      "loop": true
+    },
+    "music_clotho": {
+      "path": "audio/music/clotho.mp3",
+      "type": "music",
+      "volume": 0.3,
+      "loop": true
+    },
+    "music_game_over": {
+      "path": "audio/music/game_over.mp3",
+      "type": "music",
+      "volume": 0.4,
+      "loop": false
+    },
+    "music_game_start": {
+      "path": "audio/music/game_start.mp3",
+      "type": "music",
+      "volume": 0.4,
+      "loop": false
+    },
+    "music_name_entry": {
+      "path": "audio/music/name_entry.mp3",
+      "type": "music",
+      "volume": 0.3,
+      "loop": true
+    },
+    "sfx_back": {
+      "path": "audio/sfx/back.wav",
+      "type": "sound",
+      "volume": 0.6,
+      "loop": false
+    },
+    "sfx_click": {
+      "path": "audio/sfx/click.wav",
+      "type": "sound",
+      "volume": 0.6,
+      "loop": false
+    },
+    "sfx_drop": {
+      "path": "audio/sfx/drop.wav",
       "type": "sound",
       "volume": 0.5,
       "loop": false
     },
-    "match": {
-      "path": "audio/match.mp3",
+    "sfx_level_up": {
+      "path": "audio/sfx/level_up.wav",
       "type": "sound",
       "volume": 0.7,
       "loop": false
     },
-    "backgroundMusic": {
-      "path": "audio/background.mp3",
-      "type": "music",
-      "volume": 0.3,
-      "loop": true
-    }
-  },
-  "images": {
-    "background": {
-      "path": "images/background.png",
-      "type": "image"
+    "sfx_match": {
+      "path": "audio/sfx/match.wav",
+      "type": "sound",
+      "volume": 0.7,
+      "loop": false
+    },
+    "sfx_problem": {
+      "path": "audio/sfx/problem.wav",
+      "type": "sound",
+      "volume": 0.6,
+      "loop": false
+    },
+    "sfx_shuffle": {
+      "path": "audio/sfx/shufle.wav",
+      "type": "sound",
+      "volume": 0.6,
+      "loop": false
+    },
+    "sfx_wonder": {
+      "path": "audio/sfx/wonder.wav",
+      "type": "sound",
+      "volume": 0.6,
+      "loop": false
     }
   }
 }
-
