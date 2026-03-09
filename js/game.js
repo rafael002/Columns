@@ -106,13 +106,10 @@
     return _selectableTracks[_currentTrackIndex] ?? 'music_clotho';
   }
 
-  const _LYRE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4 C1 8 2 13 4 16 Q6 18 8 18 Q10 18 12 16 C14 13 15 8 14 4"/><line x1="1.5" y1="4" x2="14.5" y2="4"/><line x1="5.5" y1="4" x2="6" y2="17"/><line x1="8" y1="4" x2="8" y2="18"/><line x1="10.5" y1="4" x2="10" y2="17"/></svg>`;
-
   function updateMusicSwitchBtn() {
     const btn = document.getElementById('btn-music-switch');
     if (!btn || _selectableTracks.length === 0) return;
-    const label = getCurrentTrackKey().replace('music_', '').toUpperCase();
-    btn.innerHTML = `${_LYRE_SVG} ${label}`;
+    btn.textContent = getCurrentTrackKey().replace('music_', '').toUpperCase();
   }
 
   function cycleMusic() {

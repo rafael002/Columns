@@ -213,12 +213,24 @@
   z-index: 5;
 }
 
-/* ── Botão de troca de música ── */
-.music-switch-btn {
+/* ── Controle de música (lira + botão) ── */
+.music-control {
   position: absolute !important;
-  top: 14px;
+  top: 12px;
   right: 16px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.music-lyre-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+.music-switch-btn {
   font-family: var(--font-main);
   font-size: 11px;
   letter-spacing: 2px;
@@ -233,12 +245,6 @@
 .music-switch-btn:hover {
   background: var(--color-accent);
   color: var(--color-bg);
-}
-
-.music-switch-btn svg {
-  width: 18px;
-  height: 18px;
-  vertical-align: middle;
 }
 
 /* ── Countdown ── */
