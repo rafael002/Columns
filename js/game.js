@@ -110,7 +110,7 @@
     const btn = document.getElementById('btn-music-switch');
     if (!btn || _selectableTracks.length === 0) return;
     const label = getCurrentTrackKey().replace('music_', '').toUpperCase();
-    btn.textContent = '♪  ' + label;
+    btn.innerHTML = `<span class="music-icon">♪</span> ${label}`;
   }
 
   function cycleMusic() {

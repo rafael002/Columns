@@ -235,6 +235,12 @@
   color: var(--color-bg);
 }
 
+.music-switch-btn .music-icon {
+  font-size: 20px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
 /* ── Countdown ── */
 .countdown-overlay {
   position: absolute;
