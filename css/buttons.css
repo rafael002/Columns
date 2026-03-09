@@ -1,0 +1,100 @@
+/* ── Menu buttons ── */
+.menu-btn {
+  font-family: var(--font-main);
+  font-size: 20px;
+  padding: 12px 0;
+  width: 280px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  letter-spacing: 3px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.menu-btn:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-bg-hover);
+}
+
+.menu-btn--start {
+  font-size: 24px;
+  letter-spacing: 8px;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  animation: pulse-start 1.5s ease-in-out infinite;
+}
+
+.menu-btn--start:hover {
+  background: var(--color-accent);
+  color: var(--color-bg-hover);
+  animation: none;
+}
+
+@keyframes pulse-start {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.menu-btn--secondary {
+  font-size: 16px;
+  padding: 8px 0;
+  color: var(--color-text-dim);
+  border-color: var(--color-border-muted);
+  margin-top: 8px;
+}
+
+.menu-btn--secondary:hover {
+  color: var(--color-bg-hover);
+}
+
+/* ── Modal / retry buttons ── */
+.retry-btn {
+  margin-top: 6px;
+  padding: 8px 28px;
+  font-family: var(--font-main);
+  font-size: 18px;
+  background: transparent;
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.retry-btn:hover {
+  background: var(--color-text);
+  color: var(--color-bg-hover);
+}
+
+.confirm-yes {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.confirm-yes:hover {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-text);
+}
+
+/* ── Back to menu ── */
+.back-to-menu-btn {
+  font-family: var(--font-main);
+  font-size: 14px;
+  padding: 4px 16px;
+  background: transparent;
+  color: var(--color-text-dim);
+  border: 1px solid var(--color-border-muted);
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  align-self: flex-start;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.back-to-menu-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}

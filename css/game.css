@@ -1,24 +1,4 @@
-/* ── Botão voltar ao menu ── */
-.back-to-menu-btn {
-  font-family: 'Diogenes', monospace;
-  font-size: 14px;
-  padding: 4px 16px;
-  background: transparent;
-  color: #888;
-  border: 1px solid #555;
-  border-radius: 4px;
-  cursor: pointer;
-  letter-spacing: 1px;
-  align-self: flex-start;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.back-to-menu-btn:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-/* ── Wrapper do jogo (overlay sobre o menu) ── */
+/* ── Wrapper do jogo ── */
 #game-wrapper {
   position: fixed;
   inset: 0;
@@ -69,10 +49,10 @@
   align-items: center;
   gap: 6px;
   color: var(--color-accent);
-  font-family: 'Diogenes', monospace;
+  font-family: var(--font-main);
   font-size: 14px;
-  background-color: #000;
-  border: 2px solid #000;
+  background-color: var(--color-bg-dark);
+  border: 2px solid var(--color-bg-dark);
   border-radius: 3px;
 }
 
@@ -85,7 +65,7 @@
   display: grid;
   grid-template-columns: var(--cell-size);
   grid-template-rows: repeat(3, var(--cell-size));
-  border: 1px solid #444;
+  border: 1px solid var(--color-border-subtle);
 }
 
 /* ── Painel de stats (SCORE / GEMS / LEVEL) ── */
@@ -95,7 +75,7 @@
   justify-content: space-evenly;
   align-items: center;
   height: calc(13 * var(--cell-size));
-  font-family: 'Diogenes', monospace;
+  font-family: var(--font-main);
 }
 
 .value-display {
@@ -110,7 +90,7 @@
 .value-display div {
   position: relative;
   color: var(--color-accent);
-  background-color: #000;
+  background-color: var(--color-bg-dark);
 }
 
 .value-display .st-player span,
@@ -123,7 +103,7 @@
   text-align: center;
   left: 30px;
   font-size: 20px;
-  color: #aaa;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,11 +141,11 @@
 
 .player-label {
   display: none;
-  font-family: 'Diogenes', monospace;
+  font-family: var(--font-main);
   font-size: 18px;
   color: var(--color-accent);
   letter-spacing: 2px;
-  background-color: #000;
+  background-color: var(--color-bg-dark);
   border-radius: 15px;
   padding: 0 20px;
   justify-content: center;
@@ -184,7 +164,7 @@
   display: grid;
   grid-template-columns: repeat(6, var(--cell-size));
   grid-template-rows: repeat(13, var(--cell-size));
-  border: 1px solid #000;
+  border: 1px solid var(--color-bg-dark);
   overflow: hidden;
   position: relative;
 }
@@ -194,7 +174,7 @@
   width: var(--cell-size);
   height: var(--cell-size);
   border: 1px solid var(--grid-color);
-  background: #000;
+  background: var(--color-bg-dark);
   position: relative;
 }
 
@@ -206,14 +186,14 @@
   background-image: none;
 }
 
-.cell[data-value="1"] { --cell-color: var(--c1); }
-.cell[data-value="2"] { --cell-color: var(--c2); }
-.cell[data-value="3"] { --cell-color: var(--c3); }
-.cell[data-value="4"] { --cell-color: var(--c4); }
-.cell[data-value="5"] { --cell-color: var(--c5); }
-.cell[data-value="6"] { --cell-color: var(--c6); }
-.cell[data-value="7"] { --cell-color: var(--c7); }
-.cell[data-value="8"] { --cell-color: var(--c8); }
+.cell[data-value="1"] { --cell-color: var(--gem-1); }
+.cell[data-value="2"] { --cell-color: var(--gem-2); }
+.cell[data-value="3"] { --cell-color: var(--gem-3); }
+.cell[data-value="4"] { --cell-color: var(--gem-4); }
+.cell[data-value="5"] { --cell-color: var(--gem-5); }
+.cell[data-value="6"] { --cell-color: var(--gem-6); }
+.cell[data-value="7"] { --cell-color: var(--gem-7); }
+.cell[data-value="8"] { --cell-color: var(--gem-8); }
 
 /* ── Sprites ── */
 .cell.has-gem::after {
@@ -242,10 +222,4 @@
   align-items: center;
   justify-content: center;
   z-index: 20;
-}
-
-.countdown-text {
-  font-family: 'Diogenes', monospace;
-  font-size: 120px;
-  color: var(--color-accent);
 }

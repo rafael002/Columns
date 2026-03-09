@@ -6,7 +6,7 @@
   width: 100vw; height: 100vh;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   z-index: 300;
 }
 
@@ -21,11 +21,11 @@
   gap: 10px;
   width: 100%;
   padding: 24px 32px;
-  background: #510505;
+  background: var(--color-bg-modal);
   border-top: 2px solid var(--color-accent);
   border-bottom: 2px solid var(--color-accent);
-  font-family: 'Diogenes', monospace;
-  color: #fff;
+  font-family: var(--font-main);
+  color: var(--color-text);
   text-align: center;
 }
 
@@ -37,27 +37,8 @@
 
 .game-over-score-line {
   font-size: 16px;
-  color: #aaa;
+  color: var(--color-text-muted);
   letter-spacing: 1px;
-}
-
-/* ── Botões do modal ── */
-.retry-btn {
-  margin-top: 6px;
-  padding: 8px 28px;
-  font-family: 'Diogenes', monospace;
-  font-size: 18px;
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: background 0.15s, color 0.15s;
-}
-
-.retry-btn:hover {
-  background: #fff;
-  color: #1a1a2e;
 }
 
 /* ── Confirmação de saída ── */
@@ -76,17 +57,6 @@
   display: flex;
 }
 
-.confirm-yes {
-  border-color: #e74c3c;
-  color: #e74c3c;
-}
-
-.confirm-yes:hover {
-  background: #e74c3c;
-  border-color: #e74c3c;
-  color: #fff;
-}
-
 /* ── Pause ── */
 .game-over.paused .game-over-score-line,
 .game-over.paused .retry-btn {
@@ -98,7 +68,7 @@
   font-size: 13px;
   color: var(--color-accent);
   letter-spacing: 1px;
-  font-family: 'Diogenes', monospace;
+  font-family: var(--font-main);
 }
 
 .game-over.paused .pause-hint {

@@ -231,7 +231,6 @@
     document.getElementById('btn-start').style.display = '';
     document.getElementById('press-start-hint').style.display = '';
     document.getElementById('main-nav').style.display = 'none';
-    startMenuMusic();
   }
 
   // ── Confirmação de saída ───────────────────────────────────────────────────

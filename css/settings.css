@@ -1,0 +1,100 @@
+/* ── Settings container ── */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.settings-frame {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/settings_square.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;
+}
+
+.settings-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 0 70px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-content #btn-back {
+  align-self: center;
+  margin-top: 8px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.settings-label {
+  font-family: var(--font-main);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--color-accent);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Volume slider ── */
+.settings-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--color-border-subtle);
+  outline: none;
+  cursor: pointer;
+}
+
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--color-accent);
+  cursor: pointer;
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-accent);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Volume value ── */
+.settings-value {
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--color-accent);
+  width: 28px;
+  text-align: right;
+  letter-spacing: 1px;
+}
