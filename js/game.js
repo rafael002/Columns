@@ -391,9 +391,32 @@
 
   document.getElementById('btn-back').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
+      document.getElementById('clear-confirm').style.display = 'none';
       document.getElementById('screen-settings').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
     });
+  });
+
+  document.getElementById('btn-clear-data').addEventListener('click', () => {
+    playSfx('sfx_click');
+    document.getElementById('clear-confirm').style.display = '';
+  });
+
+  document.getElementById('btn-clear-no').addEventListener('click', () => {
+    playSfx('sfx_back');
+    document.getElementById('clear-confirm').style.display = 'none';
+  });
+
+  document.getElementById('btn-clear-yes').addEventListener('click', () => {
+    const keysToRemove = [
+      'columns_music_vol', 'columns_sfx_vol',
+      'columns_music_muted', 'columns_sfx_muted',
+      'columns_track', 'columns_scores',
+      'columns_skip_howto_sp', 'columns_skip_howto_vs',
+    ];
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    document.getElementById('clear-confirm').style.display = 'none';
+    playSfx('sfx_click');
   });
 
   // ── Start ─────────────────────────────────────────────────────────────────

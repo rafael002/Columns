@@ -103,3 +103,14 @@
   cursor: default;
   pointer-events: none;
 }
+
+.menu-btn--danger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.menu-btn--danger:hover {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-text);
+}
