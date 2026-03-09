@@ -166,40 +166,6 @@
   letter-spacing: 1px;
 }
 
-/* ── Clear data ── */
-.settings-clear {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-}
-
-.settings-clear-confirm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.settings-clear-msg {
-  font-family: var(--font-main);
-  font-size: 13px;
-  letter-spacing: 2px;
-  color: var(--color-danger);
-}
-
-.settings-clear-btns {
-  display: flex;
-  gap: 12px;
-}
-
-.settings-clear-btns .menu-btn {
-  width: auto;
-  font-size: 14px;
-  padding: 6px 24px;
-}
-
 /* ── Tela de scores ── */
 .scores-container {
   display: flex;
@@ -254,7 +220,8 @@
 .score-entry--player .score-name { color: var(--color-text); }
 
 /* ── Overlay novo recorde ── */
-#high-score-overlay {
+#high-score-overlay,
+#clear-confirm-overlay {
   z-index: 400;
 }
 
