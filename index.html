@@ -4,11 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Columns Game</title>
+  <link rel="stylesheet" href="css/tokens.css">
   <style>
     #game-wrapper { display: none; }
-    #screen-menu  { position: fixed; inset: 0; z-index: 100; background: #510506; }
+    #screen-menu  { position: fixed; inset: 0; z-index: 100; background: var(--color-bg); }
   </style>
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/overlay.css">
 </head>
 <body>
 
@@ -29,17 +37,19 @@
     <div class="menu-container">
       <h1 class="game-logo">COLUMNS</h1>
       <div class="menu-gems">
-        <span class="mg" style="--c:var(--c1)"></span>
-        <span class="mg" style="--c:var(--c2)"></span>
-        <span class="mg" style="--c:var(--c3)"></span>
-        <span class="mg" style="--c:var(--c4)"></span>
-        <span class="mg" style="--c:var(--c5)"></span>
-        <span class="mg" style="--c:var(--c6)"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
       </div>
-      <nav class="menu-nav">
+      <button class="menu-btn menu-btn--start" id="btn-start">START</button>
+      <p class="press-start-hint" id="press-start-hint">CLICK START BUTTON</p>
+      <nav class="menu-nav" id="main-nav" style="display:none">
         <button class="menu-btn" id="btn-1p">1 PLAYER</button>
         <button class="menu-btn" id="btn-2p">2 PLAYERS</button>
-        <button class="menu-btn menu-btn--secondary" id="btn-settings">SETTINGS</button>
+        <button class="menu-btn" id="btn-settings">SETTINGS</button>
         <span class="menu-version">v1.0</span>
       </nav>
     </div>
@@ -47,16 +57,70 @@
 
   <!-- ── Tela de configurações ── -->
   <div id="screen-settings" class="screen" style="display:none">
-    <div class="menu-container">
+    <div class="settings-container">
       <h2 class="menu-heading">SETTINGS</h2>
-      <p class="settings-placeholder">Em breve...</p>
-      <button class="menu-btn menu-btn--secondary" id="btn-back">BACK</button>
+
+      <div class="settings-frame">
+        <div class="settings-content">
+
+          <div class="settings-group">
+            <span class="settings-label">MUSIC</span>
+            <div class="settings-row">
+              <input type="range" class="settings-slider" id="slider-music" min="0" max="100" step="1">
+              <span class="settings-value" id="val-music"></span>
+              <button class="mute-btn" id="btn-mute-music">🔊</button>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <span class="settings-label">SFX</span>
+            <div class="settings-row">
+              <input type="range" class="settings-slider" id="slider-sfx" min="0" max="100" step="1">
+              <span class="settings-value" id="val-sfx"></span>
+              <button class="mute-btn" id="btn-mute-sfx">🔊</button>
+            </div>
+          </div>
+
+          <button class="menu-btn" id="btn-back">BACK</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tela de entrada de nomes (2P) ── -->
+  <div id="screen-name-entry" class="screen" style="display:none">
+    <div class="name-entry-container">
+      <h2 class="menu-heading">2 PLAYERS</h2>
+      <div class="name-entry-panels">
+
+        <div class="name-entry-panel" id="name-panel-p1">
+          <label class="name-entry-label" for="input-name-p1">Insira o nome do Player 1</label>
+          <input type="text" id="input-name-p1" class="name-entry-input" maxlength="10" placeholder="P1" autocomplete="off">
+          <button class="menu-btn" id="btn-ok-p1">OK</button>
+          <p class="name-entry-confirmed" id="confirmed-p1" style="display:none">✓ PRONTO</p>
+        </div>
+
+        <div class="name-entry-divider"></div>
+
+        <div class="name-entry-panel" id="name-panel-p2">
+          <label class="name-entry-label" for="input-name-p2">Insira o nome do Player 2</label>
+          <input type="text" id="input-name-p2" class="name-entry-input" maxlength="10" placeholder="P2" autocomplete="off">
+          <button class="menu-btn" id="btn-ok-p2">OK</button>
+          <p class="name-entry-confirmed" id="confirmed-p2" style="display:none">✓ PRONTO</p>
+        </div>
+
+      </div>
+      <button class="menu-btn" id="btn-name-back">BACK</button>
     </div>
   </div>
 
   <!-- ── Jogo ── -->
   <div id="game-wrapper" style="display:none">
-    <button id="btn-back-to-menu" class="back-to-menu-btn">&#8592; MENU</button>
+    <div class="music-control" data-tooltip="CLICK TO CHANGE MUSIC">
+      <img src="images/lyre.svg" class="music-lyre-icon" alt="lyre">
+      <button id="btn-music-switch" class="music-switch-btn"></button>
+    </div>
     <div id="main-area">
 
       <!-- P1 NEXT (esquerda) -->
@@ -73,6 +137,7 @@
         <div class="board-wrapper">
           <div id="game-board" class="game-board"></div>
         </div>
+        <button class="give-up-btn" id="btn-give-up-p1">GIVE UP</button>
       </div>
 
       <!-- Stats centrais (SCORE / GEMS / LEVEL) -->
@@ -100,6 +165,7 @@
         <div class="board-wrapper">
           <div id="game-board-p2" class="game-board"></div>
         </div>
+        <button class="give-up-btn" id="btn-give-up-p2">GIVE UP</button>
       </div>
 
       <!-- P2 NEXT (direita, oculto) -->
@@ -113,20 +179,20 @@
     </div>
   </div>
 
-  <!-- Overlay único compartilhado entre todos os jogos -->
+  <!-- ── Overlay compartilhado (game over / pause) ── -->
   <div id="game-over" class="game-over">
     <div class="game-over-modal">
       <p class="modal-title" id="modal-title">GAME OVER</p>
       <p class="pause-hint">PRESSIONE "ESC" PARA RETOMAR O JOGO.</p>
       <p class="game-over-score-line">Score: <span id="final-score">0</span></p>
-      <button id="retry-btn" class="retry-btn">RETRY</button>
-      <div class="modal-confirm-btns">
-        <button id="btn-confirm-no"  class="retry-btn">NÃO</button>
-        <button id="btn-confirm-yes" class="retry-btn confirm-yes">SIM</button>
+      <div class="modal-action-btns">
+        <button id="menu-btn-overlay" class="retry-btn">MENU</button>
+        <button id="retry-btn" class="retry-btn">RETRY</button>
       </div>
     </div>
   </div>
 
+  <!-- ── Scripts: lógica do jogo ── -->
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
   <script src="js/classes/Piece.js"></script>
@@ -134,26 +200,13 @@
   <script src="js/classes/Screen.js"></script>
   <script src="js/classes/InputHandler.js"></script>
   <script src="js/classes/ExplosionEffect.js"></script>
+  <script src="js/classes/ResourceManager.js"></script>
+  <script src="js/classes/SpriteManager.js"></script>
   <script src="js/classes/Game.js"></script>
   <script src="js/game.js"></script>
-  <script>
-    (function () {
-      const gods = [
-        '⚡', // Zeus      — raio
-        'Ψ',  // Poseidon  — tridente (psi grego)
-        '☿',  // Hermes    — caduceu
-        '⚔',  // Ares      — espadas cruzadas
-        '☀',  // Apollo    — sol
-        '☽',  // Artemis   — lua crescente
-        '⚒',  // Hefesto   — martelo
-        '⚖',  // Temis     — balança
-      ];
-      const i1 = Math.floor(Math.random() * gods.length);
-      let i2;
-      do { i2 = Math.floor(Math.random() * gods.length); } while (i2 === i1);
-      document.getElementById('orb-icon-left').textContent  = gods[i1];
-      document.getElementById('orb-icon-right').textContent = gods[i2];
-    })();
-  </script>
+
+  <!-- ── Scripts: UI ── -->
+  <script src="js/ui/menu.js"></script>
+
 </body>
 </html>

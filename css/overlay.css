@@ -1,0 +1,71 @@
+/* ── Game Over / Pause ── */
+.game-over {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-overlay);
+  z-index: 300;
+}
+
+.game-over.visible {
+  display: flex;
+}
+
+.game-over-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 24px 32px;
+  background: var(--color-bg-modal);
+  border-top: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  font-family: var(--font-main);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: var(--color-accent);
+}
+
+.game-over-score-line {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  letter-spacing: 1px;
+}
+
+/* ── Botões de ação (MENU + RETRY lado a lado) ── */
+.modal-action-btns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* ── Pause ── */
+.game-over.paused .game-over-score-line,
+.game-over.paused .modal-action-btns {
+  display: none;
+}
+
+.pause-hint {
+  display: none;
+  font-size: 13px;
+  color: var(--color-accent);
+  letter-spacing: 1px;
+  font-family: var(--font-main);
+}
+
+.game-over.paused .pause-hint {
+  display: block;
+}
+
+.game-over.paused .modal-title {
+  letter-spacing: 6px;
+}

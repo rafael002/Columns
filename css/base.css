@@ -1,0 +1,36 @@
+@font-face {
+  font-family: 'Diogenes';
+  src: url('../fonts/DIOGENES.ttf') format('truetype');
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,47 @@
+/* ── Logo / Headings ── */
+.game-logo {
+  font-family: var(--font-main);
+  font-size: 80px;
+  color: var(--color-accent);
+  letter-spacing: 10px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 48px rgba(241, 196, 15, 0.25);
+}
+
+.menu-heading {
+  font-family: var(--font-main);
+  font-size: 40px;
+  color: var(--color-accent);
+  letter-spacing: 6px;
+  margin-bottom: 16px;
+}
+
+.menu-version {
+  margin-top: 12px;
+  font-family: var(--font-main);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--color-text-subtle);
+}
+
+/* ── Press start hint ── */
+.press-start-hint {
+  font-family: var(--font-main);
+  font-size: 20px;
+  color: var(--color-accent);
+  letter-spacing: 3px;
+  margin-top: 10px;
+  animation: blink-hint 1.1s step-start infinite;
+}
+
+@keyframes blink-hint {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Countdown ── */
+.countdown-text {
+  font-family: var(--font-main);
+  font-size: 120px;
+  color: var(--color-accent);
+}

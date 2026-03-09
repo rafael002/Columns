@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" fill="none">
+  <!-- Body / resonator -->
+  <ellipse cx="24" cy="48" rx="14" ry="8" stroke="#f1c40f" stroke-width="2" fill="#f1c40f" fill-opacity="0.15"/>
+
+  <!-- Left arm: curva para fora, sobe e fecha no crossbar -->
+  <path d="M10 44 C4 34 4 18 12 8" stroke="#f1c40f" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Right arm -->
+  <path d="M38 44 C44 34 44 18 36 8" stroke="#f1c40f" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Crossbar -->
+  <line x1="12" y1="8" x2="36" y2="8" stroke="#f1c40f" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Bolas ornamentais nas pontas -->
+  <circle cx="12" cy="8" r="3" fill="#f1c40f"/>
+  <circle cx="36" cy="8" r="3" fill="#f1c40f"/>
+
+  <!-- Cordas (5) -->
+  <line x1="15" y1="11" x2="13" y2="42" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.75"/>
+  <line x1="19" y1="9"  x2="18" y2="44" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.75"/>
+  <line x1="24" y1="8"  x2="24" y2="46" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.75"/>
+  <line x1="29" y1="9"  x2="30" y2="44" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.75"/>
+  <line x1="33" y1="11" x2="35" y2="42" stroke="#f1c40f" stroke-width="1" stroke-opacity="0.75"/>
+</svg>

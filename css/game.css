@@ -1,0 +1,278 @@
+/* ── Wrapper do jogo ── */
+#game-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-bg);
+}
+
+#game-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#game-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Área principal ── */
+#main-area {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+/* ── Painel lateral (NEXT) ── */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  align-self: flex-start;
+}
+
+.next-piece-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-accent);
+  font-family: var(--font-main);
+  font-size: 14px;
+  background-color: var(--color-bg-dark);
+  border: 2px solid var(--color-bg-dark);
+  border-radius: 3px;
+}
+
+.next-piece-label {
+  padding-top: 7px;
+}
+
+.next-piece-preview {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cell-size);
+  grid-template-rows: repeat(3, var(--cell-size));
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* ── Painel de stats (SCORE / GEMS / LEVEL) ── */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: calc(13 * var(--cell-size));
+  font-family: var(--font-main);
+}
+
+.value-display {
+  position: relative;
+  width: 130px;
+}
+
+.value-display span {
+  padding: 5px 10px;
+}
+
+.value-display div {
+  position: relative;
+  color: var(--color-accent);
+  background-color: var(--color-bg-dark);
+}
+
+.value-display .st-player span,
+.value-display .nd-player span {
+  font-size: 20px;
+}
+
+.label {
+  width: 70px;
+  text-align: center;
+  left: 30px;
+  font-size: 20px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.st-player {
+  width: 100px;
+  text-align: left;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.nd-player {
+  display: none;
+  width: 100px;
+  text-align: right;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  left: 30px;
+}
+
+#main-area.two-player .nd-player {
+  display: block;
+}
+
+/* ── Tabuleiro ── */
+.board-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-label {
+  display: none;
+  font-family: var(--font-main);
+  font-size: 18px;
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  background-color: var(--color-bg-dark);
+  border-radius: 15px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+#main-area.two-player .player-label {
+  display: flex;
+}
+
+.board-wrapper {
+  position: relative;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(6, var(--cell-size));
+  grid-template-rows: repeat(13, var(--cell-size));
+  border: 1px solid var(--color-bg-dark);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Células ── */
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid var(--grid-color);
+  background: var(--color-bg-dark);
+  position: relative;
+}
+
+.cell::after {
+  content: "";
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  background-color: var(--cell-color, transparent);
+  background-image: none;
+}
+
+.cell[data-value="1"] { --cell-color: var(--gem-1); }
+.cell[data-value="2"] { --cell-color: var(--gem-2); }
+.cell[data-value="3"] { --cell-color: var(--gem-3); }
+.cell[data-value="4"] { --cell-color: var(--gem-4); }
+.cell[data-value="5"] { --cell-color: var(--gem-5); }
+.cell[data-value="6"] { --cell-color: var(--gem-6); }
+.cell[data-value="7"] { --cell-color: var(--gem-7); }
+.cell[data-value="8"] { --cell-color: var(--gem-8); }
+
+/* ── Sprites ── */
+.cell.has-gem::after {
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: transparent;
+  background-image: url('../sprites/gems.png');
+  background-repeat: no-repeat;
+  background-size: var(--sheet-w) var(--sheet-h);
+  background-position: var(--sprite-x, 0px) var(--sprite-y, 0px);
+}
+
+.explosion-effect {
+  position: absolute;
+  background-image: url('../sprites/explosion.png');
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Controle de música (lira + botão) ── */
+.music-control {
+  position: absolute !important;
+  top: 12px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.music-lyre-icon {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+.music-control::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  font-family: var(--font-main);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.music-control:hover::after {
+  opacity: 1;
+}
+
+.music-switch-btn {
+  font-family: var(--font-main);
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.music-switch-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* ── Countdown ── */
+.countdown-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}

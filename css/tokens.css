@@ -1,0 +1,40 @@
+:root {
+  /* Typography */
+  --font-main: 'Diogenes', monospace;
+
+  /* Gem colors */
+  --gem-1: #e74c3c;
+  --gem-2: #27ae60;
+  --gem-3: #2980b9;
+  --gem-4: #f1c40f;
+  --gem-5: #B53471;
+  --gem-6: #f368e0;
+  --gem-7: #e67e22;
+  --gem-8: #A3CB38;
+
+  /* Backgrounds */
+  --color-bg:       #510506;
+  --color-bg-modal: #510505;
+  --color-bg-dark:  #000;
+  --color-bg-hover: #1a1a2e;
+
+  /* Accent & status */
+  --color-accent:  #f1c40f;
+  --color-danger:  #e74c3c;
+  --color-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Text */
+  --color-text:        #fff;
+  --color-text-muted:  #aaa;
+  --color-text-dim:    #888;
+  --color-text-subtle: #555;
+
+  /* Borders */
+  --color-border:        #fff;
+  --color-border-muted:  #555;
+  --color-border-subtle: #444;
+
+  /* Board */
+  --grid-color: #CCCCCC;
+  --cell-size:  41.6px;
+}

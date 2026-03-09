@@ -1,0 +1,167 @@
+/* ── Settings container ── */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.settings-frame {
+  position: relative;
+  width: 440px;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/settings_square.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 1;
+}
+
+.settings-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 0 70px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-content #btn-back {
+  align-self: center;
+  margin-top: 8px;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.settings-label {
+  font-family: var(--font-main);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--color-accent);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Volume slider ── */
+.settings-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--color-border-subtle);
+  outline: none;
+  cursor: pointer;
+}
+
+.settings-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--color-accent);
+  cursor: pointer;
+}
+
+.settings-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-accent);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Name entry (2P) ── */
+.name-entry-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.name-entry-panels {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.name-entry-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 260px;
+}
+
+.name-entry-label {
+  font-family: var(--font-main);
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.name-entry-input {
+  font-family: var(--font-main);
+  font-size: 24px;
+  letter-spacing: 4px;
+  text-align: center;
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  color: var(--color-accent);
+  border: none;
+  border-bottom: 2px solid var(--color-accent);
+  outline: none;
+}
+
+.name-entry-input::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.name-entry-input:read-only {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.name-entry-confirmed {
+  font-family: var(--font-main);
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--color-accent);
+}
+
+.name-entry-divider {
+  width: 1px;
+  height: 180px;
+  background: var(--color-border-muted);
+  align-self: center;
+}
+
+/* ── Volume value ── */
+.settings-value {
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: var(--color-accent);
+  width: 28px;
+  text-align: right;
+  letter-spacing: 1px;
+}
