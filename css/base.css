@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'Diogenes';
+  src: url('../fonts/DIOGENES.ttf') format('truetype');
+}
+
+:root {
+  --c1: #e74c3c;
+  --c2: #27ae60;
+  --c3: #2980b9;
+  --c4: #f1c40f;
+  --c5: #B53471;
+  --c6: #f368e0;
+  --c7: #e67e22;
+  --c8: #A3CB38;
+  --cell-size: 41.6px;
+  --grid-color: #CCCCCC;
+  --color-bg: #510506;
+  --color-accent: #f1c40f;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}

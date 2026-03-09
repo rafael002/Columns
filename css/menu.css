@@ -1,0 +1,187 @@
+/* ── Animações dos orbes ── */
+@keyframes rotacionar-horario {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes rotacionar-antihorario {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* ── Telas base (menu / settings) ── */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  z-index: 100;
+}
+
+#screen-menu {
+  overflow: hidden;
+}
+
+/* ── Orbes nos cantos ── */
+.corner-orb {
+  position: absolute;
+  bottom: -160px;
+  width: 460px;
+  height: 460px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../images/rounded.svg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: rotacionar-horario 24s linear infinite;
+  pointer-events: none;
+}
+
+.corner-orb--left  { left: -160px; }
+.corner-orb--right { right: -160px; animation-direction: reverse; }
+
+.orb-mid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  background-image: url('../images/rounded.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: rotacionar-antihorario 12s linear infinite;
+}
+
+.orb-inner {
+  width: 130px;
+  height: 130px;
+  background-image: url('../images/rounded.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: rotacionar-horario 6s linear infinite;
+}
+
+.orb-god-icon {
+  position: absolute;
+  bottom: 40px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  line-height: 1;
+  font-family: serif;
+  color: var(--color-accent);
+  text-shadow: 0 0 24px rgba(241, 196, 15, 0.6);
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
+
+#orb-icon-left  { left:  40px; }
+#orb-icon-right { right: 40px; }
+
+/* ── Menu container ── */
+.menu-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.game-logo {
+  font-family: 'Diogenes', monospace;
+  font-size: 80px;
+  color: var(--color-accent);
+  letter-spacing: 10px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 48px rgba(241, 196, 15, 0.25);
+}
+
+.menu-gems {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 52px;
+}
+
+.mg {
+  width: 18px;
+  height: 18px;
+  background-image: url('../images/square.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ── Navegação ── */
+.menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.menu-btn {
+  font-family: 'Diogenes', monospace;
+  font-size: 20px;
+  padding: 12px 0;
+  width: 280px;
+  background: var(--color-bg);
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 3px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.menu-btn:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #0f0f1e;
+}
+
+.menu-btn--secondary {
+  font-size: 16px;
+  padding: 8px 0;
+  color: #888;
+  border-color: #555;
+  margin-top: 8px;
+}
+
+.menu-btn--secondary:hover {
+  color: #0f0f1e;
+}
+
+.menu-version {
+  margin-top: 12px;
+  font-family: 'Diogenes', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #555;
+}
+
+/* ── Settings ── */
+.menu-heading {
+  font-family: 'Diogenes', monospace;
+  font-size: 40px;
+  color: var(--color-accent);
+  letter-spacing: 6px;
+  margin-bottom: 32px;
+}
+
+.settings-placeholder {
+  font-family: 'Diogenes', monospace;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}

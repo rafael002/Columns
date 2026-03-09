@@ -1,0 +1,110 @@
+/* ── Game Over / Pause / Confirmação ── */
+.game-over {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 300;
+}
+
+.game-over.visible {
+  display: flex;
+}
+
+.game-over-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 24px 32px;
+  background: #510505;
+  border-top: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  font-family: 'Diogenes', monospace;
+  color: #fff;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: var(--color-accent);
+}
+
+.game-over-score-line {
+  font-size: 16px;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+/* ── Botões do modal ── */
+.retry-btn {
+  margin-top: 6px;
+  padding: 8px 28px;
+  font-family: 'Diogenes', monospace;
+  font-size: 18px;
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.retry-btn:hover {
+  background: #fff;
+  color: #1a1a2e;
+}
+
+/* ── Confirmação de saída ── */
+.modal-confirm-btns {
+  display: none;
+  gap: 20px;
+  margin-top: 4px;
+}
+
+.game-over.confirming .game-over-score-line,
+.game-over.confirming #retry-btn {
+  display: none;
+}
+
+.game-over.confirming .modal-confirm-btns {
+  display: flex;
+}
+
+.confirm-yes {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.confirm-yes:hover {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
+}
+
+/* ── Pause ── */
+.game-over.paused .game-over-score-line,
+.game-over.paused .retry-btn {
+  display: none;
+}
+
+.pause-hint {
+  display: none;
+  font-size: 13px;
+  color: var(--color-accent);
+  letter-spacing: 1px;
+  font-family: 'Diogenes', monospace;
+}
+
+.game-over.paused .pause-hint {
+  display: block;
+}
+
+.game-over.paused .modal-title {
+  letter-spacing: 6px;
+}

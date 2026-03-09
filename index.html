@@ -8,7 +8,10 @@
     #game-wrapper { display: none; }
     #screen-menu  { position: fixed; inset: 0; z-index: 100; background: #510506; }
   </style>
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/overlay.css">
 </head>
 <body>
 
@@ -29,12 +32,12 @@
     <div class="menu-container">
       <h1 class="game-logo">COLUMNS</h1>
       <div class="menu-gems">
-        <span class="mg" style="--c:var(--c1)"></span>
-        <span class="mg" style="--c:var(--c2)"></span>
-        <span class="mg" style="--c:var(--c3)"></span>
-        <span class="mg" style="--c:var(--c4)"></span>
-        <span class="mg" style="--c:var(--c5)"></span>
-        <span class="mg" style="--c:var(--c6)"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
+        <span class="mg"></span>
       </div>
       <nav class="menu-nav">
         <button class="menu-btn" id="btn-1p">1 PLAYER</button>
@@ -113,7 +116,7 @@
     </div>
   </div>
 
-  <!-- Overlay único compartilhado entre todos os jogos -->
+  <!-- ── Overlay compartilhado (game over / pause) ── -->
   <div id="game-over" class="game-over">
     <div class="game-over-modal">
       <p class="modal-title" id="modal-title">GAME OVER</p>
@@ -127,6 +130,7 @@
     </div>
   </div>
 
+  <!-- ── Scripts: lógica do jogo ── -->
   <script src="js/config/constants.js"></script>
   <script src="js/utils/colors.js"></script>
   <script src="js/classes/Piece.js"></script>
@@ -134,26 +138,13 @@
   <script src="js/classes/Screen.js"></script>
   <script src="js/classes/InputHandler.js"></script>
   <script src="js/classes/ExplosionEffect.js"></script>
+  <script src="js/classes/ResourceManager.js"></script>
+  <script src="js/classes/SpriteManager.js"></script>
   <script src="js/classes/Game.js"></script>
   <script src="js/game.js"></script>
-  <script>
-    (function () {
-      const gods = [
-        '⚡', // Zeus      — raio
-        'Ψ',  // Poseidon  — tridente (psi grego)
-        '☿',  // Hermes    — caduceu
-        '⚔',  // Ares      — espadas cruzadas
-        '☀',  // Apollo    — sol
-        '☽',  // Artemis   — lua crescente
-        '⚒',  // Hefesto   — martelo
-        '⚖',  // Temis     — balança
-      ];
-      const i1 = Math.floor(Math.random() * gods.length);
-      let i2;
-      do { i2 = Math.floor(Math.random() * gods.length); } while (i2 === i1);
-      document.getElementById('orb-icon-left').textContent  = gods[i1];
-      document.getElementById('orb-icon-right').textContent = gods[i2];
-    })();
-  </script>
+
+  <!-- ── Scripts: UI ── -->
+  <script src="js/ui/menu.js"></script>
+
 </body>
 </html>

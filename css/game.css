@@ -1,0 +1,251 @@
+/* ── Botão voltar ao menu ── */
+.back-to-menu-btn {
+  font-family: 'Diogenes', monospace;
+  font-size: 14px;
+  padding: 4px 16px;
+  background: transparent;
+  color: #888;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  align-self: flex-start;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.back-to-menu-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* ── Wrapper do jogo (overlay sobre o menu) ── */
+#game-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-bg);
+}
+
+#game-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/square.svg");
+  background-size: 10%;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#game-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Área principal ── */
+#main-area {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+/* ── Painel lateral (NEXT) ── */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  align-self: flex-start;
+}
+
+.next-piece-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-accent);
+  font-family: 'Diogenes', monospace;
+  font-size: 14px;
+  background-color: #000;
+  border: 2px solid #000;
+  border-radius: 3px;
+}
+
+.next-piece-label {
+  padding-top: 7px;
+}
+
+.next-piece-preview {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cell-size);
+  grid-template-rows: repeat(3, var(--cell-size));
+  border: 1px solid #444;
+}
+
+/* ── Painel de stats (SCORE / GEMS / LEVEL) ── */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: calc(13 * var(--cell-size));
+  font-family: 'Diogenes', monospace;
+}
+
+.value-display {
+  position: relative;
+  width: 130px;
+}
+
+.value-display span {
+  padding: 5px 10px;
+}
+
+.value-display div {
+  position: relative;
+  color: var(--color-accent);
+  background-color: #000;
+}
+
+.value-display .st-player span,
+.value-display .nd-player span {
+  font-size: 20px;
+}
+
+.label {
+  width: 70px;
+  text-align: center;
+  left: 30px;
+  font-size: 20px;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.st-player {
+  width: 100px;
+  text-align: left;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.nd-player {
+  display: none;
+  width: 100px;
+  text-align: right;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 25px;
+  left: 30px;
+}
+
+#main-area.two-player .nd-player {
+  display: block;
+}
+
+/* ── Tabuleiro ── */
+.board-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-label {
+  display: none;
+  font-family: 'Diogenes', monospace;
+  font-size: 18px;
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  background-color: #000;
+  border-radius: 15px;
+  padding: 0 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+#main-area.two-player .player-label {
+  display: flex;
+}
+
+.board-wrapper {
+  position: relative;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(6, var(--cell-size));
+  grid-template-rows: repeat(13, var(--cell-size));
+  border: 1px solid #000;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Células ── */
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: 1px solid var(--grid-color);
+  background: #000;
+  position: relative;
+}
+
+.cell::after {
+  content: "";
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  background-color: var(--cell-color, transparent);
+  background-image: none;
+}
+
+.cell[data-value="1"] { --cell-color: var(--c1); }
+.cell[data-value="2"] { --cell-color: var(--c2); }
+.cell[data-value="3"] { --cell-color: var(--c3); }
+.cell[data-value="4"] { --cell-color: var(--c4); }
+.cell[data-value="5"] { --cell-color: var(--c5); }
+.cell[data-value="6"] { --cell-color: var(--c6); }
+.cell[data-value="7"] { --cell-color: var(--c7); }
+.cell[data-value="8"] { --cell-color: var(--c8); }
+
+/* ── Sprites ── */
+.cell.has-gem::after {
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: transparent;
+  background-image: url('../sprites/gems.png');
+  background-repeat: no-repeat;
+  background-size: var(--sheet-w) var(--sheet-h);
+  background-position: var(--sprite-x, 0px) var(--sprite-y, 0px);
+}
+
+.explosion-effect {
+  position: absolute;
+  background-image: url('../sprites/explosion.png');
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Countdown ── */
+.countdown-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.countdown-text {
+  font-family: 'Diogenes', monospace;
+  font-size: 120px;
+  color: var(--color-accent);
+}
