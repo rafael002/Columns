@@ -8,9 +8,6 @@ class InputHandler {
     window.addEventListener('keydown', (event) => {
       this.handleKeyPress(event);
     }, false);
-    window.addEventListener('keyup', (event) => {
-      if (event.keyCode === CONFIG.KEYS.DOWN) this.game._onDownKeyUp();
-    }, false);
   }
 
   handleKeyPress(event) {
@@ -40,9 +37,9 @@ class InputHandler {
         break;
 
       case CONFIG.KEYS.DOWN:
-        if (!event.repeat) this.game._onDownKeyDown();
         if (board.checkCollision(0, 1, piece)) {
           piece.downPiece();
+          this.game._addScore(1);
         }
         event.preventDefault();
         break;

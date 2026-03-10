@@ -76,6 +76,7 @@
 
   <!-- ── Tela de menu ── -->
   <div id="screen-menu" class="screen">
+    <button id="btn-debug-sound" style="position:absolute;top:12px;left:12px;z-index:999;padding:6px 12px;background:#222;color:#0f0;border:1px solid #0f0;font-size:11px;cursor:pointer;font-family:monospace">▶ TEST MATCH SFX</button>
     <div class="corner-orb corner-orb--left">
       <div class="orb-mid">
         <div class="orb-inner"></div>
@@ -280,6 +281,9 @@
       <button id="hs-confirm-btn" class="menu-btn">OK</button>
     </div>
   </div>
+
+  <!-- ── Tone.js (pitch shift para efeitos de chain) ── -->
+  <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
 
   <!-- ── Scripts: lógica do jogo ── -->
   <script src="js/config/constants.js"></script>

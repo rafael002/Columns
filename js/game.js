@@ -92,6 +92,36 @@
 
   let _rm = null;
   let _menuAudio = null;
+
+  // ── Tone.js: pitch shift para match encadeado ──────────────────────────────
+
+  let _toneMatchPlayer = null;
+  let _tonePitchShift  = null;
+
+  function initToneMatch(path) {
+    if (typeof Tone === 'undefined') return;
+    try {
+      _tonePitchShift  = new Tone.PitchShift({ windowSize: 0.05 }).toDestination();
+      _toneMatchPlayer = new Tone.Player(path).connect(_tonePitchShift);
+    } catch (e) {
+      console.warn('Tone.js init falhou:', e);
+    }
+  }
+
+  function playMatchTone(multiplier) {
+    if (_settings.sfxMuted) return;
+    if (_toneMatchPlayer?.loaded) {
+      try {
+        _tonePitchShift.pitch = (multiplier - 1) * 2.3;
+        _toneMatchPlayer.volume.value = Tone.gainToDb(_settings.sfxVolume);
+        _toneMatchPlayer.start();
+      } catch (e) {
+        playSfx('sfx_match');
+      }
+    } else {
+      playSfx('sfx_match');
+    }
+  }
   let _nameEntryAudio = null;
   let _musicAudio = null;
   let _gameOverAudio = null;
@@ -162,7 +192,10 @@
         ..._selectableTracks.map(k => _rm.loadResource('audio', k)),
       ]);
     })
-    .then(() => updateMusicSwitchBtn())
+    .then(() => {
+      updateMusicSwitchBtn();
+      initToneMatch('audio/sfx/match.wav');
+    })
     .catch(err => console.warn('Erro ao carregar áudio:', err));
 
   function getCountdownDuration() {
@@ -422,6 +455,17 @@
 
   // ── Start ─────────────────────────────────────────────────────────────────
 
+  document.getElementById('btn-debug-sound').addEventListener('click', () => {
+    if (typeof Tone !== 'undefined') Tone.start();
+    let m = 1;
+    const next = () => {
+      if (m > 5) return;
+      playMatchTone(m++);
+      setTimeout(next, 1000);
+    };
+    next();
+  });
+
   document.getElementById('btn-start').addEventListener('click', () => {
     startMenuMusic();
     playSfxThen('sfx_click', () => {
@@ -433,21 +477,28 @@
 
   // ── Modos de jogo ─────────────────────────────────────────────────────────
 
+  function getMatchExplosionFps() {
+    const duration = _rm?.get('audio', 'sfx_match')?.audio?.duration;
+    if (!duration || !isFinite(duration)) return null;
+    return Math.round(8 / duration); // 8 = animationFrames
+  }
+
   function makeGameOptions(extraOpts = {}) {
     return {
-      countdownDuration: getCountdownDuration(),
+      countdownDuration:  getCountdownDuration(),
+      matchExplosionFps:  getMatchExplosionFps(),
       onCountdownStart:  () => {
         document.getElementById('btn-give-up-p1').disabled = true;
         document.getElementById('btn-give-up-p2').disabled = true;
         playCountdownMusic();
       },
-      onGameStart:       () => { startGameMusic(); enableGiveUp(); },
+      onGameStart:       () => { startGameMusic(); enableGiveUp(); if (typeof Tone !== 'undefined') Tone.start(); },
       onGameOver:        playGameOverMusic,
       onPause:           pauseMusic,
       onResume:          resumeMusic,
       onShuffle:         () => playSfx('sfx_shuffle'),
       onDrop:            () => playSfx('sfx_drop'),
-      onMatch:           () => playSfx('sfx_match'),
+      onMatch:           (multiplier = 1) => playMatchTone(multiplier),
       onLevelUp:         () => playSfx('sfx_level_up'),
       onGameOverRow:     () => playSfx('sfx_problem'),
       ...extraOpts,

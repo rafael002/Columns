@@ -27,7 +27,7 @@
       "sheetWidth": 761,
       "sheetHeight": 1406,
       "numSprites": 1,
-      "animationFPS": 80,
+      "animationFPS": 20,
       "animationFrames": 8
     }
   },

@@ -13,12 +13,14 @@ class ExplosionEffect {
     img.src = this.cfg.path;
   }
 
-  addEffects(markedGems) {
+  addEffects(markedGems, fpsOverride) {
     const offset = CONFIG.VISUAL_OFFSET;
     const s = this.scale;
     const cfg = this.cfg;
     const bgW = Math.round(cfg.sheetWidth * s);
     const bgH = Math.round(cfg.sheetHeight * s);
+    const fps = fpsOverride ?? cfg.animationFPS ?? 10;
+    const framesPerSprite = Math.ceil(60 / fps);
 
     markedGems.forEach(({ col, row }) => {
       const visRow = row - offset;
@@ -32,19 +34,16 @@ class ExplosionEffect {
       div.style.height = `${this.cellSize}px`;
       div.style.backgroundSize = `${bgW}px ${bgH}px`;
       this.boardElement.appendChild(div);
-      this.effects.push({ div, frame: 0, done: false });
+      this.effects.push({ div, frame: 0, done: false, framesPerSprite });
     });
   }
 
   update() {
     const cfg = this.cfg;
-    const fps = cfg.animationFPS ?? 10;
-    const framesPerSprite = Math.ceil(60 / fps);
-
     this.effects.forEach(effect => {
       if (effect.done) return;
 
-      const spriteFrame = Math.floor(effect.frame / framesPerSprite);
+      const spriteFrame = Math.floor(effect.frame / effect.framesPerSprite);
 
       if (spriteFrame >= cfg.animationFrames) {
         effect.div.remove();
