@@ -6,6 +6,7 @@ class Screen {
     this.cols = CONFIG.BOARD_WIDTH;
     this.cellSize = Math.round(CONFIG.BLOCK_SIZE); // 42px
 
+    this.debugValues = false;
     this.spriteReady = false;
     this.gemCfg = null;
     this.scale = 1;
@@ -31,6 +32,11 @@ class Screen {
     );
 
     this._loadSprites();
+  }
+
+  toggleDebug() {
+    this.debugValues = !this.debugValues;
+    for (let row = 0; row < this.rows; row++) this.prevMap[row].fill(-1);
   }
 
   _loadSprites() {
@@ -162,10 +168,17 @@ class Screen {
       cell.style.removeProperty('--sprite-x');
       cell.style.removeProperty('--sprite-y');
       cell.dataset.value = value;
+      cell.textContent = '';
       return;
     }
 
     cell.dataset.value = value; // color fallback (CSS handles it)
+    if (this.debugValues) {
+      cell.textContent = value;
+      cell.style.cssText += ';color:#fff;font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;text-shadow:0 0 3px #000';
+    } else {
+      cell.textContent = '';
+    }
 
     if (this.spriteReady) {
       const { x, y } = this._spritePos(value, animated ? undefined : null);

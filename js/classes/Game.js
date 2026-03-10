@@ -1,3 +1,10 @@
+const _LEVEL_THRESHOLDS = (() => {
+  const t = [0];
+  let v = 2000;
+  for (let i = 2; i <= 15; i++) { t.push(v); v = Math.round(v * 2); }
+  return t;
+})();
+
 class Game {
   constructor(boardElement, options = {}) {
     this.boardElement = boardElement;
@@ -26,9 +33,13 @@ class Game {
 
     this.screen.initPreview(document.getElementById(this._ids.nextPreview));
 
+    this._downHeldSince = null;
+    this._chainMultiplier = 1;
+
     this.customKeys = options.keys ?? null;
     if (this.customKeys) {
       window.addEventListener('keydown', e => this._handleCustomKey(e));
+      window.addEventListener('keyup',   e => { if (e.keyCode === this.customKeys.DOWN) this._onDownKeyUp(); });
     } else {
       this.inputHandler = new InputHandler(this);
     }
@@ -86,6 +97,7 @@ class Game {
       if (this._killed) return;
       if (this.gameOver && e.key === 'Enter') { this.reset(); this.peer?.reset(); }
       if (e.key === 'Escape') this.togglePause();
+      if (e.key === 'Delete') this.screen.toggleDebug();
     });
 
     document.getElementById(this._ids.score).textContent = '00000000';
@@ -143,7 +155,7 @@ class Game {
       case k.SHUFFLE: piece.shuffle(); this._onShuffle?.(); e.preventDefault(); break;
       case k.LEFT:  if (board.checkCollision(1, -1, piece)) piece.walkLeft();  e.preventDefault(); break;
       case k.RIGHT: if (board.checkCollision(1,  1, piece)) piece.walkRight(); e.preventDefault(); break;
-      case k.DOWN:  if (board.checkCollision(0,  1, piece)) piece.downPiece(); e.preventDefault(); break;
+      case k.DOWN:  if (!e.repeat) this._onDownKeyDown(); if (board.checkCollision(0,  1, piece)) piece.downPiece(); e.preventDefault(); break;
     }
   }
 
@@ -247,6 +259,7 @@ class Game {
    * Inicia a resolução de matches (com animação se disponível)
    */
   _resolveChain() {
+    this._chainMultiplier = 1;
     const marked = this.board.match();
     if (marked.length > 0 && this.explosionEffect) {
       this._addGems(marked.length);
@@ -259,14 +272,25 @@ class Game {
     }
   }
 
-  _addGems(count) {
-    this.gems += count;
-    this.score = Math.min(this.score + count * 200, 99_999_999);
-    this._onMatch?.();
-    document.getElementById(this._ids.gems).textContent  = this.gems;
+  _onDownKeyDown() {
+    if (this._downHeldSince === null) this._downHeldSince = Date.now();
+  }
+
+  _onDownKeyUp() {
+    if (this._downHeldSince === null) return;
+    const ms = Date.now() - this._downHeldSince;
+    this._downHeldSince = null;
+    this._addScore(Math.floor(ms));
+  }
+
+  _addScore(points) {
+    this.score = Math.min(this.score + points, 99_999_999);
     document.getElementById(this._ids.score).textContent = String(this.score).padStart(8, '0');
 
-    const newLevel = Math.floor(this.gems / 15) + 1;
+    let newLevel = 1;
+    for (let i = _LEVEL_THRESHOLDS.length - 1; i >= 1; i--) {
+      if (this.score >= _LEVEL_THRESHOLDS[i]) { newLevel = i + 1; break; }
+    }
     if (newLevel > this.level) {
       this.level = newLevel;
       document.getElementById(this._ids.level).textContent = this.level;
@@ -277,6 +301,14 @@ class Game {
       }
       this._onLevelUp?.();
     }
+  }
+
+  _addGems(count) {
+    this.gems += count;
+    this._addScore(count * this.level * 10 * this._chainMultiplier);
+    this._chainMultiplier = Math.min(this._chainMultiplier + 1, 5);
+    this._onMatch?.();
+    document.getElementById(this._ids.gems).textContent = this.gems;
   }
 
   _swapPiece() {
@@ -495,6 +527,8 @@ class Game {
     this._duringCountdown = true;
     this.isPaused = false;
     this._pausedDuringCountdown = false;
+    this._downHeldSince = null;
+    this._chainMultiplier = 1;
 
     document.getElementById(this._ids.gameOver)?.classList.remove('visible', 'paused');
     document.getElementById(this._ids.score).textContent = '00000000';
