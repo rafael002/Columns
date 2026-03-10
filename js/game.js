@@ -568,6 +568,7 @@
   document.getElementById('btn-name-back').addEventListener('click', () => {
     playSfxThen('sfx_click', () => {
       stopNameEntryMusic();
+      startMenuMusic();
       document.getElementById('screen-name-entry').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
     });
