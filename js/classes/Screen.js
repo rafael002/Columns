@@ -168,17 +168,13 @@ class Screen {
       cell.style.removeProperty('--sprite-x');
       cell.style.removeProperty('--sprite-y');
       cell.dataset.value = value;
-      cell.textContent = '';
+      delete cell.dataset.debug;
       return;
     }
 
     cell.dataset.value = value; // color fallback (CSS handles it)
-    if (this.debugValues) {
-      cell.textContent = value;
-      cell.style.cssText += ';color:#fff;font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;text-shadow:0 0 3px #000';
-    } else {
-      cell.textContent = '';
-    }
+    if (this.debugValues) cell.dataset.debug = value;
+    else delete cell.dataset.debug;
 
     if (this.spriteReady) {
       const { x, y } = this._spritePos(value, animated ? undefined : null);

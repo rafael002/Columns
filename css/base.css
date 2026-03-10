@@ -34,3 +34,21 @@ body > * {
   position: relative;
   z-index: 1;
 }
+
+#beta {
+  position: fixed;
+  top: 1.5em;
+  left: -3em;
+  transform: rotate(-45deg);
+  background: red;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 0.5em 3em;
+  z-index: 999999999;
+  pointer-events: none;
+}
+
+#beta::before {
+  content: "⚠️ BETA ⚠️";
+}

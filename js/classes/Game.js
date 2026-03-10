@@ -35,6 +35,7 @@ class Game {
 
     this._downHeldSince = null;
     this._chainMultiplier = 1;
+    this._pendingDownMs = 0;
 
     this.customKeys = options.keys ?? null;
     if (this.customKeys) {
@@ -262,10 +263,13 @@ class Game {
     this._chainMultiplier = 1;
     const marked = this.board.match();
     if (marked.length > 0 && this.explosionEffect) {
+      this._addScore(Math.floor(this._pendingDownMs));
+      this._pendingDownMs = 0;
       this._addGems(marked.length);
       this.explosionEffect.addEffects(marked);
       this.isAnimating = true;
     } else {
+      this._pendingDownMs = 0;
       this.board.removeMarkedCells();
       this.board.gravity();
       this._swapPiece();
@@ -278,9 +282,8 @@ class Game {
 
   _onDownKeyUp() {
     if (this._downHeldSince === null) return;
-    const ms = Date.now() - this._downHeldSince;
+    this._pendingDownMs = Date.now() - this._downHeldSince;
     this._downHeldSince = null;
-    this._addScore(Math.floor(ms));
   }
 
   _addScore(points) {
@@ -528,6 +531,7 @@ class Game {
     this.isPaused = false;
     this._pausedDuringCountdown = false;
     this._downHeldSince = null;
+    this._pendingDownMs = 0;
     this._chainMultiplier = 1;
 
     document.getElementById(this._ids.gameOver)?.classList.remove('visible', 'paused');

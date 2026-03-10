@@ -436,7 +436,11 @@
   function makeGameOptions(extraOpts = {}) {
     return {
       countdownDuration: getCountdownDuration(),
-      onCountdownStart:  playCountdownMusic,
+      onCountdownStart:  () => {
+        document.getElementById('btn-give-up-p1').disabled = true;
+        document.getElementById('btn-give-up-p2').disabled = true;
+        playCountdownMusic();
+      },
       onGameStart:       () => { startGameMusic(); enableGiveUp(); },
       onGameOver:        playGameOverMusic,
       onPause:           pauseMusic,
