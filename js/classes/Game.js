@@ -88,6 +88,10 @@ class Game {
       if (e.key === 'Escape') this.togglePause();
     });
 
+    document.getElementById(this._ids.score).textContent = '00000000';
+    document.getElementById(this._ids.gems).textContent  = 0;
+    document.getElementById(this._ids.level).textContent = 1;
+
     this._startCountdown();
   }
 
@@ -257,10 +261,10 @@ class Game {
 
   _addGems(count) {
     this.gems += count;
-    this.score += count * 200;
+    this.score = Math.min(this.score + count * 200, 99_999_999);
     this._onMatch?.();
     document.getElementById(this._ids.gems).textContent  = this.gems;
-    document.getElementById(this._ids.score).textContent = this.score;
+    document.getElementById(this._ids.score).textContent = String(this.score).padStart(8, '0');
 
     const newLevel = Math.floor(this.gems / 15) + 1;
     if (newLevel > this.level) {
@@ -493,7 +497,7 @@ class Game {
     this._pausedDuringCountdown = false;
 
     document.getElementById(this._ids.gameOver)?.classList.remove('visible', 'paused');
-    document.getElementById(this._ids.score).textContent = 0;
+    document.getElementById(this._ids.score).textContent = '00000000';
     document.getElementById(this._ids.gems).textContent = 0;
     this._startCountdown();
   }
