@@ -377,6 +377,9 @@
     playSfxThen('sfx_click', () => {
       document.getElementById('screen-scores').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
+      document.getElementById('btn-start').style.display = '';
+      document.getElementById('press-start-hint').style.display = '';
+      document.getElementById('main-nav').style.display = 'none';
     });
   });
 
@@ -393,6 +396,9 @@
     playSfxThen('sfx_click', () => {
       document.getElementById('screen-settings').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
+      document.getElementById('btn-start').style.display = '';
+      document.getElementById('press-start-hint').style.display = '';
+      document.getElementById('main-nav').style.display = 'none';
     });
   });
 
