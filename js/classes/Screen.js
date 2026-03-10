@@ -7,6 +7,7 @@ class Screen {
     this.cellSize = Math.round(CONFIG.BLOCK_SIZE); // 42px
 
     this.debugValues = false;
+    this.myopiaMode  = false;
     this.spriteReady = false;
     this.gemCfg = null;
     this.scale = 1;
@@ -36,6 +37,13 @@ class Screen {
 
   toggleDebug() {
     this.debugValues = !this.debugValues;
+    for (let row = 0; row < this.rows; row++) this.prevMap[row].fill(-1);
+  }
+
+  setMyopiaMode(enabled) {
+    this.myopiaMode = enabled;
+    this.boardElement.classList.toggle('myopia-mode', enabled);
+    this.previewElement?.classList.toggle('myopia-mode', enabled);
     for (let row = 0; row < this.rows; row++) this.prevMap[row].fill(-1);
   }
 
@@ -126,6 +134,7 @@ class Screen {
   }
 
   initPreview(previewElement) {
+    this.previewElement = previewElement;
     this.previewCells = [];
     previewElement.innerHTML = '';
     for (let i = 0; i < CONFIG.PIECE_SIZE; i++) {
@@ -151,7 +160,11 @@ class Screen {
     piece.rocks.forEach((val, i) => {
       const cell = this.previewCells[i];
       cell.dataset.value = val;
-      if (this.spriteReady) {
+      if (this.myopiaMode) {
+        cell.classList.remove('has-gem');
+        cell.style.removeProperty('--sprite-x');
+        cell.style.removeProperty('--sprite-y');
+      } else if (this.spriteReady) {
         const { x, y } = this._spritePos(val, undefined);
         cell.style.setProperty('--sprite-x', `${x}px`);
         cell.style.setProperty('--sprite-y', `${y}px`);
@@ -176,7 +189,11 @@ class Screen {
     if (this.debugValues) cell.dataset.debug = value;
     else delete cell.dataset.debug;
 
-    if (this.spriteReady) {
+    if (this.myopiaMode) {
+      cell.classList.remove('has-gem');
+      cell.style.removeProperty('--sprite-x');
+      cell.style.removeProperty('--sprite-y');
+    } else if (this.spriteReady) {
       const { x, y } = this._spritePos(value, animated ? undefined : null);
       cell.style.setProperty('--sprite-x', `${x}px`);
       cell.style.setProperty('--sprite-y', `${y}px`);

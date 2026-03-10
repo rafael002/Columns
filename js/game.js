@@ -10,13 +10,14 @@
 
   // ── Settings ──────────────────────────────────────────────────────────────
 
-  const _settings = { musicVolume: 0.7, sfxVolume: 0.7, musicMuted: false, sfxMuted: false };
+  const _settings = { musicVolume: 0.7, sfxVolume: 0.7, musicMuted: false, sfxMuted: false, myopiaMode: false };
 
   function loadSettings() {
     _settings.musicVolume = parseFloat(localStorage.getItem('columns_music_vol') ?? '0.7');
     _settings.sfxVolume   = parseFloat(localStorage.getItem('columns_sfx_vol')   ?? '0.7');
     _settings.musicMuted  = localStorage.getItem('columns_music_muted') === 'true';
     _settings.sfxMuted    = localStorage.getItem('columns_sfx_muted')   === 'true';
+    _settings.myopiaMode  = localStorage.getItem('columns_myopia_mode') === 'true';
   }
 
   function saveSettings() {
@@ -24,6 +25,12 @@
     localStorage.setItem('columns_sfx_vol',     _settings.sfxVolume);
     localStorage.setItem('columns_music_muted', _settings.musicMuted);
     localStorage.setItem('columns_sfx_muted',   _settings.sfxMuted);
+    localStorage.setItem('columns_myopia_mode', _settings.myopiaMode);
+  }
+
+  function applyMyopiaMode() {
+    const enabled = _settings.myopiaMode;
+    [window.game, window.game2].forEach(g => g?.screen?.setMyopiaMode(enabled));
   }
 
   function applyMusicSettings(audio) {
@@ -57,6 +64,13 @@
     document.getElementById('val-sfx').textContent   = sfxVal;
     updateMuteBtn('btn-mute-music', _settings.musicMuted);
     updateMuteBtn('btn-mute-sfx',   _settings.sfxMuted);
+    document.getElementById('chk-myopia').checked = _settings.myopiaMode;
+
+    document.getElementById('chk-myopia').addEventListener('change', e => {
+      _settings.myopiaMode = e.target.checked;
+      applyMyopiaMode();
+      saveSettings();
+    });
 
     document.getElementById('slider-music').addEventListener('input', e => {
       _settings.musicVolume = e.target.value / 100;
@@ -448,6 +462,7 @@
   document.getElementById('btn-clear-yes').addEventListener('click', () => {
     ['columns_music_vol', 'columns_sfx_vol', 'columns_music_muted', 'columns_sfx_muted',
      'columns_track', 'columns_scores', 'columns_skip_howto_sp', 'columns_skip_howto_vs',
+     'columns_myopia_mode',
     ].forEach(k => localStorage.removeItem(k));
     document.getElementById('clear-confirm-overlay').classList.remove('visible');
     playSfx('sfx_click');
@@ -455,18 +470,7 @@
 
   // ── Start ─────────────────────────────────────────────────────────────────
 
-  document.getElementById('btn-debug-sound').addEventListener('click', () => {
-    if (typeof Tone !== 'undefined') Tone.start();
-    let m = 1;
-    const next = () => {
-      if (m > 5) return;
-      playMatchTone(m++);
-      setTimeout(next, 1000);
-    };
-    next();
-  });
-
-  document.getElementById('btn-start').addEventListener('click', () => {
+document.getElementById('btn-start').addEventListener('click', () => {
     startMenuMusic();
     playSfxThen('sfx_click', () => {
       document.getElementById('btn-start').style.display = 'none';
@@ -518,6 +522,7 @@
             }
           },
         }));
+        applyMyopiaMode();
       });
     });
   });
@@ -606,6 +611,7 @@
 
     window.game.setPeer(window.game2);
     window.game2.setPeer(window.game);
+    applyMyopiaMode();
   }
 
   document.getElementById('btn-2p').addEventListener('click', () => {

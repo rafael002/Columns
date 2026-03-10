@@ -195,6 +195,32 @@
 .cell[data-value="7"] { --cell-color: var(--gem-7); }
 .cell[data-value="8"] { --cell-color: var(--gem-8); }
 
+/* ── Myopia mode: SVG mask com cor da gema ── */
+
+/* Cores equidistantes no espectro (máximo contraste visual) */
+.myopia-mode {
+  --gem-1: #FF4444; /* red */
+  --gem-2: #FF8800; /* orange */
+  --gem-3: #00E676; /* green */
+  --gem-4: #00E5FF; /* cyan */
+  --gem-5: #9933FF; /* purple */
+  --gem-6: #FF44CC; /* magenta */
+}
+
+.myopia-mode .cell::after {
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  background-color: var(--cell-color, transparent);
+  background-image: none;
+  -webkit-mask-image: url('../images/simple_rock.svg');
+  mask-image: url('../images/simple_rock.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
 /* ── Debug overlay ── */
 .cell[data-debug]::before {
   content: attr(data-debug);
