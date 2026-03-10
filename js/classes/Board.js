@@ -88,101 +88,6 @@ class Board {
     }
 
     /**
-     * Verifica se a posição está dentro do mapa
-     * Baseado no algoritmo Match otimizado
-     */
-    #isInsideMap(vertical, horizontal) {
-        try {
-            return horizontal >= 0 && 
-                   horizontal < this.screenMap[vertical].length &&
-                   vertical >= 0 && 
-                   vertical < this.screenMap.length;
-        } catch (error) {
-            return false;
-        }
-    }
-
-    /**
-     * Procura matches em todas as direções a partir de uma posição
-     * Algoritmo otimizado baseado no Match class, com diagonais incluídas
-     * 
-     * Movimentos:
-     *      -1 | 0 | 1           0 | 0 | 0  
-     *      _________            _________
-     * X -> -1 | 0 | 1     Y -> -1 | 0 | 1
-     *      _________            _________
-     *      -1 | 0 | 1          -1 | 0 | 1
-     */
-    #walk(vertical, horizontal) {
-        // Direções: vertical, horizontal e diagonais
-        const axies = {
-            vertical: [
-                {x: 0, y: -1},  // cima
-                {x: 0, y: 1}    // baixo
-            ],
-            horizontal: [
-                {x: -1, y: 0},  // esquerda
-                {x: 1, y: 0}    // direita
-            ],
-            first_diagonal: [
-                {x: -1, y: -1}, // diagonal esquerda-cima
-                {x: 1, y: 1}    // diagonal direita-baixo
-            ],
-            second_diagonal: [
-                {x: 1, y: -1},  // diagonal direita-cima
-                {x: -1, y: 1}   // diagonal esquerda-baixo
-            ]
-        };
-
-        let matches = [];
-        
-        if (!this.#isInsideMap(vertical, horizontal)) {
-            return matches;
-        }
-
-        // Antes de andar, pegar o valor atual
-        const value = this.screenMap[vertical][horizontal];
-
-        if (value === CONFIG.EMPTY_CELL || value === CONFIG.MARKED_CELL) {
-            return matches;
-        }
-
-        // Procura matches em cada direção
-        for (const [key, directions] of Object.entries(axies)) {
-            for (const direction of directions) {
-                // Criando com o bloco inicial
-                let currentMatch = [{x: horizontal, y: vertical}];
-
-                // Setando o ponto de partida
-                let walkH = horizontal;
-                let walkV = vertical;
-
-                // Caminha na direção até encontrar um valor diferente
-                while (true) {
-                    walkH += direction.x;
-                    walkV += direction.y;
-
-                    if (this.#isInsideMap(walkV, walkH) &&
-                        this.screenMap[walkV][walkH] === value &&
-                        this.screenMap[walkV][walkH] !== CONFIG.EMPTY_CELL &&
-                        this.screenMap[walkV][walkH] !== CONFIG.MARKED_CELL) {
-                        currentMatch.push({x: walkH, y: walkV});
-                    } else {
-                        break;
-                    }
-                }
-
-                // Se encontrou match válido (3 ou mais), adiciona à lista
-                if (currentMatch.length >= CONFIG.MIN_MATCH_SIZE) {
-                    matches = matches.concat(currentMatch);
-                }
-            }
-        }
-
-        return matches;
-    }
-
-    /**
      * Aplica gravidade - faz as peças caírem
      * Otimizado: percorre de baixo para cima (mais eficiente)
      */
@@ -208,37 +113,89 @@ class Board {
 
     /**
      * Procura matches e marca células com MARKED_CELL
+     * Line sweep em 4 eixos: horizontal, vertical, diagonal ↘, anti-diagonal ↗
      * @returns {Array} array de {col, row, value} das gemas marcadas, ou [] se nenhum match
      */
     match() {
-        let allMatches = [];
+        const H = this.ysize;
+        const W = this.xsize;
+        const map = this.screenMap;
+        const EMPTY  = CONFIG.EMPTY_CELL;
+        const MARKED = CONFIG.MARKED_CELL;
+        const MIN    = CONFIG.MIN_MATCH_SIZE;
 
-        for (let vertical = 0; vertical < this.screenMap.length; vertical++) {
-            for (let horizontal = 0; horizontal < this.screenMap[vertical].length; horizontal++) {
-                const matches = this.#walk(vertical, horizontal);
-                if (matches.length > 0) {
-                    allMatches.push(...matches);
+        const toMark = new Set();
+
+        const scanLine = (coords) => {
+            const len = coords.length;
+            if (len < MIN) return;
+            let runStart = 0;
+            for (let i = 1; i <= len; i++) {
+                const [pr, pc] = coords[runStart];
+                const prevVal  = map[pr][pc];
+                let same = false;
+                if (i < len) {
+                    const [cr, cc] = coords[i];
+                    const curVal   = map[cr][cc];
+                    same = curVal === prevVal && curVal !== EMPTY && curVal !== MARKED;
+                }
+                if (!same) {
+                    const runLen = i - runStart;
+                    if (runLen >= MIN && prevVal !== EMPTY && prevVal !== MARKED) {
+                        for (let j = runStart; j < i; j++) {
+                            const [r, c] = coords[j];
+                            toMark.add(r * W + c);
+                        }
+                    }
+                    runStart = i;
                 }
             }
+        };
+
+        // Horizontal
+        for (let r = 0; r < H; r++) {
+            const line = [];
+            for (let c = 0; c < W; c++) line.push([r, c]);
+            scanLine(line);
         }
 
-        const uniqueMatches = Array.from(
-            new Set(allMatches.map(m => `${m.x},${m.y}`))
-        ).map(str => {
-            const [x, y] = str.split(',').map(Number);
-            return {x, y};
-        });
+        // Vertical
+        for (let c = 0; c < W; c++) {
+            const line = [];
+            for (let r = 0; r < H; r++) line.push([r, c]);
+            scanLine(line);
+        }
 
-        if (uniqueMatches.length === 0) return [];
+        // Diagonal ↘
+        for (let d = -(H - 1); d < W; d++) {
+            const r0 = Math.max(0, -d);
+            const c0 = Math.max(0, d);
+            const line = [];
+            for (let r = r0, c = c0; r < H && c < W; r++, c++) line.push([r, c]);
+            scanLine(line);
+        }
+
+        // Anti-diagonal ↗
+        for (let d = 0; d < H + W - 1; d++) {
+            const r0 = Math.min(d, H - 1);
+            const c0 = d - r0;
+            const line = [];
+            for (let r = r0, c = c0; r >= 0 && c < W; r--, c++) line.push([r, c]);
+            scanLine(line);
+        }
+
+        if (toMark.size === 0) return [];
 
         const markedGems = [];
-        uniqueMatches.forEach(({ x, y }) => {
-            const val = this.screenMap[y][x];
-            if (val !== CONFIG.EMPTY_CELL && val !== CONFIG.MARKED_CELL) {
-                markedGems.push({ col: x, row: y, value: val });
-                this.screenMap[y][x] = CONFIG.MARKED_CELL;
+        for (const encoded of toMark) {
+            const r   = Math.floor(encoded / W);
+            const c   = encoded % W;
+            const val = map[r][c];
+            if (val !== EMPTY && val !== MARKED) {
+                markedGems.push({ col: c, row: r, value: val });
+                map[r][c] = MARKED;
             }
-        });
+        }
         return markedGems;
     }
 
