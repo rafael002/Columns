@@ -22,6 +22,6 @@ function getColor(value) {
  * Gera um valor aleatório de cor válido (1-8)
  */
 function getRandomColor() {
-  return Math.floor(Math.random() * 8) + 1;
+  return Math.floor(Math.random() * 6) + 1;
 }
 
