@@ -73,6 +73,24 @@
 #orb-icon-left  { left:  40px; }
 #orb-icon-right { right: 40px; }
 
+@media (max-width: 480px) {
+  .corner-orb--right {
+    display: none;
+  }
+
+  .corner-orb--left {
+    left: calc(50% - 230px);
+  }
+
+  #orb-icon-right {
+    display: none;
+  }
+
+  #orb-icon-left {
+    left: calc(50% - 30px);
+  }
+}
+
 /* ── Decorative menu gems ── */
 .mg {
   width: 18px;

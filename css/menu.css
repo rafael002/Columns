@@ -30,6 +30,16 @@
   margin-bottom: 52px;
 }
 
+@media (max-width: 480px) {
+  #screen-menu {
+    padding-bottom: 200px;
+  }
+
+  .menu-gems {
+    margin-bottom: 32px;
+  }
+}
+
 /* ── Navigation ── */
 .menu-nav {
   display: flex;
