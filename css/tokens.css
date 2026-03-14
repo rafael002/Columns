@@ -38,3 +38,17 @@
   --grid-color: #CCCCCC;
   --cell-size:  41.6px;
 }
+
+@media (max-width: 480px) {
+  :root {
+    --cell-size: min(calc((100vh - 80px) / 13), calc((100vw - 60px) / 6));
+  }
+}
+
+@supports (height: 1svh) {
+  @media (max-width: 480px) {
+    :root {
+      --cell-size: min(calc((100svh - 44px) / 13), calc((100vw - 60px) / 6));
+    }
+  }
+}

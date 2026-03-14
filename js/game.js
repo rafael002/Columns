@@ -374,6 +374,16 @@
     window.game.endGame();
   });
 
+  const _pauseMobileBtn = document.getElementById('btn-pause-mobile');
+  if (window.matchMedia('(max-width: 480px)').matches) {
+    _pauseMobileBtn.style.display = '';
+  }
+  _pauseMobileBtn.addEventListener('click', () => {
+    if (!window.game || window.game.gameOver) return;
+    playSfx('sfx_click');
+    window.game.togglePause();
+  });
+
   document.getElementById('btn-give-up-p2').addEventListener('click', () => {
     if (!window.game2 || window.game2.gameOver || window.game2.isGameOverAnimating) return;
     playSfx('sfx_click');
