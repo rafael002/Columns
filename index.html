@@ -212,6 +212,7 @@
           <div id="game-board" class="game-board"></div>
         </div>
         <button class="give-up-btn" id="btn-give-up-p1">GIVE UP</button>
+        <button id="btn-pause-mobile" style="display:none">⏸ PAUSE</button>
       </div>
 
       <!-- Stats centrais (SCORE / GEMS / LEVEL) -->
@@ -262,6 +263,17 @@
       <div class="modal-action-btns">
         <button id="menu-btn-overlay" class="retry-btn">MENU</button>
         <button id="retry-btn" class="retry-btn">RETRY</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Overlay: versus não disponível no mobile ── -->
+  <div id="versus-mobile-overlay" class="game-over">
+    <div class="game-over-modal">
+      <p class="modal-title">VERSUS</p>
+      <p class="game-over-score-line">Versus mode is designed for larger screens.<br>Please use a tablet or desktop.</p>
+      <div class="modal-action-btns">
+        <button class="retry-btn" id="btn-versus-mobile-back">MENU</button>
       </div>
     </div>
   </div>

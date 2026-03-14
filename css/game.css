@@ -307,6 +307,210 @@
   color: var(--color-bg);
 }
 
+/* ── Mobile: layout 1P ── */
+@media (max-width: 480px) {
+  /* Game wrapper: stretch, no centering */
+  #game-wrapper {
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  /* Music control: fixed in left column, just below score bar */
+  .music-control {
+    position: fixed !important;
+    top: 44px !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100vw - 6 * var(--cell-size));
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  .music-lyre-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Main area: CSS grid */
+  #main-area {
+    flex: 1;
+    display: grid;
+    grid-template-areas:
+      "score score"
+      "next  board"
+      "gems  board"
+      "level board"
+      ".     board";
+    grid-template-columns: calc(100vw - 6 * var(--cell-size)) calc(6 * var(--cell-size));
+    grid-template-rows: 44px auto auto auto 1fr;
+    width: 100%;
+  }
+
+  /* Ghost stats-panel so its children join the grid */
+  .stats-panel {
+    display: contents;
+  }
+
+  /* Score bar: inline "SCORE: 00000" */
+  .stats-panel > .value-display:nth-child(1) {
+    grid-area: score;
+    width: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .stats-panel > .value-display:nth-child(1) .label {
+    position: static;
+    left: 0;
+    width: auto;
+    font-size: 14px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .stats-panel > .value-display:nth-child(1) .label span::after {
+    content: ":";
+  }
+
+  .stats-panel > .value-display:nth-child(1) .st-player {
+    position: static;
+    width: auto;
+    background: transparent;
+    border-radius: 0;
+    text-align: left;
+  }
+
+  .stats-panel > .value-display:nth-child(1) .st-player span {
+    font-size: 18px;
+    padding: 0;
+  }
+
+  /* Gems and Level: left column */
+  .stats-panel > .value-display:nth-child(2) { grid-area: gems; }
+  .stats-panel > .value-display:nth-child(3) { grid-area: level; }
+
+  .stats-panel > .value-display:nth-child(2),
+  .stats-panel > .value-display:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 4px 0;
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  .stats-panel > .value-display:nth-child(2) .st-player,
+  .stats-panel > .value-display:nth-child(3) .st-player {
+    position: static;
+    width: auto;
+    min-width: 32px;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .stats-panel > .value-display:nth-child(2) .st-player span,
+  .stats-panel > .value-display:nth-child(3) .st-player span {
+    font-size: 13px;
+    padding: 2px 4px;
+  }
+
+  .stats-panel > .value-display:nth-child(2) .label,
+  .stats-panel > .value-display:nth-child(3) .label {
+    position: static;
+    left: 0;
+    width: auto;
+    font-size: 9px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* NEXT piece: left column, below music control */
+  #main-area > .side-panel:not(#side-panel-p2) {
+    grid-area: next;
+    align-self: start;
+    justify-self: center;
+    padding-top: 64px;
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  /* Board: right column, game-board touches right wall and bottom */
+  #main-area > .board-area:not(#board-wrapper-p2) {
+    grid-area: board;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0;
+    gap: 0;
+  }
+
+  /* Give up: fixed bottom-left, acima do pause */
+  #btn-give-up-p1 {
+    position: fixed;
+    bottom: 44px;
+    left: 0;
+    top: auto;
+    right: auto;
+    width: calc(100vw - 6 * var(--cell-size));
+    margin: 0;
+    padding: 12px 0;
+    font-size: 0;
+    border: none;
+    border-top: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    text-align: center;
+    letter-spacing: 0;
+  }
+
+  #btn-give-up-p1::after {
+    content: 'QUIT';
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  /* Pause button: fixed bottom-left */
+  #btn-pause-mobile {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    right: auto;
+    width: calc(100vw - 6 * var(--cell-size));
+    margin: 0;
+    padding: 12px 0;
+    font-size: 11px;
+    letter-spacing: 2px;
+    background: transparent;
+    color: var(--color-text);
+    border: none;
+    border-top: 1px solid var(--color-border-subtle);
+    border-right: 1px solid var(--color-border-subtle);
+    font-family: var(--font-main);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  #btn-pause-mobile:disabled {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+}
+
 /* ── Countdown ── */
 .countdown-overlay {
   position: absolute;

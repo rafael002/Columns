@@ -30,6 +30,43 @@
   margin-bottom: 52px;
 }
 
+@media (max-width: 480px) {
+  #screen-menu {
+    padding-bottom: 200px;
+  }
+
+  #screen-menu .corner-orb {
+    transition: opacity 0.4s;
+  }
+
+  #screen-menu.menu-expanded {
+    padding-bottom: 0;
+  }
+
+  #screen-menu.menu-expanded .corner-orb {
+    opacity: 0.5;
+  }
+
+  #btn-1p {
+    font-size: 0;
+    letter-spacing: 0;
+  }
+
+  #btn-1p::after {
+    content: 'PLAY';
+    font-size: 24px;
+    letter-spacing: 8px;
+  }
+
+  #btn-2p {
+    display: none;
+  }
+
+  .menu-gems {
+    margin-bottom: 32px;
+  }
+}
+
 /* ── Navigation ── */
 .menu-nav {
   display: flex;

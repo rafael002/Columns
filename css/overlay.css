@@ -70,6 +70,12 @@
   letter-spacing: 6px;
 }
 
+@media (max-width: 480px) {
+  .game-over-modal {
+    padding: 20px;
+  }
+}
+
 /* ── How to Play ── */
 #screen-howto {
   z-index: 500;

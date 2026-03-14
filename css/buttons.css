@@ -3,7 +3,7 @@
   font-family: var(--font-main);
   font-size: 20px;
   padding: 12px 0;
-  width: 280px;
+  width: min(280px, 85vw);
   background: var(--color-bg);
   color: var(--color-text);
   border: 2px solid var(--color-border);

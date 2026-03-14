@@ -39,6 +39,21 @@
   50%       { opacity: 0; }
 }
 
+@media (max-width: 480px) {
+  .game-logo {
+    font-size: 52px;
+    letter-spacing: 6px;
+  }
+  .menu-heading {
+    font-size: 28px;
+    letter-spacing: 4px;
+  }
+  .press-start-hint {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+}
+
 /* ── Countdown ── */
 .countdown-text {
   font-family: var(--font-main);
