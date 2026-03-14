@@ -360,6 +360,7 @@
     document.getElementById('screen-name-entry').style.display = 'none';
     document.getElementById('screen-menu').style.display = 'flex';
     document.getElementById('retry-btn').textContent = 'RETRY';
+    document.getElementById('screen-menu').classList.remove('menu-expanded');
     document.getElementById('btn-start').style.display = '';
     document.getElementById('press-start-hint').style.display = '';
     document.getElementById('main-nav').style.display = 'none';
@@ -424,6 +425,7 @@
     playSfxThen('sfx_click', () => {
       document.getElementById('screen-scores').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
+      document.getElementById('screen-menu').classList.remove('menu-expanded');
       document.getElementById('btn-start').style.display = '';
       document.getElementById('press-start-hint').style.display = '';
       document.getElementById('main-nav').style.display = 'none';
@@ -443,6 +445,7 @@
     playSfxThen('sfx_click', () => {
       document.getElementById('screen-settings').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
+      document.getElementById('screen-menu').classList.remove('menu-expanded');
       document.getElementById('btn-start').style.display = '';
       document.getElementById('press-start-hint').style.display = '';
       document.getElementById('main-nav').style.display = 'none';
@@ -473,6 +476,7 @@
 document.getElementById('btn-start').addEventListener('click', () => {
     startMenuMusic();
     playSfxThen('sfx_click', () => {
+      document.getElementById('screen-menu').classList.add('menu-expanded');
       document.getElementById('btn-start').style.display = 'none';
       document.getElementById('press-start-hint').style.display = 'none';
       document.getElementById('main-nav').style.display = '';
@@ -615,7 +619,15 @@ document.getElementById('btn-start').addEventListener('click', () => {
   }
 
   document.getElementById('btn-2p').addEventListener('click', () => {
+    if (window.matchMedia('(max-width: 480px)').matches) {
+      document.getElementById('versus-mobile-overlay').classList.add('visible');
+      return;
+    }
     playSfxThen('sfx_click', showNameEntry);
+  });
+
+  document.getElementById('btn-versus-mobile-back').addEventListener('click', () => {
+    document.getElementById('versus-mobile-overlay').classList.remove('visible');
   });
 
   document.getElementById('btn-ok-p1').addEventListener('click', () => {
@@ -637,6 +649,7 @@ document.getElementById('btn-start').addEventListener('click', () => {
       stopNameEntryMusic();
       document.getElementById('screen-name-entry').style.display = 'none';
       document.getElementById('screen-menu').style.display = 'flex';
+      document.getElementById('screen-menu').classList.remove('menu-expanded');
       document.getElementById('btn-start').style.display = '';
       document.getElementById('press-start-hint').style.display = '';
       document.getElementById('main-nav').style.display = 'none';
